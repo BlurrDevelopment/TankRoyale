@@ -4,6 +4,24 @@ Simply a low poly tank battle royale! Open-world, head-to-head tank battle with 
 ****
 ## Changelogs
 ### Latest Updates
+#### Version 0.0.2
+##### Whats changed?
+- Implemented a pause menu.
+- Implemented mortars.
+- Implemented reload sound.
+- Implemented music to main menu.
+- Implemented background image to main menu and reworked buttons.
+- Implemented background atmosheric sounds.
+- Implemented ammo count for both player and AI.
+- Implemented ammo count on UI.
+- Improved friction to the floor.
+- Improved gun shot sound.
+- Improved tank speed.
+- Improved tank turret speed.
+- Improved tank stopping distance.
+- Fixed tank physics in the air.
+- Fixed tank turret rotating the wrong way.
+- Other minor changes.
 #### Version 0.0.1
 ##### Whats changed?
 - Implemented player tank
@@ -23,16 +41,6 @@ Simply a low poly tank battle royale! Open-world, head-to-head tank battle with 
 - The more advanced controls consist of controlling each track individually. Basic controls control each track automatically.
 
 [See here for all changelogs.]()
-
-### Next Update
-#### Version 0.0.2
-##### What to expect in the next update.
-- Many UI features
-- Terrain bug fix (So the tank randomly go airborne)
-- Friction and Gravity adjustments (So you don't go super quick and slide)
-- Some bullet impact physics fix (So it doesn't launch the tank, although the launching is fun)
-##### Notes:
-- I may add a gamemode in a future update that brings back the old friction physics and bullet impact physics. Could make a fun Sumo Tank gamemode.
 
 ### Future
 #### What I plan for the future of Tank Royale.
