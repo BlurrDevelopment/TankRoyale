@@ -1,17 +1,5 @@
 Current Changelog for this version
 
-- Implemented a pause menu.
-- Implemented mortars.
-- Implemented reload sound.
-- Implemented music to main menu.
-- Implemented background image to main menu and reworked buttons.
-- Implemented background atmosheric sounds.
-- Implemented ammo count for both player and AI.
-- Implemented ammo count on UI.
-- Improved friction to the floor.
-- Improved gun shot sound.
-- Improved tank speed.
-- Improved tank turret speed.
-- Improved tank stopping distance.
-- Fixed tank physics in the air.
-- Fixed tank turret rotating the wrong way.
+- Implemented particle effects to projectiles.
+- Fixed bullets going through objects.
+- Fixed tanks flying when getting hit by a bullet.
