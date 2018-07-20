@@ -4,8 +4,22 @@ Simply a low poly tank battle royale! Open-world, head-to-head tank battle with 
 ****
 ## Changelogs
 ### Latest Updates
-#### Version 0.0.2
+#### Version 0.0.3 | 20th July 2018
 ##### Whats changed?
+PUBLIC
+- Implemented death for AI and player.
+- Implemented health to AI and player.
+- Implemented health bars.
+- Implemented particle effects to projectiles on launch.
+- Implemented particle effects to projectiles on impact.
+- Implemented force to projectiles on impact, causing the tank to move slightly.
+- Fixed so projectiles now destroy after impact.
+- Fixed bullets going through objects.
+- Fixed tanks flying when getting hit by a bullet.
+
+#### Version 0.0.2 | 19th July 2018
+##### Whats changed?
+PUBLIC
 - Implemented a pause menu.
 - Implemented mortars.
 - Implemented reload sound.
@@ -22,8 +36,10 @@ Simply a low poly tank battle royale! Open-world, head-to-head tank battle with 
 - Fixed tank physics in the air.
 - Fixed tank turret rotating the wrong way.
 - Other minor changes.
-#### Version 0.0.1
+
+#### Version 0.0.1 | 17th July 2018
 ##### Whats changed?
+PRIVATE
 - Implemented player tank
 - Implemented AI tank
 - Implemented player aiming
