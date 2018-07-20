@@ -1,5 +1,8 @@
 Current Changelog for this version
 
-- Implemented particle effects to projectiles.
+- Implemented particle effects to projectiles on launch.
+- Implemented particle effects to projectiles on impact.
+- Implemented force to projectiles on impact, causing the tank to move slightly.
+- Fixed so projectiles now destroy after impact.
 - Fixed bullets going through objects.
 - Fixed tanks flying when getting hit by a bullet.
