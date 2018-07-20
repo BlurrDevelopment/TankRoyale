@@ -19,6 +19,8 @@ public:
 	// Override BeginPlay.
 	virtual void BeginPlay() override;
 
+	virtual void SetPawn(APawn* InPawn) override;
+
 	// Override Tick.
 	virtual void Tick(float DeltaTime) override;
 
@@ -49,4 +51,6 @@ private:
 	// Get the direction the player is looking in.
 	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
 
+	UFUNCTION()
+	void OnPossessedTankDeath();
 };

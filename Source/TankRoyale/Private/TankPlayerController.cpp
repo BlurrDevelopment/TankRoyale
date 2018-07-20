@@ -3,6 +3,7 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
+#include "tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -33,6 +34,24 @@ void ATankPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT(" ERROR CODE: b1348c86-89e8-11e8-9a94-a6cf71072f73"));
 		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
 	}
+}
+
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	StartSpectatingOnly();
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
