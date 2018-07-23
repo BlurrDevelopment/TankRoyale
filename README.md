@@ -55,23 +55,11 @@ PRIVATE
 ##### Notes:
 - Controller or keyboard and mouse can be used with all controls although, more advanced controls with controller.
 - The more advanced controls consist of controlling each track individually. Basic controls control each track automatically.
-
 [See here for all changelogs.]()
 
-### Future
-#### What I plan for the future of Tank Royale.
-##### Alpha
-- By alpha the game will be playable as a one player or two player game against AI tanks.
-- The game will include low poly models for the tank, terrain and turrets.
-
-##### Beta
-- The game will be playable as a multiplayer game with no AI.
-- The single player version may still be available.
-****
 ## Want to help development?
 ### Donating money
-Donations will help fund the project. I am not a 3d model artist and therefor will need to purchase or have models made. Sound effects, music and graphic design will also need to be paid for, donations will help this ALOT! In the future, I may even focus on adding members to the Blurr Development team.
-A link where you can donate will be provided [HERE](), once the game is in a playable state. I do not want to except donations until the game is playable.
+I you want to help with development of Tank Royale, you can do so by pledging [here at kickstarter](https://www.kickstarter.com/projects/1962553683/tank-royale?ref=project_build). I appreciate all the help I can get and I hope to release the full game as soon as possible to Steam!
 
 ### Other ways of helping
 Of course you can donate assets to help production of Tank Royale. I will add a structure for accepting assets in the near future when they're needed.
