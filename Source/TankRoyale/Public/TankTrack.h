@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "TankTrack.generated.h"
 
+class ASprungWheel;
+
 /*
 * TankTrack is to make the tank drivable by the player.
 */
@@ -28,11 +30,7 @@ private:
 
 	void BeginPlay();
 
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	TArray<ASprungWheel*> GetWheels() const;
 
-	void ApplySidewaysForce();
-	void DriveTrack();
-
-	float CurrentThrottle = 0;
+	void DriveTrack(float CurrentThrottle);
 };
