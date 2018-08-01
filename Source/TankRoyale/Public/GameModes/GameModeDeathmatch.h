@@ -16,9 +16,12 @@ class TANKROYALE_API AGameModeDeathmatch : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
 private:
-	virtual void StartPlay() override;
+	AGameModeDeathmatch();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 	int32 TeamOneScore = 0;
 	int32 TeamOneKills = 0;
@@ -38,5 +41,17 @@ public:
 	void AssignTankTeam(ATank* Tank);
 
 	void AddTeamDeath(ATank* Tank);
+
+	// How long a round lasts in minutes.
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	float GameTime = 0.5f;
+
+	// How many rounds in a game.
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	int32 GameRounds = 1;
+
+	FTimerHandle GameTimerHandler;
+
+	void OnEndGame();
 	
 };

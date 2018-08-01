@@ -4,10 +4,35 @@
 #include "Tank.h"
 #include "TankAIController.h"
 #include "TankPlayerController.h"
+#include "TimerManager.h"
 
-void AGameModeDeathmatch::StartPlay()
+AGameModeDeathmatch::AGameModeDeathmatch()
 {
-	Super::StartPlay();
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+void AGameModeDeathmatch::BeginPlay()
+{
+	Super::BeginPlay();
+	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::OnEndGame, 2.0f, true, 60.0f * GameTime);
+}
+
+void AGameModeDeathmatch::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (TeamOneDeaths == TeamTwoDeaths)
+	{
+		WinningTeam = 0;
+	}
+	else if (TeamOneDeaths > TeamTwoDeaths)
+	{
+		WinningTeam = 1;
+	}
+	else if (TeamOneDeaths < TeamTwoDeaths)
+	{
+		WinningTeam = 2;
+	}
 }
 
 void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
@@ -41,7 +66,7 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 
 		return;
 	}
-	if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
+	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("A member of team two died."));
 
@@ -53,4 +78,10 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 
 		return;
 	}
+}
+
+void AGameModeDeathmatch::OnEndGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("End Game!"));
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }
