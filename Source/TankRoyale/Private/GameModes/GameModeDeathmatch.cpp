@@ -39,16 +39,24 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 {
 	auto Controller = Tank->GetController();
 	
-	if (Cast<ATankAIController>(Controller))
+	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < 5)
 	{
 		TeamTwoTanks.Add(Tank);
 		UE_LOG(LogTemp, Warning, TEXT("Tank added to team two, it is AI."));
 		return;
 	}
-	if (Cast<ATankPlayerController>(Controller))
+	else if (Cast<ATankPlayerController>(Controller) && TeamOneTanks.Num() < 5)
 	{
 		TeamOneTanks.Add(Tank);
 		UE_LOG(LogTemp, Warning, TEXT("Tank added to team one, it is a player."));
+	}
+	else
+	{
+		TeamSpectatorTanks.Add(Tank);
+		if (Cast<ATankPlayerController>(Controller)) Cast<ATankPlayerController>(Controller)->StartSpectatingOnly();
+		Tank->DetachFromControllerPendingDestroy(); // TODO: Might cause issues when too many players.
+		Tank->Destroy();
+		UE_LOG(LogTemp, Warning, TEXT("Tank added to team spectator."));
 	}
 }
 
