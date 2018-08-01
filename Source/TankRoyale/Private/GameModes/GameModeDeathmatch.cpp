@@ -42,13 +42,12 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < 5)
 	{
 		TeamTwoTanks.Add(Tank);
-		UE_LOG(LogTemp, Warning, TEXT("Tank added to team two, it is AI."));
 		return;
 	}
 	else if (Cast<ATankPlayerController>(Controller) && TeamOneTanks.Num() < 5)
 	{
 		TeamOneTanks.Add(Tank);
-		UE_LOG(LogTemp, Warning, TEXT("Tank added to team one, it is a player."));
+		return;
 	}
 	else
 	{
@@ -57,7 +56,7 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 		Tank->DetachFromControllerPendingDestroy(); // TODO: Might cause issues when too many players.
 		Tank->DestroyConstructedComponents();
 		Tank->Destroy();
-		UE_LOG(LogTemp, Warning, TEXT("Tank added to team spectator."));
+		return;
 	}
 }
 
@@ -65,8 +64,6 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 {
 	if (TeamOneTanks.Find(Tank) != INDEX_NONE)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("A member of team one died."));
-		
 		// Remove the tank from the team and increment the death toll.
 		TeamOneTanks.Remove(Tank);
 		TeamOneDeaths++;
@@ -77,8 +74,6 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 	}
 	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("A member of team two died."));
-
 		// Remove the tank from the team and increment the death toll.
 		TeamTwoTanks.Remove(Tank);
 		TeamTwoDeaths++;
@@ -91,6 +86,5 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 
 void AGameModeDeathmatch::OnEndGame()
 {
-	UE_LOG(LogTemp, Warning, TEXT("End Game!"));
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 }
