@@ -21,6 +21,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealthPercent() const;
 
+	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FTankDelegate OnDeath;
 
 private:
@@ -34,4 +35,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 CurrentHealth;
+	
+public:
+	// Team stuff
+	UPROPERTY(BlueprintReadOnly, Category = "Team")
+	int32 Team = 0; // 0 = No team
+
+	// Get the tanks team. 0 is No Team
+	UFUNCTION(BlueprintPure, Category = "Team")
+	int32 GetTankTeam() const { return Team; }
+
+	// Set the tanks team
+	void SetTankTeam(int32 NewTeam);
 };

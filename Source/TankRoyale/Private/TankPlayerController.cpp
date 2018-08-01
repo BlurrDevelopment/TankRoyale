@@ -26,6 +26,7 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 		auto PossessedTank = Cast<ATank>(InPawn);
 		if (!ensure(PossessedTank)) { return; }
 
+		PossessedTank->SetTankTeam(1); // TODO: Assuming the player is team one!
 		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
 	}
 }
