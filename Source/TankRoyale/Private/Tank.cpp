@@ -37,10 +37,3 @@ float ATank::GetHealthPercent() const
 {
 	return ((float)CurrentHealth / (float)StartingHealth);
 }
-
-
-void ATank::SetTankTeam(int32 NewTeam)
-{
-	Team = NewTeam;
-	UE_LOG(LogTemp, Warning, TEXT("Tanks team set to %i"), NewTeam)
-}
