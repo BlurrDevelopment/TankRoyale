@@ -18,6 +18,15 @@ void AGameModeDeathmatch::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::OnEndGame, 2.0f, true, 60.0f * GameTime);
+	TeamOneScore = 0;
+	TeamTwoScore = 0;
+	TeamOneKills = 0;
+	TeamTwoKills = 0;
+	TeamOneDeaths = 0;
+	TeamTwoDeaths = 0;
+	TeamOneTanks.Empty();
+	TeamTwoTanks.Empty();
+	TeamSpectatorTanks.Empty();
 }
 
 void AGameModeDeathmatch::Tick(float DeltaTime)
