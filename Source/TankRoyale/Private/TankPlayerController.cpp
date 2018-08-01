@@ -9,31 +9,12 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto ControlledTank = GetPawn();
-	if (!ControlledTank)
-	{
-		// TODO Display error on screen. Code: b134a3ba-89e8-11e8-9a94-a6cf71072f73
-		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
-		UE_LOG(LogTemp, Error, TEXT("    Please contact support with the error code."));
-		UE_LOG(LogTemp, Error, TEXT("    Discord Support: https://discord.gg/yv3Y25f"));
-		UE_LOG(LogTemp, Error, TEXT(" ERROR CODE: b134a3ba-89e8-11e8-9a94-a6cf71072f73"));
-		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
-	}
-
+	if (!GetPawn()) return;
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-	if (AimingComponent)
-	{
-		FoundAimingComponent(AimingComponent);
-	}
-	else
-	{
-		// TODO Display error on screen. Code: b1348c86-89e8-11e8-9a94-a6cf71072f73
-		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
-		UE_LOG(LogTemp, Error, TEXT("    Please contact support with the error code."));
-		UE_LOG(LogTemp, Error, TEXT("    Discord Support: https://discord.gg/yv3Y25f"));
-		UE_LOG(LogTemp, Error, TEXT(" ERROR CODE: b1348c86-89e8-11e8-9a94-a6cf71072f73"));
-		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
-	}
+	if (!ensure(AimingComponent)) return;
+	FoundAimingComponent(AimingComponent);
+	
+	
 }
 
 void ATankPlayerController::SetPawn(APawn* InPawn)
