@@ -52,6 +52,12 @@ public:
 
 	FTimerHandle GameTimerHandler;
 
+	UFUNCTION(BlueprintPure, Category = "Score")
+	int32 GetTeamOneScore() const { return TeamOneScore; }
+
+	UFUNCTION(BlueprintPure, Category = "Score")
+	int32 GetTeamTwoScore() const { return TeamTwoScore; }
+
 	void OnEndGame();
 	
 };
