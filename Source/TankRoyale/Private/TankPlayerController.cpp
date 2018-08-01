@@ -3,7 +3,8 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
-#include "tank.h"
+#include "Tank.h"
+#include "Engine/LocalPlayer.h"
 
 void ATankPlayerController::BeginPlay()
 {

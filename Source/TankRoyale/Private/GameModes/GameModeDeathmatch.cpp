@@ -39,7 +39,7 @@ void AGameModeDeathmatch::Tick(float DeltaTime)
 		WinningTeam = 2;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
+	//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
 
 void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)

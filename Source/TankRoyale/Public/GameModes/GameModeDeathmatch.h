@@ -44,7 +44,7 @@ public:
 
 	// How long a round lasts in minutes.
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-	float GameTime = 10.0f;
+	float GameTime = 5.0f;
 
 	// How many rounds in a game.
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
