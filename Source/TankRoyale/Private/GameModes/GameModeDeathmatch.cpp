@@ -55,6 +55,7 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 		TeamSpectatorTanks.Add(Tank);
 		if (Cast<ATankPlayerController>(Controller)) Cast<ATankPlayerController>(Controller)->StartSpectatingOnly();
 		Tank->DetachFromControllerPendingDestroy(); // TODO: Might cause issues when too many players.
+		Tank->DestroyConstructedComponents();
 		Tank->Destroy();
 		UE_LOG(LogTemp, Warning, TEXT("Tank added to team spectator."));
 	}
