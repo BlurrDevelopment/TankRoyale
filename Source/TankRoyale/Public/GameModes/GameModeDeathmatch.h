@@ -58,6 +58,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetTeamTwoScore() const { return TeamTwoScore; }
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
+	void DisplayEndGameUI();
+
 	void OnEndGame();
 	
 };

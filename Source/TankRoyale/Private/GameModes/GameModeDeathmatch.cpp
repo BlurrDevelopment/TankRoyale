@@ -97,5 +97,6 @@ void AGameModeDeathmatch::OnEndGame()
 {
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
-	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
+	//UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
+	this->DisplayEndGameUI();
 }
