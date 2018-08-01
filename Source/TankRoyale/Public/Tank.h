@@ -8,6 +8,15 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
 
+// Enum for gamemode
+UENUM()
+enum class EGameMode : uint8
+{
+	Menu,
+	Deathmatch,
+	Royale
+};
+
 UCLASS()
 class TANKROYALE_API ATank : public APawn
 {
@@ -27,6 +36,9 @@ public:
 private:
 	// Sets default values for this pawn's properties
 	ATank();
+
+	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
+	EGameMode GameMode = EGameMode::Menu;
 
 	virtual void BeginPlay() override;
 

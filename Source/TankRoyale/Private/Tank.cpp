@@ -2,6 +2,7 @@
 
 #include "Tank.h"
 #include "Engine/World.h"
+#include "GameModes/GameModeDeathmatch.h"
 
 
 // Sets default values
@@ -15,6 +16,13 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
+
+	if (Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())) GameMode = EGameMode::Deathmatch;
+
+	if (GameMode == EGameMode::Deathmatch)
+	{
+		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AssignTankTeam(this);
+	}
 }
 
 
@@ -28,6 +36,11 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 	if (CurrentHealth <= 0)
 	{
 		OnDeath.Broadcast();
+
+		if (GameMode == EGameMode::Deathmatch)
+		{
+			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this);
+		}
 	}
 
 	return DamageToApply;
