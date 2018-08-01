@@ -41,7 +41,8 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 		if (GameMode == EGameMode::Deathmatch)
 		{
-			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this);
+			auto KillerTank = Cast<ATank>(DamageCauser);
+			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
 		}
 	}
 

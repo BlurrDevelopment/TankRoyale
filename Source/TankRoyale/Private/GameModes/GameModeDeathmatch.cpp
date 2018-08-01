@@ -23,18 +23,23 @@ void AGameModeDeathmatch::BeginPlay()
 void AGameModeDeathmatch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (TeamOneDeaths == TeamTwoDeaths)
+	TeamOneScore = TeamOneKills - TeamOneDeaths;
+	TeamTwoScore = TeamTwoKills - TeamTwoDeaths;
+
+	if (TeamOneScore == TeamTwoScore)
 	{
 		WinningTeam = 0;
 	}
-	else if (TeamOneDeaths > TeamTwoDeaths)
+	else if (TeamOneScore > TeamTwoScore)
 	{
 		WinningTeam = 1;
 	}
-	else if (TeamOneDeaths < TeamTwoDeaths)
+	else if (TeamOneScore < TeamTwoScore)
 	{
 		WinningTeam = 2;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
 
 void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
@@ -62,13 +67,14 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 	}
 }
 
-void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
+void AGameModeDeathmatch::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 {
 	if (TeamOneTanks.Find(Tank) != INDEX_NONE)
 	{
 		// Remove the tank from the team and increment the death toll.
 		TeamOneTanks.Remove(Tank);
 		TeamOneDeaths++;
+		if (TeamTwoTanks.Find(KillerTank)) TeamTwoKills++;
 
 		// TODO: respawn as new tank
 
@@ -79,6 +85,7 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 		// Remove the tank from the team and increment the death toll.
 		TeamTwoTanks.Remove(Tank);
 		TeamTwoDeaths++;
+		if (TeamOneTanks.Find(KillerTank)) TeamOneKills++;
 
 		// TODO: respawn as new tank
 

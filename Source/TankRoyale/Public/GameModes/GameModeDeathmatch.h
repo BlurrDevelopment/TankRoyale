@@ -40,7 +40,7 @@ private:
 public:
 	void AssignTankTeam(ATank* Tank);
 
-	void AddTeamDeath(ATank* Tank);
+	void AddTeamDeath(ATank* Tank, ATank* KillerTank);
 
 	// How long a round lasts in minutes.
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
