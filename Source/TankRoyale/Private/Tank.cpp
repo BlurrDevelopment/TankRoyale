@@ -33,8 +33,10 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 	CurrentHealth -= DamageToApply;
 
-	if (CurrentHealth <= 0)
+	if (CurrentHealth <= 0 && bDead == false)
 	{
+		bDead = true;
+
 		OnDeath.Broadcast();
 
 		if (GameMode == EGameMode::Deathmatch)

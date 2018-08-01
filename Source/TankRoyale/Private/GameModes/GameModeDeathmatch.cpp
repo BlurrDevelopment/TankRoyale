@@ -45,8 +45,11 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("A member of team two died."));
 
+		// Remove the tank from the team and increment the death toll.
 		TeamTwoTanks.Remove(Tank);
 		TeamTwoDeaths++;
+
+		// TODO: respawn as new tank
 
 		return;
 	}
