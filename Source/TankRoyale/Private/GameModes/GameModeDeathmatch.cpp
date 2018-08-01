@@ -5,6 +5,8 @@
 #include "TankAIController.h"
 #include "TankPlayerController.h"
 #include "TimerManager.h"
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 AGameModeDeathmatch::AGameModeDeathmatch()
 {
@@ -87,4 +89,6 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank)
 void AGameModeDeathmatch::OnEndGame()
 {
 	GetWorldTimerManager().ClearAllTimersForObject(this);
+	GetWorld()->GetFirstPlayerController()->SetPause(true);
+	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
 }
