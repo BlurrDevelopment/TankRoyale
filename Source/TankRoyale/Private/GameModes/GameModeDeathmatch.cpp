@@ -55,12 +55,12 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 {
 	auto Controller = Tank->GetController();
 	
-	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < 5)
+	if (Cast<ATankAIController>(Controller) /**&& TeamTwoTanks.Num() < 5**/)
 	{
 		TeamTwoTanks.Add(Tank);
 		return;
 	}
-	else if (Cast<ATankPlayerController>(Controller) && TeamOneTanks.Num() < 5)
+	else if (Cast<ATankPlayerController>(Controller) /**&& TeamOneTanks.Num() < 5**/)
 	{
 		TeamOneTanks.Add(Tank);
 		return;
