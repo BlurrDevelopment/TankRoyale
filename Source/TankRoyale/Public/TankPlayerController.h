@@ -8,6 +8,7 @@
 
 //Forward Declarations
 class UTankAimingComponent;
+class UTank;
 
 // Responsible for helping the player control the tank.
 UCLASS()
@@ -29,7 +30,6 @@ protected:
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 
 private:
-
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairXLocation = 0.5f;
 
