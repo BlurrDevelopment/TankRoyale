@@ -3,6 +3,7 @@
 #include "Tank.h"
 #include "Engine/World.h"
 #include "GameModes/GameModeDeathmatch.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -44,6 +45,10 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 			auto KillerTank = Cast<ATank>(DamageCauser);
 			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
 		}
+
+		// Play explosion sound
+		if (!ensure(ExplodeSound)) return DamageToApply;
+		UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
 	}
 
 	return DamageToApply;

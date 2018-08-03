@@ -31,6 +31,18 @@ public:
 
 	void LaunchProjectile(float Speed);
 
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ImpactSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float VolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float PitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float StartTime = 0.0f;
+
 private:
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
 

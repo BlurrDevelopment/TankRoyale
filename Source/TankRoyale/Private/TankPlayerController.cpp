@@ -2,9 +2,8 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
-#include "TankAimingComponent.h"
 #include "Tank.h"
-#include "Engine/LocalPlayer.h"
+#include "TankAimingComponent.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -82,11 +81,12 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 	auto StartLocation = PlayerCameraManager->GetCameraLocation();
 	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
 
-	// If linetrace succeeds set the HitLocation
+	// Add the controlled tank to collision params so the tank doesn't try to aim at itself
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetPawn());
 
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, CollisionParams)) // TODO Ignore players tank
+	// If linetrace succeeds set the HitLocation
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Camera, CollisionParams))
 	{
 		HitLocation = HitResult.Location;
 		return true;

@@ -80,4 +80,45 @@ private:
 	// How many rounds the tank has left.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	int32 RoundsLeft = 21;
+
+	void OnReload();
+
+	// Sound of the tank firing
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* FireSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float FireVolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float FirePitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float FireStartTime = 0.0f;
+
+	// Sound of the tank reloading
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ReloadSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ReloadVolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ReloadPitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ReloadStartTime = 0.0f;
+
+	// Sound of the tank empty
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* EmptySound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float EmptyVolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float EmptyPitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float EmptyStartTime = 0.0f;
 };

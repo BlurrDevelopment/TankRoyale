@@ -146,6 +146,20 @@ void UTankAimingComponent::Fire()
 		// Set the last fire time
 		LastFireTime = FPlatformTime::Seconds();
 		RoundsLeft--;
+
+		// Play fire sound
+		if (!ensure(FireSound)) return;
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
+
+		// Start the timer for destroying the projectile
+		FTimerHandle Timer;
+		GetWorld()->GetTimerManager().SetTimer(Timer, this, &UTankAimingComponent::OnReload, ReloadTimeInSeconds, false);
+	}
+	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
+	{
+		// Play empty barrel sound
+		if (!ensure(EmptySound)) return;
+		UGameplayStatics::PlaySoundAtLocation(this, EmptySound, Barrel->GetSocketLocation(FName("Projectile")), EmptyVolumeMultiplier, EmptyPitchMultiplier, EmptyStartTime);
 	}
 }
 
@@ -157,4 +171,11 @@ EFiringState UTankAimingComponent::GetFiringState() const
 int32 UTankAimingComponent::GetRoundsLeft() const
 {
 	return RoundsLeft;
+}
+
+void UTankAimingComponent::OnReload()
+{
+	// Play reload sound
+	if (!ensure(ReloadSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
 }

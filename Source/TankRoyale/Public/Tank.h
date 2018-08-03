@@ -49,4 +49,17 @@ private:
 	int32 CurrentHealth;
 
 	bool bDead = false;
+
+	// Sound of the tank exploding
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ExplodeSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ExplodeVolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ExplodePitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float ExplodeStartTime = 0.0f;
 };

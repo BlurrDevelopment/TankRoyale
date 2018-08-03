@@ -39,19 +39,26 @@ void AProjectile::BeginPlay()
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
+	// Deactivate launch blast and activate the impact blast and fire the explosion force
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	ExplosionForce->FireImpulse();
 
+	// Set the impact blast to the root and destroy the collision mesh
 	SetRootComponent(ImpactBlast);
 	CollisionMesh->DestroyComponent();
 
+	// Apply the damage from the projectile
 	float ProjectileDamage = FMath::RandRange(ProjectileMinDamage, ProjectileMaxDamage);
-
 	UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 
+	// Start the timer for destroying the projectile
 	FTimerHandle Timer;
 	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, DestroyDelay, false);
+
+	// Play explosion sound
+	if (!ensure(ImpactSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), VolumeMultiplier, PitchMultiplier, StartTime);
 }
 
 
