@@ -58,6 +58,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetTeamTwoScore() const { return TeamTwoScore; }
 
+	UFUNCTION(BlueprintPure, Category = "Team")
+	int32 GetTankTeam(ATank* Tank) const;
+
+	UFUNCTION(BlueprintPure, Category = "Team")
+	int32 GetTeamAlive(int32 Team) const;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
 	void DisplayEndGameUI();
 

@@ -109,3 +109,26 @@ void AGameModeDeathmatch::OnEndGame()
 	//UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
 	this->DisplayEndGameUI();
 }
+
+int32 AGameModeDeathmatch::GetTankTeam(ATank* Tank) const
+{
+	if (!ensure(Tank)) return 0;
+
+	if (TeamOneTanks.Find(Tank) != INDEX_NONE) return 1;
+	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE) return 2;
+	else return 0;
+}
+
+int32 AGameModeDeathmatch::GetTeamAlive(int32 Team) const
+{
+	if (Team == 1)
+	{
+		return TeamOneTanks.Num();
+	}
+	else if (Team == 2)
+	{
+		return TeamTwoTanks.Num();
+	}
+
+	return 0;
+}
