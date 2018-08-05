@@ -68,5 +68,10 @@ public:
 	void DisplayEndGameUI();
 
 	void OnEndGame();
+
+	void RegisterTankHit(ATank* ShootingTank, ATank* HitTank);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Killfeed")
+	void AddKillToFeed(const FString& Killer, const FString& State, const FString& Victim);//FString Killer, FString State, FString Victim               const FString& Killer, const FString& State, const FString& Victim
 	
 };

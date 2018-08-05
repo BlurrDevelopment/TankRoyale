@@ -21,6 +21,7 @@ enum class EFiringState : uint8
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class ATank;
 
 // Holds barrels parameters and elavate method
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -33,7 +34,7 @@ public:
 	UTankAimingComponent();
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	void Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 	void AimAt(FVector HitLocation);
 
@@ -60,6 +61,7 @@ private:
 
 	UTankBarrel * Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
+	ATank* OwnerTank = nullptr;
 
 	double LastFireTime = 0.0;
 

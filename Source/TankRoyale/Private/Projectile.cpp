@@ -2,6 +2,8 @@
 
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Tank.h"
+#include "GameModeDeathmatch.h"
 
 
 // Sets default values
@@ -38,8 +40,7 @@ void AProjectile::BeginPlay()
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
-	// Deactivate launch blast and activate the impact blast and fire the explosion force
+{	// Deactivate launch blast and activate the impact blast and fire the explosion force
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	ExplosionForce->FireImpulse();
@@ -59,6 +60,19 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	// Play explosion sound
 	if (!ensure(ImpactSound)) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), VolumeMultiplier, PitchMultiplier, StartTime);
+
+	// TODO Get what the projectile hit
+	// Check if the projectile hit a tank.
+	auto HitTank = Cast<ATank>(OtherActor);
+	if (HitTank)
+	{
+		// TODO Send to gamemode the owning tank and hit tank
+		auto GM = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
+		if (OwningTank && GM)
+		{
+			GM->RegisterTankHit(OwningTank, HitTank);
+		}
+	}
 }
 
 
@@ -78,4 +92,10 @@ void AProjectile::LaunchProjectile(float Speed)
 void AProjectile::OnTimerExpire()
 {
 	Destroy();
+}
+
+void AProjectile::SetFiringTank(ATank* Tank)
+{
+	if (!ensure(Tank)) return;
+	OwningTank = Tank;
 }

@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Tank.h"
 #include "Projectile.h"
 
 
@@ -21,7 +22,7 @@ void UTankAimingComponent::BeginPlay()
 	LastFireTime = FPlatformTime::Seconds();
 }
 
-void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
+void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
 	if (!BarrelToSet)
 	{
@@ -53,9 +54,11 @@ void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* Tur
 		UE_LOG(LogTemp, Error, TEXT(" ERROR CODE: b13488ee-89e8-11e8-9a94-a6cf71072f73"));
 		UE_LOG(LogTemp, Error, TEXT("------------------------------------------------------"));
 	}
+	if (!ensure(OwningTank)) return;
 
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
+	OwnerTank = OwningTank;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -139,6 +142,9 @@ void UTankAimingComponent::Fire()
 
 		// Spawn a projectile at the socket location on the barrel
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+
+		// TODO Set owning tank of projectile
+		Projectile->SetFiringTank(OwnerTank);
 
 		// Launch the projectile
 		Projectile->LaunchProjectile(LaunchSpeed);

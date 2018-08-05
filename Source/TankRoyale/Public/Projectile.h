@@ -12,6 +12,8 @@
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Projectile.generated.h"
 
+class ATank;
+
 UCLASS()
 class TANKROYALE_API AProjectile : public AActor
 {
@@ -42,6 +44,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float StartTime = 0.0f;
+
+	void SetFiringTank(ATank* Tank);
 
 private:
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
@@ -74,5 +78,6 @@ private:
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-	
+
+	ATank* OwningTank;
 };
