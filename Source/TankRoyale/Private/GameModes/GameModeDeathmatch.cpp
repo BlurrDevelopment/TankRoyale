@@ -80,24 +80,16 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 {
 	if (TeamOneTanks.Find(Tank) != INDEX_NONE)
 	{
-		// Remove the tank from the team and increment the death toll.
-		TeamOneTanks.Remove(Tank);
 		TeamOneDeaths++;
-		if (TeamTwoTanks.Find(KillerTank)) TeamTwoKills++;
-
+		TeamOneTanks.Remove(Tank);
 		// TODO: respawn as new tank
-
 		return;
 	}
 	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
-		// Remove the tank from the team and increment the death toll.
-		TeamTwoTanks.Remove(Tank);
 		TeamTwoDeaths++;
-		if (TeamOneTanks.Find(KillerTank)) TeamOneKills++;
-
+		TeamTwoTanks.Remove(Tank);
 		// TODO: respawn as new tank
-
 		return;
 	}
 }
@@ -133,12 +125,14 @@ int32 AGameModeDeathmatch::GetTeamAlive(int32 Team) const
 	return 0;
 }
 
-// TODO Receive hits from tanks and check them against tanks
+// Receive hits from tanks and check them against tanks
 void AGameModeDeathmatch::RegisterTankHit(ATank* ShootingTank, ATank* HitTank)
 {
 	if (!ensure(ShootingTank)) return;
 	if (!ensure(HitTank)) return;
+	//if (!(TeamOneTanks.Find(HitTank) != INDEX_NONE) || !(TeamTwoTanks.Find(HitTank) != INDEX_NONE)) return;
 
+	bool bTeamkill = false;
 	FString Killer = ShootingTank->GetName();
 	FString State = "Unset";
 	FString Victim = HitTank->GetName();
@@ -147,22 +141,31 @@ void AGameModeDeathmatch::RegisterTankHit(ATank* ShootingTank, ATank* HitTank)
 	if ((TeamOneTanks.Find(ShootingTank) != INDEX_NONE && TeamOneTanks.Find(HitTank) != INDEX_NONE) || (TeamTwoTanks.Find(ShootingTank) != INDEX_NONE && TeamTwoTanks.Find(HitTank) != INDEX_NONE))
 	{
 		FeedColour = FColor::Red;
+		bTeamkill = true;
 	}
 	else
 	{
 		FeedColour = FColor::Blue;
+		bTeamkill = false;
 	}
 
-	// TODO We need a wait, to make sure the damage has been applied
 	if (HitTank->GetHealthPercent() <= 0)
 	{
-		TeamTwoTanks.Remove(HitTank);
-		State = "Killed";
+		if (bTeamkill == false)
+		{
+			if (TeamOneTanks.Find(ShootingTank) != INDEX_NONE) TeamOneKills++;
+			if (TeamTwoTanks.Find(ShootingTank) != INDEX_NONE) TeamTwoKills++;
+			State = "Killed";
+		}
+		else State = "Team Killed";
 	}
 	else State = "Hit";
 
 	UE_LOG(LogTemp, Warning, TEXT("%s %s %s"), *Killer, *State, *Victim);
-	this->AddKillToFeed(Killer, State, Victim);//ShootingTank->GetName(), State, HitTank->GetName()
+	this->AddKillToFeed(Killer, State, Victim);
 
 	return;
 }
+
+
+

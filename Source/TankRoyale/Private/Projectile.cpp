@@ -61,12 +61,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	if (!ensure(ImpactSound)) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), VolumeMultiplier, PitchMultiplier, StartTime);
 
-	// TODO Get what the projectile hit
 	// Check if the projectile hit a tank.
 	auto HitTank = Cast<ATank>(OtherActor);
 	if (HitTank)
 	{
-		// TODO Send to gamemode the owning tank and hit tank
 		auto GM = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
 		if (OwningTank && GM)
 		{
