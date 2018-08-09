@@ -17,7 +17,7 @@ AGameModeDeathmatch::AGameModeDeathmatch()
 void AGameModeDeathmatch::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::OnEndGame, 2.0f, true, 60.0f * GameTime);
+	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::EndGame, 2.0f, true, 60.0f * GameTime);
 	TeamOneScore = 0;
 	TeamTwoScore = 0;
 	TeamOneKills = 0;
@@ -48,6 +48,10 @@ void AGameModeDeathmatch::Tick(float DeltaTime)
 		WinningTeam = 2;
 	}
 
+	if (TeamOneTanks.Num() <= 0 || TeamTwoTanks.Num() <= 0)
+	{
+		EndGame();
+	}
 	//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
 
@@ -94,11 +98,10 @@ void AGameModeDeathmatch::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	}
 }
 
-void AGameModeDeathmatch::OnEndGame()
+void AGameModeDeathmatch::EndGame()
 {
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
-	//UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
 	this->DisplayEndGameUI();
 }
 
@@ -167,5 +170,9 @@ void AGameModeDeathmatch::RegisterTankHit(ATank* ShootingTank, ATank* HitTank)
 	return;
 }
 
-
+TArray<ATank*> AGameModeDeathmatch::GetTeamTanks(int32 Team) const
+{
+	if (Team == 1) return TeamOneTanks;
+	else return TeamTwoTanks;
+}
 

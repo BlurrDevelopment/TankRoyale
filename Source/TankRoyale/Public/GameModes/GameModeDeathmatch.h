@@ -52,22 +52,31 @@ public:
 
 	FTimerHandle GameTimerHandler;
 
+	// Get team ones score.
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetTeamOneScore() const { return TeamOneScore; }
 
+	// Get team twos score.
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetTeamTwoScore() const { return TeamTwoScore; }
 
+	// Get which team the tank is on.
 	UFUNCTION(BlueprintPure, Category = "Team")
 	int32 GetTankTeam(ATank* Tank) const;
 
+	// Get how many members of the team are alive.
 	UFUNCTION(BlueprintPure, Category = "Team")
 	int32 GetTeamAlive(int32 Team) const;
+	
+	// Get all the tanks in the team.
+	UFUNCTION(BlueprintPure, Category = "Team")
+	TArray<ATank*> GetTeamTanks(int32 Team) const;
+
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
 	void DisplayEndGameUI();
 
-	void OnEndGame();
+	void EndGame();
 
 	void RegisterTankHit(ATank* ShootingTank, ATank* HitTank);
 
