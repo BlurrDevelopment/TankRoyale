@@ -11,6 +11,9 @@ ATank::ATank()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	//DeathBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Death Blast"));
+	//DeathBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//DeathBlast->bAutoActivate = false;
 }
 
 void ATank::BeginPlay()
@@ -36,6 +39,7 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 	if (CurrentHealth <= 0 && bDead == false)
 	{
+		DeathBlast->Activate();
 		bDead = true;
 
 		OnDeath.Broadcast();

@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "ParticleHelper.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Tank.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
@@ -62,4 +65,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float ExplodeStartTime = 0.0f;
+
+	// Death Particle
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* DeathBlast = nullptr;
 };
