@@ -14,6 +14,10 @@ AAmmoPickup::AAmmoPickup()
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(FName("Collision Sphere"));
 	CollisionSphere->AttachToComponent(PickupParticle, FAttachmentTransformRules::KeepRelativeTransform);
+	CollisionSphere->SetSphereRadius(1250);
+
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAmmoPickup::OnOverlapBegin);
+	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &AAmmoPickup::OnOverlapEnd);
 
 }
 
@@ -37,7 +41,16 @@ void AAmmoPickup::SetupPickup(int32 Ammo)
 
 void AAmmoPickup::Deactivate()
 {
-	// Destroy ui component
 	PickupParticle->Deactivate();
 	Destroy();
+}
+
+void AAmmoPickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlap Began!"));
+}
+
+void AAmmoPickup::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlap Ended!"));
 }
