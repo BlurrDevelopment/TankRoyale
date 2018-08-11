@@ -185,3 +185,8 @@ void UTankAimingComponent::OnReload()
 	if (!ensure(ReloadSound)) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
 }
+
+void UTankAimingComponent::AddAmmo(int32 Amount)
+{
+	RoundsLeft = RoundsLeft + Amount;
+}
