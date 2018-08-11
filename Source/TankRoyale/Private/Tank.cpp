@@ -38,21 +38,7 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 	if (CurrentHealth <= 0 && bDead == false)
 	{
-		bDead = true;
-
-		OnDeath.Broadcast();
-
-		if (GameMode == EGameMode::Deathmatch)
-		{
-			auto KillerTank = Cast<ATank>(DamageCauser);
-			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
-
-			DropRemainingAmmo();
-		}
-
-		// Play explosion sound
-		if (!ensure(ExplodeSound)) return DamageToApply;
-		UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
+		TankDeath(DamageCauser, DamageToApply);
 	}
 
 	return DamageToApply;
@@ -67,6 +53,27 @@ void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
 {
 	bOnPickup = On;
 	CurrentPickup = Pickup;
+}
+
+int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
+{
+	bDead = true;
+
+	OnDeath.Broadcast();
+
+	if (GameMode == EGameMode::Deathmatch)
+	{
+		auto KillerTank = Cast<ATank>(DamageCauser);
+		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
+
+		DropRemainingAmmo();
+	}
+
+	// Play explosion sound
+	if (!ensure(ExplodeSound)) return DamageToApply;
+	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
+	
+	return DamageToApply;
 }
 
 void ATank::DropRemainingAmmo()
