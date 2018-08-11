@@ -39,7 +39,6 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 	if (CurrentHealth <= 0 && bDead == false)
 	{
-		DeathBlast->Activate();
 		bDead = true;
 
 		OnDeath.Broadcast();
