@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
+#include "AmmoPickup.h"
 
 
 // Sets default values
@@ -60,4 +61,10 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 float ATank::GetHealthPercent() const
 {
 	return ((float)CurrentHealth / (float)StartingHealth);
+}
+
+void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
+{
+	bOnPickup = On;
+	CurrentPickup = Pickup;
 }

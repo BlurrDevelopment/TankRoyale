@@ -24,10 +24,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Setup the pickup
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetupPickup(int32 Ammo);
 
 	// Deactivate and destroy the pickup
+	UFUNCTION(BlueprintCallable, Category = "Use")
 	void Deactivate();
+
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
+	int32 GetStoredAmmo() { return AmmoStored; }
 
 protected:
 	// Called when the game starts or when spawned

@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+class AAmmoPickup;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
 
 // Enum for gamemode
@@ -32,6 +34,19 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FTankDelegate OnDeath;
+
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	void SetOnPickup(bool On, AAmmoPickup* Pickup);
+
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	AAmmoPickup* GetCurrentPickup() { return CurrentPickup; }
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
+		bool bOnPickup;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
+		AAmmoPickup* CurrentPickup = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
