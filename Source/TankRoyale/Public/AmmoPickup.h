@@ -25,7 +25,7 @@ public:
 
 	// Setup the pickup
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetupPickup(int32 Ammo);
+	void SetupPickup(int32 Ammo) { AmmoStored = Ammo; }
 
 	// Deactivate and destroy the pickup
 	UFUNCTION(BlueprintCallable, Category = "Use")

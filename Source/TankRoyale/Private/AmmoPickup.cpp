@@ -35,11 +35,6 @@ void AAmmoPickup::Tick(float DeltaTime)
 
 }
 
-void AAmmoPickup::SetupPickup(int32 Ammo)
-{
-	AmmoStored = Ammo;
-}
-
 void AAmmoPickup::Deactivate()
 {
 	PickupParticle->DestroyComponent();

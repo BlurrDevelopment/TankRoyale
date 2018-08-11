@@ -43,10 +43,10 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-		bool bOnPickup;
+	bool bOnPickup;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-		AAmmoPickup* CurrentPickup = nullptr;
+	AAmmoPickup* CurrentPickup = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
@@ -64,6 +64,15 @@ private:
 	int32 CurrentHealth;
 
 	bool bDead = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	TSubclassOf<AAmmoPickup> AmmoPickupBlueprint;
+
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	void UsePickup();
+
+	void DropRemainingAmmo();
+	void DropHalfAmmo();
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")

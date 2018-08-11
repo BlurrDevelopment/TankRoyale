@@ -5,6 +5,7 @@
 #include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
 #include "AmmoPickup.h"
+#include "TankAimingComponent.h"
 
 
 // Sets default values
@@ -12,9 +13,6 @@ ATank::ATank()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	//DeathBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Death Blast"));
-	//DeathBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	//DeathBlast->bAutoActivate = false;
 }
 
 void ATank::BeginPlay()
@@ -48,6 +46,8 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 		{
 			auto KillerTank = Cast<ATank>(DamageCauser);
 			Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
+
+			DropRemainingAmmo();
 		}
 
 		// Play explosion sound
@@ -67,4 +67,41 @@ void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
 {
 	bOnPickup = On;
 	CurrentPickup = Pickup;
+}
+
+void ATank::DropRemainingAmmo()
+{
+	if (!ensure(AmmoPickupBlueprint)) return;
+	FVector Location = GetActorLocation();
+	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	SpawnedPickup->SetActorLocation(Location);
+
+	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+	int32 Ammo = AimingComponent->GetRoundsLeft();
+	SpawnedPickup->SetupPickup(Ammo);
+}
+
+void ATank::DropHalfAmmo()
+{
+	if (!ensure(AmmoPickupBlueprint)) return;
+	FVector Location = GetActorLocation();
+	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	SpawnedPickup->SetActorLocation(Location);
+
+	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+	int32 Ammo = (AimingComponent->GetRoundsLeft())/2;
+	SpawnedPickup->SetupPickup(Ammo);
+}
+
+void ATank::UsePickup()
+{
+	// Get the aiming component and then add the ammo from the pickup
+	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	AimingComponent->AddAmmo(CurrentPickup->GetStoredAmmo());
+
+	// Destroy the pickup
+	CurrentPickup->Deactivate();
+	UE_LOG(LogTemp, Warning, TEXT("Use Pickup."))
 }
