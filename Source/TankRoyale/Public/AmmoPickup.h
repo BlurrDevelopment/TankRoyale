@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
+#include "ParticleHelper.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "AmmoPickup.generated.h"
 
 UCLASS()
@@ -18,7 +22,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Setup the pickup
+	void SetupPickup(int32 Ammo);
+
+	// Deactivate and destroy the pickup
+	void Deactivate();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	int32 AmmoStored = 5;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* PickupParticle = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* CollisionSphere = nullptr;
 };
