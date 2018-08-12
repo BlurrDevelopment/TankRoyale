@@ -56,7 +56,7 @@ void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
 	CurrentPickup = Pickup;
 }
 
-int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
+void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 {
 	bDead = true;
 	OnDeath.Broadcast();
@@ -70,11 +70,11 @@ int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	}
 
 	// Play explosion sound
-	if (!ensure(ExplodeSound)) return DamageToApply;
+	if (!ensure(ExplodeSound)) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
 
 	// Play the particle emitter
-	if (!ensure(EmitterTemplate)) return DamageToApply;
+	if (!ensure(EmitterTemplate)) return;
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterTemplate, GetTransform());
 	
 	// TODO Destroy the wheels
@@ -82,7 +82,7 @@ int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	// Destroy the actor
 	Destroy();
 
-	return DamageToApply;
+	return;
 }
 
 void ATank::DropRemainingAmmo()

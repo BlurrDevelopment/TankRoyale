@@ -52,7 +52,7 @@ private:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	int32 TankDeath(AActor* DamageCauser, int32 DamageToApply);
+	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
 
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;
