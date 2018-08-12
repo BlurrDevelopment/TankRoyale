@@ -1,6 +1,7 @@
 // Copyright Blurr Development 2018.
 
 #include "Tank.h"
+#include "TankTrack.h"
 #include "Engine/World.h"
 #include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
@@ -58,7 +59,6 @@ void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
 int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 {
 	bDead = true;
-
 	OnDeath.Broadcast();
 
 	if (GameMode == EGameMode::Deathmatch)
@@ -72,7 +72,16 @@ int32 ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	// Play explosion sound
 	if (!ensure(ExplodeSound)) return DamageToApply;
 	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
+
+	// Play the particle emitter
+	if (!ensure(EmitterTemplate)) return DamageToApply;
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterTemplate, GetTransform());
 	
+	// TODO Destroy the wheels
+
+	// Destroy the actor
+	Destroy();
+
 	return DamageToApply;
 }
 

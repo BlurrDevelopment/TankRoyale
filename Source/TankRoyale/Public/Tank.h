@@ -70,6 +70,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
 	TSubclassOf<AAmmoPickup> AmmoPickupBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UParticleSystem* EmitterTemplate = nullptr;
+
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void UsePickup();
 
