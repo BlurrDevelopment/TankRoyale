@@ -66,8 +66,12 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		auto KillerTank = Cast<ATank>(DamageCauser);
 		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
 
+		// Drop all remaining ammo
 		DropRemainingAmmo();
-		DropHalfHealth();
+
+		// 40% Chance to drop health
+		int32 Chance = rand() % 100 + 1;
+		if (Chance <= 40) DropHalfHealth();
 	}
 
 	// Play explosion sound

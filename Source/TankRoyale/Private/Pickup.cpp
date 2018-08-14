@@ -11,7 +11,7 @@ APickup::APickup()
 	PrimaryActorTick.bCanEverTick = true;
 
 	PickupParticle = CreateDefaultSubobject<UParticleSystemComponent>(FName("Pickup Particle"));
-	PickupParticle->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	SetRootComponent(PickupParticle);
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(FName("Collision Sphere"));
 	CollisionSphere->AttachToComponent(PickupParticle, FAttachmentTransformRules::KeepRelativeTransform);

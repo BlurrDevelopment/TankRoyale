@@ -164,7 +164,6 @@ void AGameModeDeathmatch::RegisterTankHit(ATank* ShootingTank, ATank* HitTank)
 	}
 	else State = "Hit";
 
-	UE_LOG(LogTemp, Warning, TEXT("%s %s %s"), *Killer, *State, *Victim);
 	this->AddKillToFeed(Killer, State, Victim);
 
 	return;
