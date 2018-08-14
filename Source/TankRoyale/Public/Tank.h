@@ -36,17 +36,17 @@ public:
 	FTankDelegate OnDeath;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
-	void SetOnPickup(bool On, APickup* Pickup);  // TODO Change to APickup
+	void SetOnPickup(bool On, APickup* Pickup);
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
-	APickup* GetCurrentPickup() { return CurrentPickup; }  // TODO Change to APickup
+	APickup* GetCurrentPickup() { return CurrentPickup; }
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-	APickup* CurrentPickup = nullptr;  // TODO Change to APickup
+	APickup* CurrentPickup = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
@@ -75,6 +75,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UParticleSystem* EmitterTemplate = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	FVector AmmoOffset;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	FVector HealthOffset;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void UsePickup();

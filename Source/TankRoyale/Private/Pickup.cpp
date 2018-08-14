@@ -15,7 +15,7 @@ APickup::APickup()
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(FName("Collision Sphere"));
 	CollisionSphere->AttachToComponent(PickupParticle, FAttachmentTransformRules::KeepRelativeTransform);
-	CollisionSphere->SetSphereRadius(1250);
+	CollisionSphere->SetSphereRadius(500);
 
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapBegin);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &APickup::OnOverlapEnd);
