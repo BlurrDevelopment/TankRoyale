@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
-#include "AmmoPickup.h"
+#include "Pickup.h"
 #include "TankAimingComponent.h"
 
 
@@ -50,7 +50,7 @@ float ATank::GetHealthPercent() const
 	return ((float)CurrentHealth / (float)StartingHealth);
 }
 
-void ATank::SetOnPickup(bool On, AAmmoPickup* Pickup)
+void ATank::SetOnPickup(bool On, APickup* Pickup)  // TODO Change to APickup
 {
 	bOnPickup = On;
 	CurrentPickup = Pickup;
@@ -66,7 +66,8 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		auto KillerTank = Cast<ATank>(DamageCauser);
 		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
 
-		DropRemainingAmmo();
+		//DropRemainingAmmo();
+		DropHalfHealth();
 	}
 
 	// Play explosion sound
@@ -76,8 +77,6 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	// Play the particle emitter
 	if (!ensure(EmitterTemplate)) return;
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterTemplate, GetTransform());
-	
-	// TODO Destroy the wheels
 
 	// Destroy the actor
 	Destroy();
@@ -89,35 +88,50 @@ void ATank::DropRemainingAmmo()
 {
 	if (!ensure(AmmoPickupBlueprint)) return;
 	FVector Location = GetActorLocation();
-	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(AmmoPickupBlueprint);  // TODO Change to APickup
 	SpawnedPickup->SetActorLocation(Location);
 
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
 	int32 Ammo = AimingComponent->GetRoundsLeft();
-	SpawnedPickup->SetupPickup(Ammo);
+	SpawnedPickup->SetupPickup(EPickupType::Ammo, Ammo);
 }
 
 void ATank::DropHalfAmmo()
 {
 	if (!ensure(AmmoPickupBlueprint)) return;
 	FVector Location = GetActorLocation();
-	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(AmmoPickupBlueprint);  // TODO Change to APickup
 	SpawnedPickup->SetActorLocation(Location);
 
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
-	int32 Ammo = (AimingComponent->GetRoundsLeft())/2;
-	SpawnedPickup->SetupPickup(Ammo);
+	int32 Ammo = (AimingComponent->GetRoundsLeft()) / 2;
+	SpawnedPickup->SetupPickup(EPickupType::Ammo, Ammo);
+}
+
+void ATank::DropHalfHealth()
+{
+	if (!ensure(HealthPickupBlueprint)) return;
+	FVector Location = GetActorLocation();
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(HealthPickupBlueprint);  // TODO Change to APickup
+	SpawnedPickup->SetActorLocation(Location);
+	SpawnedPickup->SetupPickup(EPickupType::Health, StartingHealth / 2);
 }
 
 void ATank::UsePickup()
+{
+	if (CurrentPickup->GetType() == EPickupType::Ammo) UseAmmoPickup();
+	if (CurrentPickup->GetType() == EPickupType::Health) UseHealthPickup();
+}
+
+void ATank::UseAmmoPickup()
 {
 	// Get the aiming component and then add the ammo from the pickup
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
 
-	int32 AmountToPickup = CurrentPickup->GetStoredAmmo();
+	int32 AmountToPickup = CurrentPickup->GetValue();
 	int32 AmountToLeave = 0;
 
 	// Make sure the tank isn't already full of ammo
@@ -139,7 +153,36 @@ void ATank::UsePickup()
 
 	// Spawn new pickup with what is left
 	FVector Location = GetActorLocation();
-	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(AmmoPickupBlueprint);  // TODO Change to APickup
 	SpawnedPickup->SetActorLocation(Location);
-	SpawnedPickup->SetupPickup(AmountToLeave);
+	SpawnedPickup->SetupPickup(EPickupType::Ammo, AmountToLeave);
+}
+
+void ATank::UseHealthPickup()
+{
+	int32 AmountToPickup = CurrentPickup->GetValue();
+	int32 AmountToLeave = 0;
+
+	// Make sure the tank isn't already full health
+	if (CurrentHealth >= StartingHealth) return;
+
+	// Check how much the tank can take and set AmountToLeave to what is left
+	if ((StartingHealth - CurrentHealth) < AmountToPickup)
+	{
+		AmountToLeave = AmountToPickup;
+		AmountToPickup = (StartingHealth - CurrentHealth);
+		AmountToLeave = AmountToLeave - AmountToPickup;
+	}
+
+	// Add the health
+	CurrentHealth = CurrentHealth + AmountToPickup;
+
+	// Destroy
+	CurrentPickup->Deactivate();
+
+	// Spawn new pickup with what is left
+	FVector Location = GetActorLocation();
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(HealthPickupBlueprint);  // TODO Change to APickup
+	SpawnedPickup->SetActorLocation(Location);
+	SpawnedPickup->SetupPickup(EPickupType::Health, AmountToLeave);
 }

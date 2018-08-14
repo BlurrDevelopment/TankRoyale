@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-class AAmmoPickup;
+class APickup;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
 
@@ -36,17 +36,17 @@ public:
 	FTankDelegate OnDeath;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
-	void SetOnPickup(bool On, AAmmoPickup* Pickup);
+	void SetOnPickup(bool On, APickup* Pickup);  // TODO Change to APickup
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
-	AAmmoPickup* GetCurrentPickup() { return CurrentPickup; }
+	APickup* GetCurrentPickup() { return CurrentPickup; }  // TODO Change to APickup
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-	AAmmoPickup* CurrentPickup = nullptr;
+	APickup* CurrentPickup = nullptr;  // TODO Change to APickup
 
 private:
 	// Sets default values for this pawn's properties
@@ -68,16 +68,23 @@ private:
 	bool bDead = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
-	TSubclassOf<AAmmoPickup> AmmoPickupBlueprint;
+	TSubclassOf<APickup> AmmoPickupBlueprint;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	TSubclassOf<APickup> HealthPickupBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UParticleSystem* EmitterTemplate = nullptr;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void UsePickup();
+	void UseAmmoPickup();
+	void UseHealthPickup();
 
 	void DropRemainingAmmo();
 	void DropHalfAmmo();
+
+	void DropHalfHealth();
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
