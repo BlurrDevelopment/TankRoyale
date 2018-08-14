@@ -115,9 +115,31 @@ void ATank::UsePickup()
 {
 	// Get the aiming component and then add the ammo from the pickup
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
-	AimingComponent->AddAmmo(CurrentPickup->GetStoredAmmo());
+	if (!ensure(AimingComponent)) return;
+
+	int32 AmountToPickup = CurrentPickup->GetStoredAmmo();
+	int32 AmountToLeave = 0;
+
+	// Make sure the tank isn't already full of ammo
+	if (AimingComponent->GetRoundsLeft() >= AimingComponent->GetMaxRounds()) return;
+
+	// Check how much the tank can take and set AmountToLeave to what is left
+	if ((AimingComponent->GetMaxRounds() - AimingComponent->GetRoundsLeft()) < AmountToPickup)
+	{
+		AmountToLeave = AmountToPickup;
+		AmountToPickup = (AimingComponent->GetMaxRounds() - AimingComponent->GetRoundsLeft());
+		AmountToLeave = AmountToLeave - AmountToPickup;
+	}
+
+	// Add the ammo to the tank
+	AimingComponent->AddAmmo(AmountToPickup);
 
 	// Destroy the pickup
 	CurrentPickup->Deactivate();
-	UE_LOG(LogTemp, Warning, TEXT("Use Pickup."))
+
+	// Spawn new pickup with what is left
+	FVector Location = GetActorLocation();
+	auto SpawnedPickup = GetWorld()->SpawnActor<AAmmoPickup>(AmmoPickupBlueprint);
+	SpawnedPickup->SetActorLocation(Location);
+	SpawnedPickup->SetupPickup(AmountToLeave);
 }

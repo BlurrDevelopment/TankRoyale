@@ -46,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	int32 GetRoundsLeft() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int32 GetMaxRounds() const { return MaxRounds; }
+
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	void AddAmmo(int32 Amount);
 
@@ -84,7 +87,10 @@ private:
 
 	// How many rounds the tank has left.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 RoundsLeft = 21;
+	int32 RoundsLeft = 10;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 MaxRounds = 12;
 
 	void OnReload();
 

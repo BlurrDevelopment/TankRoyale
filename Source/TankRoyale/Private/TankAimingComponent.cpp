@@ -81,6 +81,8 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringState = EFiringState::Locked;
 	}
+
+	RoundsLeft = FMath::Clamp<int32>(RoundsLeft, 0, MaxRounds);
 }
 
 bool UTankAimingComponent::IsBarrelMoving()
@@ -189,4 +191,5 @@ void UTankAimingComponent::OnReload()
 void UTankAimingComponent::AddAmmo(int32 Amount)
 {
 	RoundsLeft = RoundsLeft + Amount;
+	RoundsLeft = FMath::Clamp<int32>(RoundsLeft, 0, MaxRounds);
 }
