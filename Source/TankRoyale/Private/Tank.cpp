@@ -71,7 +71,7 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 
 		// 40% Chance to drop health
 		int32 Chance = rand() % 100 + 1;
-		if (Chance <= 40) DropHalfHealth();
+		if (Chance <= 40) DropHealth(50);
 	}
 
 	// Play explosion sound
@@ -114,13 +114,13 @@ void ATank::DropHalfAmmo()
 	SpawnedPickup->SetupPickup(EPickupType::Ammo, Ammo);
 }
 
-void ATank::DropHalfHealth()
+void ATank::DropHealth(int32 Amount)
 {
 	if (!ensure(HealthPickupBlueprint)) return;
 	FVector Location = GetActorLocation() + HealthOffset;
 	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(HealthPickupBlueprint);
 	SpawnedPickup->SetActorLocation(Location);
-	SpawnedPickup->SetupPickup(EPickupType::Health, StartingHealth / 2);
+	SpawnedPickup->SetupPickup(EPickupType::Health, Amount);
 }
 
 void ATank::UsePickup()
@@ -156,6 +156,7 @@ void ATank::UseAmmoPickup()
 	CurrentPickup->Deactivate();
 
 	// Spawn new pickup with what is left
+	if (AmountToLeave <= 0) return;
 	FVector Location = GetActorLocation() + AmmoOffset;
 	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(AmmoPickupBlueprint);
 	SpawnedPickup->SetActorLocation(Location);
@@ -185,5 +186,5 @@ void ATank::UseHealthPickup()
 	CurrentPickup->Deactivate();
 
 	// Spawn new pickup with what is left
-	DropHalfHealth();
+	if (AmountToLeave > 0) DropHealth(AmountToLeave);
 }

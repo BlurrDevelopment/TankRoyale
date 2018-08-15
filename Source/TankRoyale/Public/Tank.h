@@ -90,7 +90,7 @@ private:
 	void DropRemainingAmmo();
 	void DropHalfAmmo();
 
-	void DropHalfHealth();
+	void DropHealth(int32 Amount);
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
