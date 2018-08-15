@@ -33,6 +33,8 @@ private:
 
 	int32 WinningTeam = 0;
 
+	bool bGameStarted = false;
+
 	TArray<ATank*> TeamOneTanks;
 	TArray<ATank*> TeamTwoTanks;
 	TArray<ATank*> TeamSpectatorTanks;
@@ -40,15 +42,21 @@ private:
 public:
 	void AssignTankTeam(ATank* Tank);
 
+	void StartGame();
+
 	void AddTeamDeath(ATank* Tank, ATank* KillerTank);
 
 	// How long a round lasts in minutes.
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-	float GameTime = 5.0f;
+	float GameTime = 10.0f;
 
 	// How many rounds in a game.
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
 	int32 GameRounds = 1;
+
+	// How many tanks per team.
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	int32 TanksPerTeam = 5;
 
 	FTimerHandle GameTimerHandler;
 

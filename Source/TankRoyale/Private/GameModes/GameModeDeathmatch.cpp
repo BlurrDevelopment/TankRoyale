@@ -17,13 +17,7 @@ AGameModeDeathmatch::AGameModeDeathmatch()
 void AGameModeDeathmatch::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::EndGame, 2.0f, true, 60.0f * GameTime);
-	TeamOneScore = 0;
-	TeamTwoScore = 0;
-	TeamOneKills = 0;
-	TeamTwoKills = 0;
-	TeamOneDeaths = 0;
-	TeamTwoDeaths = 0;
+	
 	TeamOneTanks.Empty();
 	TeamTwoTanks.Empty();
 	TeamSpectatorTanks.Empty();
@@ -32,6 +26,25 @@ void AGameModeDeathmatch::BeginPlay()
 void AGameModeDeathmatch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (!bGameStarted)
+	{
+		bool bTeamOneReady = false;
+		bool bTeamTwoReady = false;
+
+		if (TeamOneTanks.Num() >= TanksPerTeam) bTeamOneReady = true;
+		if (TeamTwoTanks.Num() >= TanksPerTeam) bTeamTwoReady = true;
+
+		if (bTeamOneReady && bTeamTwoReady)
+		{
+			StartGame();
+		}
+		else
+		{
+			// Delay 1 second?
+		}
+
+		return;
+	}
 	TeamOneScore = TeamOneKills - TeamOneDeaths;
 	TeamTwoScore = TeamTwoKills - TeamTwoDeaths;
 
@@ -59,19 +72,19 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 {
 	auto Controller = Tank->GetController();
 	
-	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < 5)
+	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < TanksPerTeam)
 	{
 		TeamTwoTanks.Add(Tank);
 		return;
 	}
 	else if (Cast<ATankPlayerController>(Controller))
 	{
-		if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < 5)
+		if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < TanksPerTeam)
 		{
 			TeamTwoTanks.Add(Tank);
 			return;
 		}
-		else if (TeamOneTanks.Num() < 5)
+		else if (TeamOneTanks.Num() < TanksPerTeam)
 		{
 			TeamOneTanks.Add(Tank);
 			return;
@@ -89,26 +102,45 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 	}
 }
 
+void AGameModeDeathmatch::StartGame()
+{
+	bGameStarted = true;
+	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::EndGame, 2.0f, true, 60.0f * GameTime);
+	TeamOneScore = 0;
+	TeamTwoScore = 0;
+	TeamOneKills = 0;
+	TeamTwoKills = 0;
+	TeamOneDeaths = 0;
+	TeamTwoDeaths = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("Game starting!"));
+}
+
 void AGameModeDeathmatch::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 {
+	if (!bGameStarted) return;
+
 	if (TeamOneTanks.Find(Tank) != INDEX_NONE)
 	{
 		TeamOneDeaths++;
 		TeamOneTanks.Remove(Tank);
-		// TODO: respawn as new tank
+		// TODO respawn as new tank
 		return;
 	}
 	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
 		TeamTwoDeaths++;
 		TeamTwoTanks.Remove(Tank);
-		// TODO: respawn as new tank
+		// TODO respawn as new tank
 		return;
 	}
 }
 
 void AGameModeDeathmatch::EndGame()
 {
+	if (!bGameStarted) return;
+
+	bGameStarted = false;
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
 	this->DisplayEndGameUI();
