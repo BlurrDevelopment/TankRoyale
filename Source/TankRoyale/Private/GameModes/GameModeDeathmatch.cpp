@@ -64,16 +64,25 @@ void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)
 		TeamTwoTanks.Add(Tank);
 		return;
 	}
-	else if (Cast<ATankPlayerController>(Controller) && TeamOneTanks.Num() < 5)
+	else if (Cast<ATankPlayerController>(Controller))
 	{
-		TeamOneTanks.Add(Tank);
-		return;
+		if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < 5)
+		{
+			TeamTwoTanks.Add(Tank);
+			return;
+		}
+		else if (TeamOneTanks.Num() < 5)
+		{
+			TeamOneTanks.Add(Tank);
+			return;
+		}
+		
 	}
 	else
 	{
 		TeamSpectatorTanks.Add(Tank);
 		if (Cast<ATankPlayerController>(Controller)) Cast<ATankPlayerController>(Controller)->StartSpectatingOnly();
-		Tank->DetachFromControllerPendingDestroy(); // TODO: Might cause issues when too many players.
+		Tank->DetachFromControllerPendingDestroy(); // TODO Might cause issues when too many players.
 		Tank->DestroyConstructedComponents();
 		Tank->Destroy();
 		return;
