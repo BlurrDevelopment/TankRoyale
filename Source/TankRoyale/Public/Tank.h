@@ -89,7 +89,7 @@ private:
 
 	void DropRemainingAmmo();
 	void DropHalfAmmo();
-
+	void DropAmmo(int32 Amount);
 	void DropHealth(int32 Amount);
 
 	// Sound of the tank exploding
