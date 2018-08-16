@@ -65,7 +65,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	if (RoundsLeft <= 0)
+	if (RoundsLeft <= 0 || !Barrel->CanBarrelFire())
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
@@ -76,10 +76,6 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	else if (IsBarrelMoving())
 	{
 		FiringState = EFiringState::Aiming;
-	}
-	else if (!Barrel->CanBarrelFire())
-	{
-		FiringState = EFiringState::TotalledBarrel;
 	}
 	else
 	{
