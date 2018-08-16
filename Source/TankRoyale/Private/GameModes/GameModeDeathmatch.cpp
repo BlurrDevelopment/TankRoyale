@@ -18,6 +18,8 @@ void AGameModeDeathmatch::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// TODO Pause game
+
 	TeamOneTanks.Empty();
 	TeamTwoTanks.Empty();
 	TeamSpectatorTanks.Empty();
@@ -36,11 +38,13 @@ void AGameModeDeathmatch::Tick(float DeltaTime)
 
 		if (bTeamOneReady && bTeamTwoReady)
 		{
+			// TODO Countdown from 5
 			StartGame();
 		}
 		else
 		{
 			// Delay 1 second?
+			// TODO UI Displaying game loading
 		}
 
 		return;
@@ -112,6 +116,8 @@ void AGameModeDeathmatch::StartGame()
 	TeamTwoKills = 0;
 	TeamOneDeaths = 0;
 	TeamTwoDeaths = 0;
+
+	// TODO Unpause game
 
 	UE_LOG(LogTemp, Warning, TEXT("Game starting!"));
 }
