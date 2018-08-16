@@ -24,6 +24,5 @@ private:
 
 	UFUNCTION()
 	void OnPossessedTankDeath();
-
 protected:
 };

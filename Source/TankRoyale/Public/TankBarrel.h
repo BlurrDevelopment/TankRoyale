@@ -46,9 +46,18 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float MinElevationDegrees = 0.0f;
 
-	float StartingDamage = 200;
+	// The starting and max health of the tank part.
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float StartingDamage = 125;
+
 	float CurrentDamage = StartingDamage;
+
+	// The point when the tank part starts to have side effects and malfunctioning.
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float StartDamagedEffects = 75;
+
+	// The point when the tank part loses most of its functions.
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float TotalPart = 0;
 
 	bool bIsDamaged = false;
