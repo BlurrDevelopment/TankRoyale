@@ -3,6 +3,8 @@
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Tank.h"
+#include "TankTurret.h"
+#include "TankBarrel.h"
 #include "GameModeDeathmatch.h"
 
 
@@ -40,7 +42,8 @@ void AProjectile::BeginPlay()
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{	// Deactivate launch blast and activate the impact blast and fire the explosion force
+{
+	// Deactivate launch blast and activate the impact blast and fire the explosion force
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	ExplosionForce->FireImpulse();
@@ -48,10 +51,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	// Set the impact blast to the root and destroy the collision mesh
 	SetRootComponent(ImpactBlast);
 	CollisionMesh->DestroyComponent();
-
-	// Apply the damage from the projectile
-	float ProjectileDamage = FMath::RandRange(ProjectileMinDamage, ProjectileMaxDamage);
-	UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 
 	// Start the timer for destroying the projectile
 	FTimerHandle Timer;
@@ -62,14 +61,40 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), VolumeMultiplier, PitchMultiplier, StartTime);
 
 	// Check if the projectile hit a tank.
+	float ProjectileDamage = FMath::RandRange(ProjectileMinDamage, ProjectileMaxDamage);
 	auto HitTank = Cast<ATank>(OtherActor);
 	if (HitTank)
 	{
+
+		auto Turret = Cast<UTankTurret>(OtherComponent);
+		auto Barrel = Cast<UTankBarrel>(OtherComponent);
+		if (Turret)
+		{
+			// The component hit was a turret.
+			Turret->TakeDamage(ProjectileDamage / 2);
+			UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage / 5, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
+		}
+		else if (Barrel)
+		{
+			// The component hit was a barrel.
+		}
+		else
+		{
+			// The projectile hit the body.
+			// Apply the damage from the projectile
+			UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
+		}
+
 		auto GM = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
 		if (OwningTank && GM)
 		{
 			GM->RegisterTankHit(OwningTank, HitTank);
 		}
+	}
+	else
+	{
+		// Apply the damage from the projectile
+		UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 	}
 }
 
