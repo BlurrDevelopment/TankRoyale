@@ -34,9 +34,9 @@ private:
 	float MaxDegreesPerSecond = 20.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float MaxDegreesPerSecondDamaged = 8.0f;
+	float MaxDegreesPerSecondDamaged = 15.0f;
 	
-	float StartingDamage = 100;
+	float StartingDamage = 150;
 	float CurrentDamage = StartingDamage;
 	float StartDamagedEffects = 50;
 	float TotalPart = 0;

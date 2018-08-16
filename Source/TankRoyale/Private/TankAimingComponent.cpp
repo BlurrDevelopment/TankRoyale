@@ -77,6 +77,10 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringState = EFiringState::Aiming;
 	}
+	else if (!Barrel->CanBarrelFire())
+	{
+		FiringState = EFiringState::TotalledBarrel;
+	}
 	else
 	{
 		FiringState = EFiringState::Locked;

@@ -14,7 +14,8 @@ enum class EFiringState : uint8
 	Reloading,
 	Aiming,
 	Locked,
-	OutOfAmmo
+	OutOfAmmo,
+	TotalledBarrel
 };
 
 // Forward declaration

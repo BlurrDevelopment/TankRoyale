@@ -77,6 +77,8 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		else if (Barrel)
 		{
 			// The component hit was a barrel.
+			Barrel->TakeDamage(ProjectileDamage / 2);
+			UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage / 5, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 		}
 		else
 		{
