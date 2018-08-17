@@ -65,6 +65,15 @@ private:
 
 	void MoveBarrelTowards(FVector AimDirection);
 
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	float GetLaunchSpeed() { return LaunchSpeed; }
+
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void IncreaseLaunchSpeed();
+
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void DecreaseLaunchSpeed();
+
 	UTankBarrel * Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	ATank* OwnerTank = nullptr;
@@ -77,9 +86,17 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	// The speed of the projectile is launched.
+	// The maximum speed of the projectile is launched.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LaunchSpeed = 6500;
+	float MinLaunchSpeed = 4500;
+
+	// The minimum speed of the projectile is launched.
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float MaxLaunchSpeed = 6500;
+
+	// The speed of the projectile is launched.
+	UPROPERTY(VisibleAnywhere, Category = "Firing")
+	float LaunchSpeed = MaxLaunchSpeed;
 
 	// How long it takes to reload.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")

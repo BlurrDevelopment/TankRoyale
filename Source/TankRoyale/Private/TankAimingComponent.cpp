@@ -193,3 +193,19 @@ void UTankAimingComponent::AddAmmo(int32 Amount)
 	RoundsLeft = RoundsLeft + Amount;
 	RoundsLeft = FMath::Clamp<int32>(RoundsLeft, 0, MaxRounds);
 }
+
+void UTankAimingComponent::IncreaseLaunchSpeed()
+{
+	if (LaunchSpeed <= (MaxLaunchSpeed - 100))
+	{
+		LaunchSpeed = LaunchSpeed + 100;
+	}
+}
+
+void UTankAimingComponent::DecreaseLaunchSpeed()
+{
+	if (LaunchSpeed >= (MinLaunchSpeed + 100))
+	{
+		LaunchSpeed = LaunchSpeed - 100;
+	}
+}
