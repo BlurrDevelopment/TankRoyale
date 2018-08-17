@@ -117,6 +117,7 @@ void ATank::DropRemainingAmmo()
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
 	int32 Ammo = AimingComponent->GetRoundsLeft();
+	if (Ammo <= 0) return;
 	SpawnedPickup->SetupPickup(EPickupType::Ammo, Ammo);
 }
 
@@ -130,11 +131,13 @@ void ATank::DropHalfAmmo()
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
 	int32 Ammo = (AimingComponent->GetRoundsLeft()) / 2;
+	if (Ammo <= 0) return;
 	SpawnedPickup->SetupPickup(EPickupType::Ammo, Ammo);
 }
 
 void ATank::DropAmmo(int32 Amount)
 {
+	if (Amount <= 0) return;
 	if (!ensure(AmmoPickupBlueprint)) return;
 	FVector Location = GetActorLocation() + AmmoOffset;
 	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(AmmoPickupBlueprint);
@@ -144,6 +147,7 @@ void ATank::DropAmmo(int32 Amount)
 
 void ATank::DropHealth(int32 Amount)
 {
+	if (Amount <= 0) return;
 	if (!ensure(HealthPickupBlueprint)) return;
 	FVector Location = GetActorLocation() + HealthOffset;
 	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(HealthPickupBlueprint);
@@ -184,7 +188,7 @@ void ATank::UseAmmoPickup()
 	CurrentPickup->Deactivate();
 
 	// Spawn new pickup with what is left
-	if (AmountToLeave <= 0) DropAmmo(AmountToLeave);
+	if (AmountToLeave > 0) DropAmmo(AmountToLeave);
 }
 
 void ATank::UseHealthPickup()
