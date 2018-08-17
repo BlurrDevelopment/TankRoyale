@@ -117,8 +117,6 @@ void AGameModeDeathmatch::StartGame()
 	TeamOneDeaths = 0;
 	TeamTwoDeaths = 0;
 
-	// TODO Unpause game
-
 	UE_LOG(LogTemp, Warning, TEXT("Game starting!"));
 }
 

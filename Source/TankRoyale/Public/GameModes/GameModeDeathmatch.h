@@ -40,8 +40,12 @@ private:
 	TArray<ATank*> TeamSpectatorTanks;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Start")
+	bool HasGameStarted() { return bGameStarted; }
+
 	void AssignTankTeam(ATank* Tank);
 
+	UFUNCTION(BlueprintCallable, Category = "Start")
 	void StartGame();
 
 	void AddTeamDeath(ATank* Tank, ATank* KillerTank);
