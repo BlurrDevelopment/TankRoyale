@@ -1,6 +1,7 @@
 // Copyright Blurr Development 2018.
 
 #include "Tank.h"
+#include "TankTurret.h"
 #include "TankTrack.h"
 #include "Engine/World.h"
 #include "GameModes/GameModeDeathmatch.h"
@@ -37,9 +38,27 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 
 	CurrentHealth -= DamageToApply;
 
-	if (CurrentHealth <= 0 && bDead == false)
+	// Play tank damage sound
+	if (!ensure(DamageSound)) return DamageToApply;
+	UGameplayStatics::PlaySoundAtLocation(this, DamageSound, GetActorLocation(), DamageVolumeMultiplier, DamagePitchMultiplier, DamageStartTime);
+
+	if (!bDead)
 	{
-		TankDeath(DamageCauser, DamageToApply);
+		if (CurrentHealth <= (StartingHealth / 2) && CurrentHealth > 0)
+		{
+			// Play the particle emitter
+			if (!ensure(SmokeEmitterTemplate)) return DamageToApply;
+			SmokeEmitterComponent = UGameplayStatics::SpawnEmitterAttached(SmokeEmitterTemplate, FindComponentByClass<UTankTurret>(), FName("Barrel"), FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), EAttachLocation::KeepRelativeOffset, true);
+		}
+		else if (CurrentHealth <= 0)
+		{
+			if (SmokeEmitterComponent) SmokeEmitterComponent; // TODO Destroy SmokeEmitterComponent
+			TankDeath(DamageCauser, DamageToApply);
+		}
+		else
+		{
+			if (SmokeEmitterComponent) SmokeEmitterComponent; // TODO Destroy SmokeEmitterComponent
+		}
 	}
 
 	return DamageToApply;
@@ -79,8 +98,8 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
 
 	// Play the particle emitter
-	if (!ensure(EmitterTemplate)) return;
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterTemplate, GetTransform());
+	if (!ensure(DeathEmitterTemplate)) return;
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEmitterTemplate, GetTransform());
 
 	// Destroy the actor
 	Destroy();

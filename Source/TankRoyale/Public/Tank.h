@@ -74,7 +74,11 @@ private:
 	TSubclassOf<APickup> HealthPickupBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	UParticleSystem* EmitterTemplate = nullptr;
+	UParticleSystem* DeathEmitterTemplate = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UParticleSystem* SmokeEmitterTemplate = nullptr;
+	UParticleSystemComponent* SmokeEmitterComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
 	FVector AmmoOffset;
@@ -94,7 +98,7 @@ private:
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
-	USoundBase* ExplodeSound = nullptr;
+		USoundBase* ExplodeSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float ExplodeVolumeMultiplier = 0.6f;
@@ -104,4 +108,17 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float ExplodeStartTime = 0.0f;
+
+	// Sound of the tank taking damage
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* DamageSound = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float DamageVolumeMultiplier = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float DamagePitchMultiplier = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float DamageStartTime = 0.0f;
 };
