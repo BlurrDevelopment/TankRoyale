@@ -116,8 +116,6 @@ void AGameModeDeathmatch::StartGame()
 	TeamTwoKills = 0;
 	TeamOneDeaths = 0;
 	TeamTwoDeaths = 0;
-
-	UE_LOG(LogTemp, Warning, TEXT("Game starting!"));
 }
 
 void AGameModeDeathmatch::AddTeamDeath(ATank* Tank, ATank* KillerTank)
