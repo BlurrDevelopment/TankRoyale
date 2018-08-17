@@ -64,6 +64,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ProjectileMinDamage = 30.0f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float BlastRadius = 200.0f;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* CollisionMesh = nullptr;
 
