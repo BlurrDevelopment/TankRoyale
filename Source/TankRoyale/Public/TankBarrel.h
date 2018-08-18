@@ -32,6 +32,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Damage")
 	bool CanBarrelFire() const;
+
+	void SetOverheated(bool Overheated) { bOverheated = Overheated; }
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -45,7 +47,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float MinElevationDegrees = 0.0f;
-
+	
+	// DAMAGE
 	// The starting and max health of the tank part.
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float StartingDamage = 125;
@@ -63,5 +66,8 @@ private:
 	bool bIsDamaged = false;
 	bool bIsTotalled = false;
 	bool bCanFire = true;
+
+	// HEAT
+	bool bOverheated = false;
 
 };

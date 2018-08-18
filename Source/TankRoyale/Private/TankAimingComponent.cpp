@@ -64,8 +64,9 @@ void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSe
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	if (RoundsLeft <= 0 || !Barrel->CanBarrelFire())
+
+	// Set the firing state
+	if (RoundsLeft <= 0 || !Barrel->CanBarrelFire() || bOverheated)
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
@@ -83,6 +84,25 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	}
 
 	RoundsLeft = FMath::Clamp<int32>(RoundsLeft, 0, MaxRounds);
+
+	// Set the barrel overheat bool
+	if (CurrentHeat >= OverheatAt)
+	{
+		Barrel->SetOverheated(true);
+		bOverheated = true;
+	}
+	else if (CurrentHeat <= 10)
+	{
+		bOverheated = false;
+	}
+	else
+	{
+		Barrel->SetOverheated(false);
+	}
+
+	// Heat loss
+	auto HeatChange = HeatLossPerSecond * DeltaTime;
+	CurrentHeat = FMath::Clamp<float>((CurrentHeat - HeatChange), 0.0f, 10000);
 }
 
 bool UTankAimingComponent::IsBarrelMoving()
@@ -162,6 +182,9 @@ void UTankAimingComponent::Fire()
 		// Start the timer for destroying the projectile
 		FTimerHandle Timer;
 		GetWorld()->GetTimerManager().SetTimer(Timer, this, &UTankAimingComponent::OnReload, ReloadTimeInSeconds, false);
+
+		// Increase heat
+		CurrentHeat = CurrentHeat + HeatPerShot;
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
 	{

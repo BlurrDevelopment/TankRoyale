@@ -52,6 +52,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	void AddAmmo(int32 Amount);
 
+	UFUNCTION(BlueprintCallable, Category = "Heat")
+	float GetHeat() { return CurrentHeat; }
+
+	UFUNCTION(BlueprintCallable, Category = "Heat")
+	float GetHeatPerShot() { return HeatPerShot; }
+
+	UFUNCTION(BlueprintCallable, Category = "Heat")
+	bool IsOverheated() { return bOverheated; }
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState FiringState = EFiringState::Reloading;
@@ -149,4 +158,20 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float EmptyStartTime = 0.0f;
+
+	// HEAT
+	// How much heat per shot
+	UPROPERTY(EditDefaultsOnly, Category = "Heat")
+	float HeatPerShot = 55.0f;
+
+	// Heat to overheat at
+	UPROPERTY(EditDefaultsOnly, Category = "Heat")
+	float OverheatAt = 100.0f;
+
+	// Decrease per second
+	UPROPERTY(EditDefaultsOnly, Category = "Heat")
+	float HeatLossPerSecond = 10.0f;
+
+	float CurrentHeat = 0.0f;
+	bool bOverheated = false;
 };
