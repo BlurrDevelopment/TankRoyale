@@ -5,6 +5,7 @@
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include "Tank.h"
+#include "Engine/World.h"
 #include "Projectile.h"
 
 
@@ -69,11 +70,15 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
-	else if (IsBarrelMoving() && (FiringState != EFiringState::Reloading))
+	else if (RoundsLoaded < MaxRoundsLoadable)
+	{
+		FiringState = EFiringState::Reloading;
+	}
+	else if (IsBarrelMoving())
 	{
 		FiringState = EFiringState::Aiming;
 	}
-	else if ((FiringState != EFiringState::Reloading))
+	else
 	{
 		FiringState = EFiringState::Locked;
 	}
@@ -182,7 +187,10 @@ void UTankAimingComponent::Fire()
 		}
 
 		// Reload
-		Reload();
+		FTimerHandle ReloadTimer;
+		float ReloadTime = ReloadTimeInSeconds / MaxRoundsLoadable;
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTankAimingComponent::Reload, ReloadTime, false);
+
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
 	{
@@ -194,20 +202,19 @@ void UTankAimingComponent::Fire()
 
 void UTankAimingComponent::Reload()
 {
-	FiringState = EFiringState::Reloading;
-	RoundsLoaded = 0;
-	for (int i = 0; i < MaxRoundsLoadable; i++)
+	RoundsLoaded++;
+	RoundsLeft--;
+
+	if (!ensure(ReloadSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
+	
+	if (RoundsLoaded < MaxRoundsLoadable)
 	{
-		// TODO Delay by DelayTime
-		float DelayTime = ReloadTimeInSeconds / MaxRoundsLoadable;
-
-		RoundsLoaded++;
-		RoundsLeft--;
-
-		if (!ensure(ReloadSound)) return;
-		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
+		// Reload another round
+		FTimerHandle ReloadTimer;
+		float ReloadTime = ReloadTimeInSeconds / MaxRoundsLoadable;
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTankAimingComponent::Reload, ReloadTime, false);
 	}
-	FiringState = EFiringState::Aiming;
 }
 
 EFiringState UTankAimingComponent::GetFiringState() const
