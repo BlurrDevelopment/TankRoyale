@@ -161,42 +161,50 @@ void UTankAimingComponent::Fire()
 
 	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
 	{
-		int32 RoundsLoadedWhenFiring = RoundsLoaded;
-		for (int32 i = 0; i < RoundsLoadedWhenFiring; i++)
-		{
-			// Spawn a projectile at the socket location on the barrel
-			auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
-
-			// Set owning tank of projectile
-			Projectile->SetFiringTank(OwnerTank);
-
-			// Launch the projectile
-			Projectile->LaunchProjectile(LaunchSpeed);
-
-			// Play fire sound
-			if (!ensure(FireSound)) return;
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
-
-			// Increase heat
-			CurrentHeat = CurrentHeat + HeatPerShot;
-
-			// Decrease loaded rounds
-			RoundsLoaded--;
-
-			// TODO Delay with BurstTime
-		}
-
-		// Reload
-		FTimerHandle ReloadTimer;
-		float ReloadTime = ReloadTimeInSeconds / MaxRoundsLoadable;
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTankAimingComponent::Reload, ReloadTime, false);
-
+		FiringState = EFiringState::Reloading;
+		FireRound();
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
 	{
 		// Play empty barrel sound
 		if (!ensure(EmptySound)) return;
 		UGameplayStatics::PlaySoundAtLocation(this, EmptySound, Barrel->GetSocketLocation(FName("Projectile")), EmptyVolumeMultiplier, EmptyPitchMultiplier, EmptyStartTime);
+	}
+}
+
+void UTankAimingComponent::FireRound()
+{
+	// Spawn a projectile at the socket location on the barrel
+	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+
+	// Set owning tank of projectile
+	Projectile->SetFiringTank(OwnerTank);
+
+	// Launch the projectile
+	Projectile->LaunchProjectile(LaunchSpeed);
+
+	// Play fire sound
+	if (!ensure(FireSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
+
+	// Increase heat
+	CurrentHeat = CurrentHeat + HeatPerShot;
+
+	// Decrease loaded rounds
+	RoundsLoaded--;
+
+	if (RoundsLoaded > 0)
+	{
+		// Reload another round
+		FTimerHandle BurstTimer;
+		GetWorld()->GetTimerManager().SetTimer(BurstTimer, this, &UTankAimingComponent::FireRound, BurstTime, false);
+	}
+	else
+	{
+		// Reload
+		FTimerHandle ReloadTimer;
+		float ReloadTime = ReloadTimeInSeconds / MaxRoundsLoadable;
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTankAimingComponent::Reload, ReloadTime, false);
 	}
 }
 

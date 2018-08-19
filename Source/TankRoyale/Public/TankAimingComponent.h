@@ -132,7 +132,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 MaxRoundsLoadable = 1;
 
-	void OnReload();
+	void FireRound();
 	void Reload();
 
 	// Sound of the tank firing
