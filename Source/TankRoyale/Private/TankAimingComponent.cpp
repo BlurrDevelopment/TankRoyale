@@ -186,11 +186,11 @@ void UTankAimingComponent::Fire()
 			// Decrease loaded rounds
 			RoundsLoaded--;
 
-			// TODO Delay with time between shots
+			// TODO Delay with BurstTime
 		}
 
 		// Reload
-		//Reload();
+		Reload();
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
 	{
@@ -202,6 +202,7 @@ void UTankAimingComponent::Fire()
 
 void UTankAimingComponent::Reload()
 {
+	RoundsLoaded = 0;
 	for (int i = 0; i < MaxRoundsLoadable; i++)
 	{
 		float DelayTime = ReloadTimeInSeconds / MaxRoundsLoadable;

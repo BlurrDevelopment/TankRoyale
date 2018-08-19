@@ -114,6 +114,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 3.0f;
 
+	// How long between each shot for burst fire.
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float BurstTime = 0.0f;
+
 	// How many rounds the tank has left.
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 RoundsLeft = 24;
