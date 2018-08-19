@@ -70,15 +70,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
-	else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
-	{
-		FiringState = EFiringState::Reloading;
-	}
-	else if (IsBarrelMoving())
+	else if (IsBarrelMoving() && (FiringState != EFiringState::Reloading))
 	{
 		FiringState = EFiringState::Aiming;
 	}
-	else
+	else if ((FiringState != EFiringState::Reloading))
 	{
 		FiringState = EFiringState::Locked;
 	}
@@ -173,9 +169,6 @@ void UTankAimingComponent::Fire()
 			// Launch the projectile
 			Projectile->LaunchProjectile(LaunchSpeed);
 
-			// Set the last fire time
-			LastFireTime = FPlatformTime::Seconds();
-
 			// Play fire sound
 			if (!ensure(FireSound)) return;
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
@@ -202,12 +195,12 @@ void UTankAimingComponent::Fire()
 
 void UTankAimingComponent::Reload()
 {
+	FiringState = EFiringState::Reloading;
 	RoundsLoaded = 0;
 	for (int i = 0; i < MaxRoundsLoadable; i++)
 	{
-		float DelayTime = ReloadTimeInSeconds / MaxRoundsLoadable;
-
 		// TODO Delay by DelayTime
+		float DelayTime = ReloadTimeInSeconds / MaxRoundsLoadable;
 
 		RoundsLoaded++;
 		RoundsLeft--;
@@ -215,6 +208,7 @@ void UTankAimingComponent::Reload()
 		if (!ensure(ReloadSound)) return;
 		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
 	}
+	FiringState = EFiringState::Aiming;
 }
 
 EFiringState UTankAimingComponent::GetFiringState() const

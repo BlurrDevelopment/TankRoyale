@@ -66,7 +66,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Reloading;
+	EFiringState FiringState = EFiringState::Aiming;
 
 private:
 	virtual void BeginPlay() override;
@@ -89,8 +89,6 @@ private:
 	UTankBarrel * Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	ATank* OwnerTank = nullptr;
-
-	double LastFireTime = 0.0;
 
 	FVector AimDirection;
 
