@@ -161,36 +161,58 @@ void UTankAimingComponent::Fire()
 
 	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
 	{
+		int32 RoundsLoadedWhenFiring = RoundsLoaded;
+		for (int32 i = 0; i < RoundsLoadedWhenFiring; i++)
+		{
+			// Spawn a projectile at the socket location on the barrel
+			auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
 
-		// Spawn a projectile at the socket location on the barrel
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+			// Set owning tank of projectile
+			Projectile->SetFiringTank(OwnerTank);
 
-		// Set owning tank of projectile
-		Projectile->SetFiringTank(OwnerTank);
+			// Launch the projectile
+			Projectile->LaunchProjectile(LaunchSpeed);
 
-		// Launch the projectile
-		Projectile->LaunchProjectile(LaunchSpeed);
+			// Set the last fire time
+			LastFireTime = FPlatformTime::Seconds();
 
-		// Set the last fire time
-		LastFireTime = FPlatformTime::Seconds();
-		RoundsLeft--;
+			// Play fire sound
+			if (!ensure(FireSound)) return;
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
 
-		// Play fire sound
-		if (!ensure(FireSound)) return;
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
+			// Increase heat
+			CurrentHeat = CurrentHeat + HeatPerShot;
 
-		// Start the timer for destroying the projectile
-		FTimerHandle Timer;
-		GetWorld()->GetTimerManager().SetTimer(Timer, this, &UTankAimingComponent::OnReload, ReloadTimeInSeconds, false);
+			// Decrease loaded rounds
+			RoundsLoaded--;
 
-		// Increase heat
-		CurrentHeat = CurrentHeat + HeatPerShot;
+			// TODO Delay with time between shots
+		}
+
+		// Reload
+		//Reload();
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
 	{
 		// Play empty barrel sound
 		if (!ensure(EmptySound)) return;
 		UGameplayStatics::PlaySoundAtLocation(this, EmptySound, Barrel->GetSocketLocation(FName("Projectile")), EmptyVolumeMultiplier, EmptyPitchMultiplier, EmptyStartTime);
+	}
+}
+
+void UTankAimingComponent::Reload()
+{
+	for (int i = 0; i < MaxRoundsLoadable; i++)
+	{
+		float DelayTime = ReloadTimeInSeconds / MaxRoundsLoadable;
+
+		// TODO Delay by DelayTime
+
+		RoundsLoaded++;
+		RoundsLeft--;
+
+		if (!ensure(ReloadSound)) return;
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
 	}
 }
 
@@ -204,11 +226,9 @@ int32 UTankAimingComponent::GetRoundsLeft() const
 	return RoundsLeft;
 }
 
-void UTankAimingComponent::OnReload()
+int32 UTankAimingComponent::GetRoundsLoaded() const
 {
-	// Play reload sound
-	if (!ensure(ReloadSound)) return;
-	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
+	return RoundsLoaded;
 }
 
 void UTankAimingComponent::AddAmmo(int32 Amount)

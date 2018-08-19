@@ -43,10 +43,13 @@ public:
 
 	EFiringState GetFiringState() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Firing")
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	int32 GetRoundsLeft() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Firing")
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
+	int32 GetRoundsLoaded() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	int32 GetMaxRounds() const { return MaxRounds; }
 
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
@@ -112,13 +115,22 @@ private:
 	float ReloadTimeInSeconds = 3.0f;
 
 	// How many rounds the tank has left.
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 RoundsLeft = 10;
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 RoundsLeft = 24;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 MaxRounds = 12;
+	// Max amount of rounds the tank can have.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 MaxRounds = 24;
 
-	void OnReload();
+	// How many rounds are loaded.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 RoundsLoaded = 1;
+
+	// Max amount of rounds that can be loaded.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 MaxRoundsLoadable = 1;
+
+	void Reload();
 
 	// Sound of the tank firing
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
