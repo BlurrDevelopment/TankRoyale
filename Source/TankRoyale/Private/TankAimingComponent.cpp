@@ -19,7 +19,6 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	LastFireTime = FPlatformTime::Seconds();
 }
 
 void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
