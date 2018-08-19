@@ -66,7 +66,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Set the firing state
-	if (RoundsLeft <= 0 || !Barrel->CanBarrelFire() || bOverheated)
+	if ((RoundsLeft <= 0 && RoundsLoaded <= 0) || !Barrel->CanBarrelFire() || bOverheated)
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
