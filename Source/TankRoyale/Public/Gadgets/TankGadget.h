@@ -38,7 +38,7 @@ protected:
 	// Activate the gadget.
 	virtual void ActivateGadget();
 
-	// Deactivate and delete the gadget.
+	// Deactivate the gadget.
 	virtual void DeactivateGadget();
 
 	// Use the gadget.

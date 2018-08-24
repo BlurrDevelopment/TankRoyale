@@ -60,16 +60,14 @@ void ATankGadget::StickToSurface(AActor* Surface, FTransform MineTransform)
 void ATankGadget::ActivateGadget()
 {
 	bActiveGadget = true;
-	UE_LOG(LogTemp, Warning, TEXT("Activate Gadget."));
 }
 
 void ATankGadget::DeactivateGadget()
 {
 	bActiveGadget = false;
-	Destroy();
 }
 
 void ATankGadget::UseGadget()
 {
-	UE_LOG(LogTemp, Warning, TEXT("USE GADGET"));
+	DeactivateGadget();
 }
