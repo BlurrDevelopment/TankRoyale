@@ -11,24 +11,14 @@ AGadgetMine::AGadgetMine()
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AGadgetMine::OnOverlapBegin);
 }
 
-// Activate the mine so it blows when driven over.
-void AGadgetMine::ActivateGadget()
-{
-	Super::ActivateGadget();
-
-}
-
 // When another actor overlaps the collision mesh.
 void AGadgetMine::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//if (bActiveGadget) 
-		this->UseGadget();
-	
+	UE_LOG(LogTemp, Warning, TEXT("USE MINE"));
 }
 
 // Override use gadget.
 void AGadgetMine::UseGadget()
 {
 	Super::UseGadget();
-	UE_LOG(LogTemp, Warning, TEXT("USE MINE"));
 }
