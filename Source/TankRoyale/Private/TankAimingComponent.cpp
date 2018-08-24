@@ -5,6 +5,7 @@
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include "Tank.h"
+#include "TankGadget.h"
 #include "Engine/World.h"
 #include "Projectile.h"
 
@@ -165,6 +166,26 @@ void UTankAimingComponent::Fire()
 		FireRound();
 	}
 	else if (FiringState == EFiringState::OutOfAmmo || FiringState == EFiringState::Reloading)
+	{
+		// Play empty barrel sound
+		if (!ensure(EmptySound)) return;
+		UGameplayStatics::PlaySoundAtLocation(this, EmptySound, Barrel->GetSocketLocation(FName("Projectile")), EmptyVolumeMultiplier, EmptyPitchMultiplier, EmptyStartTime);
+	}
+}
+
+void UTankAimingComponent::FireGadget()
+{
+	if (!ensure(Barrel) || !ensure(GadgetBlueprint)) { return; }
+
+	if (GadgetsLeft > 0)
+	{
+		Gadget = GetWorld()->SpawnActor<ATankGadget>(GadgetBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+		Gadget->LaunchGadget(LaunchSpeed);
+		if (!ensure(FireSound)) return;
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Barrel->GetSocketLocation(FName("Projectile")), FireVolumeMultiplier, FirePitchMultiplier, FireStartTime);
+		GadgetsLeft--;
+	}
+	else
 	{
 		// Play empty barrel sound
 		if (!ensure(EmptySound)) return;

@@ -22,6 +22,7 @@ class UTankBarrel;
 class UTankTurret;
 class AProjectile;
 class ATank;
+class ATankGadget;
 
 // Holds barrels parameters and elavate method
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -41,6 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void FireGadget();
+
 	EFiringState GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
@@ -54,6 +58,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	void AddAmmo(int32 Amount);
+
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
+	int32 GetGadgetsLeft() const { return GadgetsLeft; }
 
 	UFUNCTION(BlueprintCallable, Category = "Heat")
 	float GetHeat() { return CurrentHeat; }
@@ -89,12 +96,17 @@ private:
 	UTankBarrel * Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	ATank* OwnerTank = nullptr;
+	ATankGadget* Gadget = nullptr;
 
 	FVector AimDirection;
 
 	// The projectile the tank uses.
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	// The gadget the tank uses.
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ATankGadget> GadgetBlueprint;
 
 	// The maximum speed of the projectile is launched.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
@@ -123,6 +135,14 @@ private:
 	// Max amount of rounds the tank can have.
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 MaxRounds = 24;
+
+	// How many rounds the tank has left.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 GadgetsLeft = 1;
+
+	// Max amount of rounds the tank can have.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 MaxGadgets = 1;
 
 	// How many rounds are loaded.
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")

@@ -5,6 +5,11 @@
 #include "CoreMinimal.h"
 #include "Gadgets/TankGadget.h"
 #include "Components/SphereComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
+#include "Engine/World.h"
+#include "ParticleHelper.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "GadgetMine.generated.h"
 
 /**
@@ -31,7 +36,22 @@ private:
 	// Override use gadget.
 	virtual void UseGadget() override;
 
+	// Make the mine explode.
+	void ExplodeMine();
+
 	// Collision Sphere for Overlap.
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* CollisionSphere = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URadialForceComponent* ExplosionForce = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* MineBlast = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float MineMaxDamage = 40.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float MineMinDamage = 30.0f;
 };
