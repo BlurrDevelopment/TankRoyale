@@ -47,15 +47,20 @@ void AGadgetMine::UseGadget()
 
 void AGadgetMine::ExplodeMine()
 {
+	// Activate the blast and fire the explosion force
 	MineBlast->Activate();
 	ExplosionForce->FireImpulse();
 
+	// Set the blast as root and destroy any collision meshes
 	SetRootComponent(MineBlast);
 	CollisionMesh->DestroyComponent();
 	CollisionSphere->DestroyComponent();
 
+	// Play the explode sound
+	if (!ensure(ExplodeSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), 1.0f, 1.0f, 0.0f);
+
+	// Apply damage to the explosion range
 	float MineDamage = FMath::RandRange(MineMinDamage, MineMaxDamage);
 	UGameplayStatics::ApplyRadialDamage(this, MineDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
-
-	UE_LOG(LogTemp, Warning, TEXT("BOOM! Mine Damage: %f"), MineDamage);
 }

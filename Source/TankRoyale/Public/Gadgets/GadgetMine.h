@@ -49,6 +49,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UParticleSystemComponent* MineBlast = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* ExplodeSound = nullptr;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float MineMaxDamage = 40.0f;
 
