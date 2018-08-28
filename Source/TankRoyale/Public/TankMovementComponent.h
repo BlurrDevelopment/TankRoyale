@@ -25,10 +25,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void IntendTurnRight(float Throw);
 
+	/// Disable Movement
+	void Disable(float Time);
+	void OnEnable();
+
 private:
 	// Called from the path finding logic by the AI Controllers
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
+
+	/// Disable Movement
+	bool bMovementDisabled = false;
 };

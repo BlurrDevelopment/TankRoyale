@@ -71,6 +71,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Heat")
 	bool IsOverheated() { return bOverheated; }
 
+	/// Disable Aiming
+	void Disable(float Time);
+	void OnEnable();
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState FiringState = EFiringState::Aiming;
@@ -194,7 +198,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float EmptyStartTime = 0.0f;
 
-	// HEAT
+	/// HEAT
 	// How much heat per shot
 	UPROPERTY(EditDefaultsOnly, Category = "Heat")
 	float HeatPerShot = 55.0f;
@@ -209,4 +213,7 @@ private:
 
 	float CurrentHeat = 0.0f;
 	bool bOverheated = false;
+
+	/// Disable Aiming
+	bool bAimingDisabled = false;
 };

@@ -15,6 +15,8 @@ class TANKROYALE_API AGadgetRepair : public ATankGadget
 	GENERATED_BODY()
 	
 private:
+	// How much the gadget repairs the tank hit.
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float RepairAmount = 40.0f;
 
 	virtual void ActivateGadget() override;

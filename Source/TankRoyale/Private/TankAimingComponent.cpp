@@ -67,7 +67,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Set the firing state
-	if ((RoundsLeft <= 0 && RoundsLoaded <= 0) || !Barrel->CanBarrelFire() || bOverheated)
+	if ((RoundsLeft <= 0 && RoundsLoaded <= 0) || !Barrel->CanBarrelFire() || bOverheated || bAimingDisabled)
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
@@ -137,6 +137,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
+	if (bAimingDisabled) return;
 
 	// Work out difference between current barrel rotation and aim direction
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
@@ -159,6 +160,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 void UTankAimingComponent::Fire()
 {
 	if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
+	if (bAimingDisabled) return;
 
 	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
 	{
@@ -176,6 +178,7 @@ void UTankAimingComponent::Fire()
 void UTankAimingComponent::FireGadget()
 {
 	if (!ensure(Barrel) || !ensure(GadgetBlueprint)) { return; }
+	if (bAimingDisabled) return;
 
 	if (GadgetsLeft > 0)
 	{
@@ -281,4 +284,17 @@ void UTankAimingComponent::DecreaseLaunchSpeed()
 	{
 		LaunchSpeed = LaunchSpeed - 100;
 	}
+}
+
+void UTankAimingComponent::Disable(float Time)
+{
+	bAimingDisabled = true;
+
+	FTimerHandle DisableTimer;
+	GetWorld()->GetTimerManager().SetTimer(DisableTimer, this, &UTankAimingComponent::OnEnable, Time, false);
+}
+
+void UTankAimingComponent::OnEnable()
+{
+	bAimingDisabled = false;
 }

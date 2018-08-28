@@ -100,7 +100,7 @@ private:
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
-		USoundBase* ExplodeSound = nullptr;
+	USoundBase* ExplodeSound = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float ExplodeVolumeMultiplier = 0.6f;
