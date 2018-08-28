@@ -18,10 +18,16 @@ void AGadgetEMP::UseGadget()
 
 	// Check if the gadget hit a tank.
 	auto Tank = Cast<ATank>(SurfaceStuckTo);
+	if (!Tank)
+	{	
+		Destroy();
+		return;
+	}
+
 	auto AimingComponent = Tank->FindComponentByClass<UTankAimingComponent>();
 	auto MovementComponent = Tank->FindComponentByClass<UTankMovementComponent>();
-	if (!Tank || !AimingComponent || !MovementComponent)
-	{	
+	if (!AimingComponent || !MovementComponent)
+	{
 		Destroy();
 		return;
 	}
