@@ -24,6 +24,9 @@ public:
 	// Fire the gadget.
 	void LaunchGadget(float Speed);
 
+	// Destroy the gadget.
+	void DestroyGadget();
+
 protected:
 	// Called when the game starts or when spawned.
 	virtual void BeginPlay() override;

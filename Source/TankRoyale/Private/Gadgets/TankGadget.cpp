@@ -71,3 +71,8 @@ void ATankGadget::UseGadget()
 {
 	DeactivateGadget();
 }
+
+void ATankGadget::DestroyGadget()
+{
+	Destroy();
+}
