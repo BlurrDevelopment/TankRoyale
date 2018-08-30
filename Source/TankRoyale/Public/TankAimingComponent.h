@@ -109,7 +109,7 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	// The gadget the tank uses.
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(VisibleAnywhere, Category = "Setup")
 	TSubclassOf<ATankGadget> GadgetBlueprint;
 
 	// The maximum speed of the projectile is launched.
