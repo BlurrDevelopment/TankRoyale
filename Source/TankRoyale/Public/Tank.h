@@ -75,6 +75,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
 	TSubclassOf<APickup> HealthPickupBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	TSubclassOf<APickup> BurstPickupBlueprint;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	UParticleSystem* DeathEmitterTemplate = nullptr;
 	
@@ -88,15 +91,20 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
 	FVector HealthOffset;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
+	FVector BurstOffset;
+
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void UsePickup();
 	void UseAmmoPickup();
 	void UseHealthPickup();
+	void UseBurstPickup();
 
 	void DropRemainingAmmo();
 	void DropHalfAmmo();
 	void DropAmmo(int32 Amount);
 	void DropHealth(int32 Amount);
+	void DropBurst();
 
 	// Sound of the tank exploding
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")

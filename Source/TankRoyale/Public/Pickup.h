@@ -15,7 +15,8 @@ UENUM()
 enum class EPickupType : uint8
 {
 	Ammo,
-	Health
+	Health,
+	Burst
 };
 
 UCLASS()

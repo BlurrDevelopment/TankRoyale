@@ -249,6 +249,23 @@ void UTankAimingComponent::Reload()
 	}
 }
 
+void UTankAimingComponent::LoadSpecialAmmo()
+{
+	RoundsLoaded++;
+	RoundsLeft--;
+
+	if (!ensure(ReloadSound)) return;
+	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Barrel->GetSocketLocation(FName("Projectile")), ReloadVolumeMultiplier, ReloadPitchMultiplier, ReloadStartTime);
+
+	if (RoundsLoaded < MaxSpecialRoundsLoadable)
+	{
+		// Reload another round
+		FTimerHandle ReloadTimer;
+		float ReloadTime = ReloadTimeInSeconds / MaxSpecialRoundsLoadable;
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTankAimingComponent::LoadSpecialAmmo, ReloadTime, false);
+	}
+}
+
 EFiringState UTankAimingComponent::GetFiringState() const
 {
 	return FiringState;

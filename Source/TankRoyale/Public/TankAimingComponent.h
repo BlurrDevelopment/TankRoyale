@@ -60,6 +60,9 @@ public:
 	void AddAmmo(int32 Amount);
 
 	UFUNCTION(BlueprintCallable, Category = "Ammo")
+	void LoadSpecialAmmo();
+
+	UFUNCTION(BlueprintCallable, Category = "Ammo")
 	int32 GetGadgetsLeft() const { return GadgetsLeft; }
 
 	UFUNCTION(BlueprintCallable, Category = "Heat")
@@ -130,7 +133,7 @@ private:
 
 	// How long between each shot for burst fire.
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float BurstTime = 0.0f;
+	float BurstTime = 0.15f;
 
 	// How many rounds the tank has left.
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
@@ -155,6 +158,10 @@ private:
 	// Max amount of rounds that can be loaded.
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 MaxRoundsLoadable = 1;
+
+	// Max amount of rounds that can be loaded for burst by special pickup.
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
+	int32 MaxSpecialRoundsLoadable = 3;
 
 	void FireRound();
 	void Reload();

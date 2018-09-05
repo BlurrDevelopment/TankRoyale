@@ -91,6 +91,10 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		// 40% Chance to drop health
 		int32 Chance = rand() % 100 + 1;
 		if (Chance <= 40) DropHealth(50);
+
+		// 15% Chance to drop burst
+		Chance = rand() % 100 + 1;
+		if (Chance <= 20) DropBurst();
 	}
 
 	// Play explosion sound
@@ -162,10 +166,20 @@ void ATank::DropHealth(int32 Amount)
 	SpawnedPickup->SetupPickup(EPickupType::Health, Amount);
 }
 
+void ATank::DropBurst()
+{
+	if (!ensure(BurstPickupBlueprint)) return;
+	FVector Location = GetActorLocation() + BurstOffset;
+	auto SpawnedPickup = GetWorld()->SpawnActor<APickup>(BurstPickupBlueprint);
+	SpawnedPickup->SetActorLocation(Location);
+	SpawnedPickup->SetupPickup(EPickupType::Burst, 0);
+}
+
 void ATank::UsePickup()
 {
 	if (CurrentPickup->GetType() == EPickupType::Ammo) UseAmmoPickup();
 	if (CurrentPickup->GetType() == EPickupType::Health) UseHealthPickup();
+	if (CurrentPickup->GetType() == EPickupType::Burst) UseBurstPickup();
 }
 
 void ATank::UseAmmoPickup()
@@ -222,4 +236,17 @@ void ATank::UseHealthPickup()
 
 	// Spawn new pickup with what is left
 	if (AmountToLeave > 0) DropHealth(AmountToLeave);
+}
+
+void ATank::UseBurstPickup()
+{
+	// Get the aiming component and then add the ammo from the pickup
+	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+
+	// Use the pickup
+	AimingComponent->LoadSpecialAmmo();
+
+	// Destroy the pickup
+	CurrentPickup->Deactivate();
 }
