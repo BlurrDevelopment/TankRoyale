@@ -6,23 +6,12 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
+#include "Components/WidgetSwitcher.h"
 #include "ServerRowWidget.h"
 void UWidgetGameTypeManager::SetNetworkInterface(INetworkInterface * INetworkInterface)
 {
-	this->NetworkInterface = INetworkInterface;
+	NetworkInterface = INetworkInterface;
 }
-
-
-
-void UWidgetGameTypeManager::TearDown()
-{
-	this->RemoveFromViewport();
-	APlayerController * Player = GetWorld()->GetFirstPlayerController();
-	FInputModeGameOnly  InputModeData;
-	Player->bShowMouseCursor = false;
-	Player->SetInputMode(InputModeData);
-}
-
 bool UWidgetGameTypeManager::Initialize() {
 	bool bSuccess = Super::Initialize();
 	if (bSuccess)
@@ -36,12 +25,34 @@ bool UWidgetGameTypeManager::Initialize() {
 		{
 			Join->OnClicked.AddDynamic(this, &UWidgetGameTypeManager::JoinGamePressd);
 		}
+		if (HostServer != nullptr)
+		{
+			HostServer->OnClicked.AddDynamic(this, &UWidgetGameTypeManager::OnHostServerButtonPressd);
+		}
+		if (Refresh != nullptr)
+		{
+			Refresh->OnClicked.AddDynamic(this, &UWidgetGameTypeManager::RefreshServerList);
+		}
+		
 		return true;
 	}
 	return false;
 
 }
+void UWidgetGameTypeManager::OnHostServerButtonPressd() {
+	if (NetworkInterface != nullptr) {
+		NetworkInterface->Host(ServerNameBox->GetText().ToString());
+	}
+}
 
+void UWidgetGameTypeManager::TearDown()
+{
+	this->RemoveFromViewport();
+	APlayerController * Player = GetWorld()->GetFirstPlayerController();
+	FInputModeGameOnly  InputModeData;
+	Player->bShowMouseCursor = false;
+	Player->SetInputMode(InputModeData);
+}
 
 void UWidgetGameTypeManager::JoinGamePressd()
 {
@@ -49,7 +60,6 @@ void UWidgetGameTypeManager::JoinGamePressd()
 
 		if (ServerIndex.IsSet())
 		{
-
 			UE_LOG(LogTemp, Warning, TEXT("ServerIndex %i "), ServerIndex.GetValue());
 			NetworkInterface->Join(ServerIndex.GetValue());
 		}
@@ -60,6 +70,7 @@ void UWidgetGameTypeManager::JoinGamePressd()
 
 void UWidgetGameTypeManager::HostPressd()
 {
+		MenuSwitcher->SetActiveWidget(HostMenu);
 }
 
 void UWidgetGameTypeManager::SelectIndex(uint32 Index)
@@ -82,24 +93,33 @@ void UWidgetGameTypeManager::SetServerList(TArray<FServerData> ServersData)
 	UWorld * World = GetWorld();
 	if (World != nullptr)
 	{
-
-		ScrollServer->ClearChildren();
-		int32	i = 0;
-		for (FServerData &ServerData : ServersData)
+		if (ScrollServer != nullptr)
 		{
-			UServerRowWidget *ServerWidget = CreateWidget<UServerRowWidget>(World, ServerWidgetSub);
-			if (ServerWidget != nullptr) {
+			ScrollServer->ClearChildren();
+			int32	i = 0;
+			for (FServerData &ServerData : ServersData)
+			{
+				UServerRowWidget *ServerWidget = CreateWidget<UServerRowWidget>(World, ServerWidgetSub);
+				if (ServerWidget != nullptr) {
 
-				ServerWidget->ServerName->SetText(FText::FromString(ServerData.ServerName));
-				ServerWidget->Host->SetText(FText::FromString(ServerData.HostName));
-				FString CurrentToMaxPlayres = FString::Printf(TEXT("%d/%d"), ServerData.CurrentPlayers, ServerData.MaxPlayers);
-				ServerWidget->PlayersNumber->SetText(FText::FromString(CurrentToMaxPlayres));
-				ScrollServer->AddChild(ServerWidget);
-				ServerWidget->SetUpServerIndex(this, i);
-				++i;
+					ServerWidget->ServerName->SetText(FText::FromString(ServerData.ServerName));
+					ServerWidget->Host->SetText(FText::FromString(ServerData.HostName));
+					FString CurrentToMaxPlayres = FString::Printf(TEXT("%d/%d"), ServerData.CurrentPlayers, ServerData.MaxPlayers);
+					ServerWidget->PlayersNumber->SetText(FText::FromString(CurrentToMaxPlayres));
+					ScrollServer->AddChild(ServerWidget);
+					ServerWidget->SetUpServerIndex(this, i);
+					++i;
 
+				}
 			}
 		}
 	}
 
+}
+
+void UWidgetGameTypeManager::RefreshServerList()
+{
+	if (NetworkInterface != nullptr) {
+		NetworkInterface->RequestARefresh();
+	}
 }

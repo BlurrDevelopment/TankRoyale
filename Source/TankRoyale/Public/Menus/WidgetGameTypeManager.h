@@ -25,6 +25,8 @@ GENERATED_BODY()
 public:	
 void TearDown();
 void SetNetworkInterface(class INetworkInterface * INetworkInterface);
+UFUNCTION()
+void OnHostServerButtonPressd();
 //TODO make it take an enum
 UPROPERTY(EditDefaultsOnly)
 FString GameMode;
@@ -35,6 +37,8 @@ void HostPressd();
 void SelectIndex(uint32 Index);
 void UpdateChildern();
 void SetServerList(TArray<FServerData> ServersData);
+UFUNCTION()
+void RefreshServerList();
 protected:
 class INetworkInterface * NetworkInterface;
 virtual bool Initialize();
@@ -46,6 +50,17 @@ class UButton *  Join;
 TOptional<uint32> ServerIndex;
 UPROPERTY(meta = (BindWidget))
 class UScrollBox * ScrollServer;
+UPROPERTY(EditAnywhere)
 TSubclassOf<class UServerRowWidget> ServerWidgetSub;
 class UServerRowWidget * SelectedWidget;
+UPROPERTY(meta = (BindWidget))
+class UButton *  HostServer;
+UPROPERTY(meta = (BindWidget))
+class UEditableTextBox * ServerNameBox;
+UPROPERTY(meta = (BindWidget))
+class UWidgetSwitcher * MenuSwitcher;
+UPROPERTY(meta = (BindWidget))
+UWidget * HostMenu;
+UPROPERTY(meta = (BindWidget))
+class UButton * Refresh;
 };

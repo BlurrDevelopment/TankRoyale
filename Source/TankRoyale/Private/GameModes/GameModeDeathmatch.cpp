@@ -23,7 +23,6 @@ void AGameModeDeathmatch::BeginPlay()
 	TeamOneTanks.Empty();
 	TeamTwoTanks.Empty();
 	TeamSpectatorTanks.Empty();
-	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::EndGame, 2.0f, true, 0);
 }
 
 void AGameModeDeathmatch::Tick(float DeltaTime)

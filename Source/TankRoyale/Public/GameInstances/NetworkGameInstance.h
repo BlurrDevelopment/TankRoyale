@@ -29,11 +29,9 @@ void Join(uint32 Index) override;
 void GoToMainMenu() override;
 void RequestARefresh() override;
 class UWidgetGameTypeManager * Menu;
-TSubclassOf<class UMainMenu> UserWidget;
 
 
 private:
-	TSubclassOf<class UUserWidget> InGameUserWidget;
 	bool bIsSessionCrated;
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr < class FOnlineSessionSearch > SearchSettings;

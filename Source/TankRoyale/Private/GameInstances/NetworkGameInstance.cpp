@@ -80,7 +80,8 @@ void UNetworkGameInstance::OnFindSessionsComplete(bool Success)
 
 
 	}
-
+	else{ UE_LOG(LogTemp, Warning, TEXT(" no found")); }
+	
 }
 void UNetworkGameInstance::Join(uint32 Index)
 {
@@ -188,14 +189,16 @@ void UNetworkGameInstance::CreateAndHost(FName SessionName, bool bIsSessionReady
 	{
 
 		Engine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("Hosting"));
-		GetWorld()->ServerTravel("/Game/ThirdPersonCPP/Maps/Lobby?listen");
+		GetWorld()->ServerTravel("/Game/_Levels/TestMapDeathmatch?listen");
 	}
+	
 
 }
 
 void UNetworkGameInstance::Setwidget(UWidgetGameTypeManager * WidgetToSet)
 {
 	Menu = WidgetToSet;
+	Menu->SetNetworkInterface(this);
 }
 
 
