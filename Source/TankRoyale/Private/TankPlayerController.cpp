@@ -8,7 +8,7 @@
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	// Testing that Github works
 	if (!GetPawn()) return;
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
