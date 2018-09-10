@@ -9,8 +9,9 @@
 /**
  * 
  */
+USTRUCT()
 struct FServerData {
-	GENERATED_BODY()
+	GENERATED_BODY();
 	FString  ServerName;
 	uint16	CurrentPlayers;
 	uint16 MaxPlayers;

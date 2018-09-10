@@ -101,6 +101,10 @@ void UNetworkGameInstance::Join(uint32 Index)
 	}
 }
 
+void UNetworkGameInstance::GoToMainMenu()
+{
+}
+
 
 
 void UNetworkGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
