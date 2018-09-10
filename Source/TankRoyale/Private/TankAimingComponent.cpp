@@ -117,7 +117,8 @@ bool UTankAimingComponent::IsBarrelMoving()
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	if (!ensure(Barrel) || !ensure(Turret)) { return; }
+	//TODO add ensure
+	if (/*!ensure(Barrel) || */ !ensure(Turret)) { return; }
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));

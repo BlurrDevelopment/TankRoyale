@@ -23,53 +23,57 @@ void AGameModeDeathmatch::BeginPlay()
 	TeamOneTanks.Empty();
 	TeamTwoTanks.Empty();
 	TeamSpectatorTanks.Empty();
+	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &AGameModeDeathmatch::EndGame, 2.0f, true, 0);
 }
 
 void AGameModeDeathmatch::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-	if (!bGameStarted)
-	{
-		bool bTeamOneReady = false;
-		bool bTeamTwoReady = false;
+	
 
-		if (TeamOneTanks.Num() >= TanksPerTeam) bTeamOneReady = true;
-		if (TeamTwoTanks.Num() >= TanksPerTeam) bTeamTwoReady = true;
-
-		if (bTeamOneReady && bTeamTwoReady)
+		Super::Tick(DeltaTime);
+		if (!bGameStarted)
 		{
-			// TODO Countdown from 5
-			StartGame();
+			bool bTeamOneReady = false;
+			bool bTeamTwoReady = false;
+
+			if (TeamOneTanks.Num() >= TanksPerTeam) bTeamOneReady = true;
+			if (TeamTwoTanks.Num() >= TanksPerTeam) bTeamTwoReady = true;
+
+			if (bTeamOneReady && bTeamTwoReady)
+			{
+				// TODO Countdown from 5
+				StartGame();
+			}
+			else
+			{
+				// Delay 1 second?
+				// TODO UI Displaying game loading
+			}
+			//UE_LOG(LogTemp, Warning, TEXT("%d"), TeamOneTanks.Num())
+
+				return;
 		}
-		else
+		TeamOneScore = TeamOneKills - TeamOneDeaths;
+		TeamTwoScore = TeamTwoKills - TeamTwoDeaths;
+
+		if (TeamOneScore == TeamTwoScore)
 		{
-			// Delay 1 second?
-			// TODO UI Displaying game loading
+			WinningTeam = 0;
+		}
+		else if (TeamOneScore > TeamTwoScore)
+		{
+			WinningTeam = 1;
+		}
+		else if (TeamOneScore < TeamTwoScore)
+		{
+			WinningTeam = 2;
 		}
 
-		return;
-	}
-	TeamOneScore = TeamOneKills - TeamOneDeaths;
-	TeamTwoScore = TeamTwoKills - TeamTwoDeaths;
-
-	if (TeamOneScore == TeamTwoScore)
-	{
-		WinningTeam = 0;
-	}
-	else if (TeamOneScore > TeamTwoScore)
-	{
-		WinningTeam = 1;
-	}
-	else if (TeamOneScore < TeamTwoScore)
-	{
-		WinningTeam = 2;
-	}
-
-	if (TeamOneTanks.Num() <= 0 || TeamTwoTanks.Num() <= 0)
-	{
-		EndGame();
-	}
-	//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
+		if (TeamOneTanks.Num() <= 0 || TeamTwoTanks.Num() <= 0)
+		{
+			EndGame();
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
 
 void AGameModeDeathmatch::AssignTankTeam(ATank* Tank)

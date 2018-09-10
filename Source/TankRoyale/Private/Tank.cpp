@@ -27,6 +27,7 @@ void ATank::BeginPlay()
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AssignTankTeam(this);
+		UE_LOG(LogTemp, Warning, TEXT("hi"))
 	}
 }
 
