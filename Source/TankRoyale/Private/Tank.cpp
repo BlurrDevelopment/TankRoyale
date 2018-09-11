@@ -23,12 +23,12 @@ void ATank::BeginPlay()
 	CurrentHealth = StartingHealth;
 
 	if (Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())) GameMode = EGameMode::Deathmatch;
-
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AssignTankTeam(this);
 		UE_LOG(LogTemp, Warning, TEXT("hi"))
 	}
+	
 }
 
 

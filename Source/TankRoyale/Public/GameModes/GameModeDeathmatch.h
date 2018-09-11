@@ -42,7 +42,6 @@ private:
 public:
 	UFUNCTION(BlueprintCallable, Category = "Start")
 	bool HasGameStarted() { return bGameStarted; }
-
 	void AssignTankTeam(ATank* Tank);
 
 	UFUNCTION(BlueprintCallable, Category = "Start")
