@@ -39,6 +39,8 @@ void UpdateChildern();
 void SetServerList(TArray<FServerData> ServersData);
 UFUNCTION()
 void RefreshServerList();
+UFUNCTION()
+void GoToJoinMenu();
 protected:
 class INetworkInterface * NetworkInterface;
 virtual bool Initialize();
@@ -63,4 +65,6 @@ UPROPERTY(meta = (BindWidget))
 UWidget * HostMenu;
 UPROPERTY(meta = (BindWidget))
 class UButton * Refresh;
+UPROPERTY(meta = (BindWidget))
+class UButton * BackToJoinMenu;
 };

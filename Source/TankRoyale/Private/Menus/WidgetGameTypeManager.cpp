@@ -33,6 +33,11 @@ bool UWidgetGameTypeManager::Initialize() {
 		{
 			Refresh->OnClicked.AddDynamic(this, &UWidgetGameTypeManager::RefreshServerList);
 		}
+		if (BackToJoinMenu != nullptr)
+		{
+			BackToJoinMenu->OnClicked.AddDynamic(this, &UWidgetGameTypeManager::GoToJoinMenu);
+		}
+		
 		
 		return true;
 	}
@@ -122,4 +127,9 @@ void UWidgetGameTypeManager::RefreshServerList()
 	if (NetworkInterface != nullptr) {
 		NetworkInterface->RequestARefresh();
 	}
+}
+
+void UWidgetGameTypeManager::GoToJoinMenu()
+{
+	MenuSwitcher->SetActiveWidget(Refresh);
 }
