@@ -27,7 +27,8 @@ void ATank::BeginPlay()
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
-		UE_LOG(LogTemp, Warning, TEXT("hi"))
+		
+		UE_LOG(LogTemp, Warning, TEXT(" %s Team is %d"), *GetName(), Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTankTeam(this))
 	}
 	
 }
@@ -119,6 +120,7 @@ void ATank::Repair(float Amount)
 	CurrentHealth = FMath::Clamp<int32>(CurrentHealth + Amount, 0, 100);
 	UE_LOG(LogTemp, Warning, TEXT("%s: I have been repaired for: %f"), *GetName(), Amount);
 }
+
 
 void ATank::DropRemainingAmmo()
 {
