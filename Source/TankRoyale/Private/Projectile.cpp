@@ -5,7 +5,7 @@
 #include "Tank.h"
 #include "TankTurret.h"
 #include "TankBarrel.h"
-#include "GameModeDeathmatch.h"
+#include "DeathmatchGameStateBase.h"
 
 
 // Sets default values
@@ -88,10 +88,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 			UGameplayStatics::ApplyRadialDamage(this, ProjectileDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 		}
 
-		auto GM = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
-		if (OwningTank && GM)
+		auto GS = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+		if (OwningTank && GS)
 		{
-			GM->RegisterTankHit(OwningTank, HitTank);
+			GS->RegisterTankHit(OwningTank, HitTank);
 		}
 	}
 	else

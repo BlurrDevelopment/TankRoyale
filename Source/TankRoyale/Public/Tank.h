@@ -58,7 +58,7 @@ private:
 
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;
-
+	
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")

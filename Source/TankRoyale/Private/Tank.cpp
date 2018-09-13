@@ -7,6 +7,7 @@
 #include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pickup.h"
+#include "DeathmatchGameStateBase.h"
 #include "TankAimingComponent.h"
 
 
@@ -21,11 +22,11 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
-
-	if (Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())) GameMode = EGameMode::Deathmatch;
+	
+	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
 	if (GameMode == EGameMode::Deathmatch)
 	{
-		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AssignTankTeam(this);
+		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
 		UE_LOG(LogTemp, Warning, TEXT("hi"))
 	}
 	
@@ -84,7 +85,7 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		auto KillerTank = Cast<ATank>(DamageCauser);
-		Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode())->AddTeamDeath(this, KillerTank);
+		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AddTeamDeath(this, KillerTank);
 
 		// Drop all remaining ammo
 		DropRemainingAmmo();
