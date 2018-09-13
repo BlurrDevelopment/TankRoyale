@@ -10,7 +10,6 @@
 
 ADeathmatchGameStateBase::ADeathmatchGameStateBase()
 {
-	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -79,13 +78,12 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 {
 	auto Controller = Tank->GetController();
 
-	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < TanksPerTeam)
-	{
-		TeamTwoTanks.Add(Tank);
-		return;
-	}
-	else if (Cast<ATankPlayerController>(Controller))
-	{
+//	if (Cast<ATankAIController>(Controller) && TeamTwoTanks.Num() < TanksPerTeam)
+//	{
+	//	TeamTwoTanks.Add(Tank);
+	//	return;
+	//}
+	// we should not care about Controllers if you want ai vs player it should be somthing the player should set because in the way that the code was written the clint could not be Assign to a Team
 		if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < TanksPerTeam)
 		{
 			TeamTwoTanks.Add(Tank);
@@ -96,8 +94,6 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 			TeamOneTanks.Add(Tank);
 			return;
 		}
-
-	}
 	else
 	{
 		TeamSpectatorTanks.Add(Tank);

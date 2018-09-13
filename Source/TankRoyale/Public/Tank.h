@@ -42,7 +42,7 @@ public:
 	APickup* GetCurrentPickup() { return CurrentPickup; }
 
 	void Repair(float Amount);
-
+	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
