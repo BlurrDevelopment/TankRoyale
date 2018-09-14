@@ -46,8 +46,8 @@ void ADeathmatchGameStateBase::Tick(float DeltaTime)
 		{
 			// Delay 1 second?
 			// TODO UI Displaying game loading
+			UE_LOG(LogTemp, Warning, TEXT("Team One Players: %d/%d | Team Two Players: %d/%d"), TeamOneTanks.Num(), TanksPerTeam, TeamTwoTanks.Num(), TanksPerTeam);
 		}
-		//UE_LOG(LogTemp, Warning, TEXT("%d"), TeamOneTanks.Num())
 
 		return;
 	}
