@@ -119,7 +119,7 @@ void ATank::Repair(float Amount)
 	UE_LOG(LogTemp, Warning, TEXT("%s: I have been repaired for: %f"), *GetName(), Amount);
 }
 
-void ATank::GetSpawnPointNumber(int16 Number)
+void ATank::SetSpawnPointNumber(int16 Number)
 {
 	SpawnPointNumber = Number;
 }

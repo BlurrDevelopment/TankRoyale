@@ -81,8 +81,10 @@ public:
 	// Get all the tanks in the team.
 	UFUNCTION(BlueprintPure, Category = "Team")
 		TArray<ATank*> GetTeamTanks(int32 Team) const;
-
-
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ATank> TankSubClass;
+	UPROPERTY()
+		AActor * PointToSpawn;
 	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
 		void DisplayEndGameUI();
 
@@ -95,14 +97,7 @@ public:
 	bool Timer = false;
 	void Spawn(APlayerController * NewPlayer, int16 SpawnPointNumber);
 private:
-	TArray<AActor *> SpawnPoints;
-	AActor * SpawnPointAtIndex;
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<class ATank> TankSubClass;
-	void Respawn();
-	AActor * PointToSpawn;
-	class ATank * Tank;
-	APlayerController * PlayerController;
-	
-	
+	TArray<AActor *> SpawnPoints;	
+	void Respawn(APlayerController * NewPlayer);
+
 };
