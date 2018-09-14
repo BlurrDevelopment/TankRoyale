@@ -48,7 +48,7 @@ void ADeathmatchGameStateBase::WaitForPlayers()
 			UE_LOG(LogTemp, Warning, TEXT("Team One Players: %d/%d | Team Two Players: %d/%d"), TeamOneTanks.Num(), TanksPerTeam, TeamTwoTanks.Num(), TanksPerTeam);
 
 			FTimerHandle WaitTimer;
-			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &ADeathmatchGameStateBase::WaitForPlayers, 1000.0f, false);
+			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &ADeathmatchGameStateBase::WaitForPlayers, 1.0f, false);
 		}
 	}
 }

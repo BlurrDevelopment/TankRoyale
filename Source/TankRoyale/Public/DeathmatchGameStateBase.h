@@ -55,9 +55,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
 		int32 GameRounds = 1;
 
-	// How many tanks per team.
+	// How many tanks per team. Default: 5
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-		int32 TanksPerTeam = 5;
+		int32 TanksPerTeam = 1;
 
 	FTimerHandle GameTimerHandler;
 
