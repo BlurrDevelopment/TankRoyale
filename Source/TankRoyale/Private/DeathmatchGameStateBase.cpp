@@ -22,13 +22,12 @@ void ADeathmatchGameStateBase::BeginPlay()
 	TeamOneTanks.Empty();
 	TeamTwoTanks.Empty();
 	TeamSpectatorTanks.Empty();
+
+	WaitForPlayers();
 }
 
-void ADeathmatchGameStateBase::Tick(float DeltaTime)
+void ADeathmatchGameStateBase::WaitForPlayers()
 {
-
-
-	Super::Tick(DeltaTime);
 	if (!bGameStarted)
 	{
 		bool bTeamOneReady = false;
@@ -40,17 +39,26 @@ void ADeathmatchGameStateBase::Tick(float DeltaTime)
 		if (bTeamOneReady && bTeamTwoReady)
 		{
 			// TODO Countdown from 5
+			UE_LOG(LogTemp, Warning, TEXT("Starting game..."));
 			StartGame();
 		}
 		else
 		{
-			// Delay 1 second?
 			// TODO UI Displaying game loading
 			UE_LOG(LogTemp, Warning, TEXT("Team One Players: %d/%d | Team Two Players: %d/%d"), TeamOneTanks.Num(), TanksPerTeam, TeamTwoTanks.Num(), TanksPerTeam);
-		}
 
-		return;
+			FTimerHandle WaitTimer;
+			GetWorld()->GetTimerManager().SetTimer(WaitTimer, this, &ADeathmatchGameStateBase::WaitForPlayers, 1000.0f, false);
+		}
 	}
+}
+
+void ADeathmatchGameStateBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	if (!bGameStarted) return;
+
 	TeamOneScore = TeamOneKills - TeamOneDeaths;
 	TeamTwoScore = TeamTwoKills - TeamTwoDeaths;
 

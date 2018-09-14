@@ -18,7 +18,7 @@ private:
 	ADeathmatchGameStateBase();
 
 	virtual void BeginPlay() override;
-
+	void WaitForPlayers();
 	virtual void Tick(float DeltaTime) override;
 
 	int32 TeamOneScore = 0;
