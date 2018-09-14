@@ -42,7 +42,8 @@ public:
 	APickup* GetCurrentPickup() { return CurrentPickup; }
 
 	void Repair(float Amount);
-	
+	void GetSpawnPointNumber(int16 Number);
+	int16 SpawnPointNumber = 0;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;

@@ -38,6 +38,7 @@ private:
 	TArray<ATank*> TeamSpectatorTanks;
 
 public:
+	int16 PlayerNumber = 0;
 	UFUNCTION(BlueprintCallable, Category = "Start")
 		bool HasGameStarted() { return bGameStarted; }
 	void AssignTankTeam(ATank* Tank);
@@ -92,7 +93,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Killfeed")
 		void AddKillToFeed(const FString& Killer, const FString& State, const FString& Victim);//FString Killer, FString State, FString Victim               const FString& Killer, const FString& State, const FString& Victim
 	bool Timer = false;
-	
+	void Spawn(APlayerController * NewPlayer, int16 SpawnPointNumber);
+private:
+	TArray<AActor *> SpawnPoints;
+	AActor * SpawnPointAtIndex;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ATank> TankSubClass;
+	void Respawn();
+	AActor * PointToSpawn;
+	class ATank * Tank;
+	APlayerController * PlayerController;
 	
 	
 };

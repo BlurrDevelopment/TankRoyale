@@ -82,7 +82,7 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 {
 	bDead = true;
 	OnDeath.Broadcast();
-
+	UE_LOG(LogTemp, Warning, TEXT("Dead "));
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		auto KillerTank = Cast<ATank>(DamageCauser);
@@ -107,10 +107,8 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	// Play the particle emitter
 	if (!ensure(DeathEmitterTemplate)) return;
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEmitterTemplate, GetTransform());
-
 	// Destroy the actor
 	Destroy();
-
 	return;
 }
 
@@ -119,6 +117,11 @@ void ATank::Repair(float Amount)
 	Amount = FMath::Clamp<float>(Amount, 0.0f, 100.0f);
 	CurrentHealth = FMath::Clamp<int32>(CurrentHealth + Amount, 0, 100);
 	UE_LOG(LogTemp, Warning, TEXT("%s: I have been repaired for: %f"), *GetName(), Amount);
+}
+
+void ATank::GetSpawnPointNumber(int16 Number)
+{
+	SpawnPointNumber = Number;
 }
 
 

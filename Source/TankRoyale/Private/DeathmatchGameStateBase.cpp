@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "TankSpawnPoint.h"
 
 ADeathmatchGameStateBase::ADeathmatchGameStateBase()
 {
@@ -133,14 +134,14 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	{
 		TeamOneDeaths++;
 		TeamOneTanks.Remove(Tank);
-		// TODO respawn as new tank
+		Respawn();
 		return;
 	}
 	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
 		TeamTwoDeaths++;
 		TeamTwoTanks.Remove(Tank);
-		// TODO respawn as new tank
+		Respawn();
 		return;
 	}
 }
@@ -225,6 +226,30 @@ TArray<ATank*> ADeathmatchGameStateBase::GetTeamTanks(int32 Team) const
 	else return TeamTwoTanks;
 }
 
+
+void ADeathmatchGameStateBase::Spawn(APlayerController * NewPlayer, int16 SpawnPointNumber)
+{
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATankSpawnPoint::StaticClass(), SpawnPoints);
+	if (SpawnPoints.Num() == 0) {
+		UE_LOG(LogTemp, Warning, TEXT("nope"));
+		return;
+	}
+	PointToSpawn = SpawnPoints[SpawnPointNumber];
+	Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
+
+	//Tank->PossessedBy(NewPlayer);
+	NewPlayer->Possess(Tank);
+	PlayerController = NewPlayer;
+	PlayerNumber++;
+
+
+}
+
+void ADeathmatchGameStateBase::Respawn()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I am Respawning "));
+	Spawn(PlayerController, Tank->SpawnPointNumber);
+}
 
 
 
