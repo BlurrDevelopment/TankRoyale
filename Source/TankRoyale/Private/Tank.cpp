@@ -47,7 +47,7 @@ void ATank::StartGame()
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	//for testing 
-	TankDeath(DamageCauser, 20);
+	//TankDeath(DamageCauser, 20);
 	if (!bGameStarted) return 0.0f;
 
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
