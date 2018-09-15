@@ -22,20 +22,32 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
+	bGameStarted = false;
 	
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
 	if (GameMode == EGameMode::Deathmatch)
 	{
 		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
-		
-		UE_LOG(LogTemp, Warning, TEXT(" %s Team is %d"), *GetName(), Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTankTeam(this))
 	}
 	
+}
+
+void ATank::StartGame()
+{
+	// Set bool so the tank knows it can be killed.
+	bGameStarted = true;
+
+	// Allow the player to being able to shoot and use gadgets.
+	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+	AimingComponent->StartGame();
 }
 
 
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
+	if (!bGameStarted) return;
+
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp<int32>(DamagePoints, 0, CurrentHealth);
 

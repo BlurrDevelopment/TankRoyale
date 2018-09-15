@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
+	void StartGame();
+
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
@@ -223,4 +225,5 @@ private:
 
 	/// Disable Aiming
 	bool bAimingDisabled = false;
+	bool bGameStarted = false;
 };

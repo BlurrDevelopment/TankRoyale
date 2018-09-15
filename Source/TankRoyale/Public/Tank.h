@@ -41,6 +41,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	APickup* GetCurrentPickup() { return CurrentPickup; }
 
+	void StartGame();
+
 	void Repair(float Amount);
 	void SetSpawnPointNumber(int16 Number);
 	int16 SpawnPointNumber = 0;
@@ -56,6 +58,8 @@ private:
 	ATank();
 
 	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
+
+	bool bGameStarted = false;
 
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;

@@ -125,6 +125,14 @@ void ADeathmatchGameStateBase::StartGame()
 	TeamTwoKills = 0;
 	TeamOneDeaths = 0;
 	TeamTwoDeaths = 0;
+
+	// TODO Teleport all players to spawn.
+
+	for (int i = 0; i < TanksPerTeam; i++)
+	{
+		if (TeamOneTanks[i]) TeamOneTanks[i]->StartGame();
+		if (TeamTwoTanks[i]) TeamTwoTanks[i]->StartGame();
+	}
 }
 
 void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)

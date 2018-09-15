@@ -21,6 +21,7 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	bGameStarted = false;
 }
 
 void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -62,12 +63,17 @@ void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSe
 	OwnerTank = OwningTank;
 }
 
+void UTankAimingComponent::StartGame()
+{
+	bGameStarted = true;
+}
+
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Set the firing state
-	if ((RoundsLeft <= 0 && RoundsLoaded <= 0) || !Barrel->CanBarrelFire() || bOverheated || bAimingDisabled)
+	if ((RoundsLeft <= 0 && RoundsLoaded <= 0) || !Barrel->CanBarrelFire() || bOverheated || bAimingDisabled || !bGameStarted)
 	{
 		FiringState = EFiringState::OutOfAmmo;
 	}
@@ -117,7 +123,9 @@ bool UTankAimingComponent::IsBarrelMoving()
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	
+	// Dont shoot if the game hasnt started
+	if (!bGameStarted) return;
+
 	if (!ensure(Barrel) ||  !ensure(Turret)) { return; }
 
 	FVector OutLaunchVelocity;
@@ -137,6 +145,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 // Move the tanks barrel.
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
+	// Dont shoot if the game hasnt started
+	if (!bGameStarted) return;
+
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	if (bAimingDisabled) return;
 
@@ -160,6 +171,9 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
+	// Dont shoot if the game hasnt started
+	if (!bGameStarted) return;
+
 	if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
 	if (bAimingDisabled) return;
 
@@ -178,6 +192,9 @@ void UTankAimingComponent::Fire()
 
 void UTankAimingComponent::FireGadget()
 {
+	// Dont shoot if the game hasnt started
+	if (!bGameStarted) return;
+
 	if (!ensure(Barrel) || !ensure(GadgetBlueprint)) { return; }
 	if (bAimingDisabled) return;
 
@@ -199,6 +216,9 @@ void UTankAimingComponent::FireGadget()
 
 void UTankAimingComponent::FireRound()
 {
+	// Dont shoot if the game hasnt started
+	if (!bGameStarted) return;
+
 	// Spawn a projectile at the socket location on the barrel
 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
 
