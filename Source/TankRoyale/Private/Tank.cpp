@@ -46,7 +46,7 @@ void ATank::StartGame()
 
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	if (!bGameStarted) return;
+	if (!bGameStarted) return 0.0f;
 
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp<int32>(DamagePoints, 0, CurrentHealth);
