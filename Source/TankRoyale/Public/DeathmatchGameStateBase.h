@@ -89,15 +89,16 @@ public:
 		void DisplayEndGameUI();
 
 	void EndGame();
-
+	UFUNCTION(Server, Reliable, WithValidation)
+	void SpawnOnServer(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer);
 	void RegisterTankHit(ATank* ShootingTank, ATank* HitTank);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Killfeed")
 		void AddKillToFeed(const FString& Killer, const FString& State, const FString& Victim);//FString Killer, FString State, FString Victim               const FString& Killer, const FString& State, const FString& Victim
 	bool Timer = false;
-	void Spawn(APlayerController * NewPlayer, int16 SpawnPointNumber);
+	void Spawn(AController * NewPlayer, int16 SpawnPointNumber);
 private:
 	TArray<AActor *> SpawnPoints;	
-	void Respawn(APlayerController * NewPlayer);
+	void Respawn(AController * NewPlayer, FVector SpawnLocation);
 
 };

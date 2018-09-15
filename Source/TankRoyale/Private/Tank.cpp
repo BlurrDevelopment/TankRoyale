@@ -4,7 +4,6 @@
 #include "TankTurret.h"
 #include "TankTrack.h"
 #include "Engine/World.h"
-#include "GameModes/GameModeDeathmatch.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pickup.h"
 #include "DeathmatchGameStateBase.h"
@@ -22,6 +21,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
+	
 	bGameStarted = false;
 	
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
@@ -46,6 +46,8 @@ void ATank::StartGame()
 
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
+	//for testing 
+	TankDeath(DamageCauser, 20);
 	if (!bGameStarted) return 0.0f;
 
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
@@ -131,9 +133,9 @@ void ATank::Repair(float Amount)
 	UE_LOG(LogTemp, Warning, TEXT("%s: I have been repaired for: %f"), *GetName(), Amount);
 }
 
-void ATank::SetSpawnPointNumber(int16 Number)
+void ATank::SetSpawnPointLocation(FVector Location)
 {
-	SpawnPointNumber = Number;
+	SpawnPointLocation = Location;
 }
 
 

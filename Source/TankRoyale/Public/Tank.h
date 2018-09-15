@@ -44,8 +44,8 @@ public:
 	void StartGame();
 
 	void Repair(float Amount);
-	void SetSpawnPointNumber(int16 Number);
-	int16 SpawnPointNumber = 0;
+	void SetSpawnPointLocation(FVector Location);
+	FVector SpawnPointLocation;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;

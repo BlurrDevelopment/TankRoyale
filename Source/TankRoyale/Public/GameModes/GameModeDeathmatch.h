@@ -15,10 +15,13 @@ UCLASS()
 class TANKROYALE_API AGameModeDeathmatch : public AGameModeBase
 {
 	GENERATED_BODY()
+public:
+	AActor * SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation);
 protected:
 	void PostLogin(APlayerController * NewPlayer) override;
 private:
 	class ADeathmatchGameStateBase * GameState;
-};
+	
+ };
 
 

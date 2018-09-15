@@ -132,7 +132,7 @@ void ADeathmatchGameStateBase::StartGame()
 	for (int i = 0; i < TanksPerTeam; i++)
 	{
 		if (TeamOneTanks[i]) TeamOneTanks[i]->StartGame();
-		if (TeamTwoTanks[i]) TeamTwoTanks[i]->StartGame();
+	if (TeamTwoTanks[i]) TeamTwoTanks[i]->StartGame();
 	}
 }
 
@@ -144,7 +144,7 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	{
 		TeamOneDeaths++;
 		
-		Respawn(Cast<APlayerController>(Tank->GetController()));
+		Respawn(Tank->GetController(), Tank->SpawnPointLocation);
 		TeamOneTanks.Remove(Tank);
 		return;
 	}
@@ -153,7 +153,7 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	{
 		TeamTwoDeaths++;
 		
-	Respawn(Cast<APlayerController>(Tank->GetController()));
+		Respawn(Tank->GetController(), Tank->SpawnPointLocation);
 		TeamTwoTanks.Remove(Tank);
 		return;
 	}
@@ -190,6 +190,26 @@ int32 ADeathmatchGameStateBase::GetTeamAlive(int32 Team) const
 	}
 
 	return 0;
+}
+
+void ADeathmatchGameStateBase::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer)
+{
+	AActor * TankActor = Cast<AGameModeDeathmatch>(UGameplayStatics::GetGameMode(World))->SpawnActor(ActorToSpawn, SpawnLocation, FRotator(0, 0, 0));
+	if (TankActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
+		return;
+	}
+	ATank * Tank = Cast<ATank>(TankActor);
+	if (Tank == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
+		return;
+	}
+	NewPlayer->Possess(Tank);
+
+}
+bool ADeathmatchGameStateBase::SpawnOnServer_Validate(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer) {
+	return true;
 }
 
 // Receive hits from tanks and check them against tanks
@@ -240,7 +260,7 @@ TArray<ATank*> ADeathmatchGameStateBase::GetTeamTanks(int32 Team) const
 }
 
 
-void ADeathmatchGameStateBase::Spawn(APlayerController * NewPlayer, int16 SpawnPointNumber)
+void ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPointNumber)
 {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATankSpawnPoint::StaticClass(), SpawnPoints);
 	if (SpawnPoints.Num() == 0) {
@@ -248,24 +268,18 @@ void ADeathmatchGameStateBase::Spawn(APlayerController * NewPlayer, int16 SpawnP
 		return;
 	}
 	PointToSpawn = SpawnPoints[SpawnPointNumber];
+	FVector PointToSpawnLocation = PointToSpawn->GetActorLocation();
 	 ATank *Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
 	//Tank->PossessedBy(NewPlayer);
 	NewPlayer->Possess(Tank);
-	Tank->SetSpawnPointNumber(PlayerNumber);
+	Tank->SetSpawnPointLocation(PointToSpawnLocation);
 	PlayerNumber++;
 
 
 }
-void ADeathmatchGameStateBase::Respawn(APlayerController * NewPlayer)
+void ADeathmatchGameStateBase::Respawn(AController * NewPlayer , FVector SpawnLocation)
 {
-
-	ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
-	if (Tank == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
-		return;
-	}
-	NewPlayer->Possess(Tank);
-
+	SpawnOnServer(TankSubClass, SpawnLocation, FRotator(0, 0, 0), GetWorld(), NewPlayer);
 }
 
 
