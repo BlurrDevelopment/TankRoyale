@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Pickup.h"
 #include "DeathmatchGameStateBase.h"
+#include "GameModeDeathmatch.h"
 #include "TankAimingComponent.h"
 
 
@@ -21,7 +22,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
-	
+	 AGameMode = Cast<AGameModeDeathmatch>(UGameplayStatics::GetGameMode(GetWorld()));
 	bGameStarted = false;
 	
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
@@ -47,7 +48,7 @@ void ATank::StartGame()
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	//for testing 
-	//TankDeath(DamageCauser, 20);
+	TankDeath(DamageCauser, 20);
 	if (!bGameStarted) return 0.0f;
 
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
@@ -91,7 +92,33 @@ void ATank::SetOnPickup(bool On, APickup* Pickup)
 	bOnPickup = On;
 	CurrentPickup = Pickup;
 }
+void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod)
+{
+	if (AGameMod == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GameMode Is Null"));
+	}
+	if (ActorToSpawn == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("ActorToSpawn Is Null"));
+	}
+	AActor * TankActor = AGameMod->SpawnActor(ActorToSpawn, SpawnLocation, FRotator(0, 0, 0));
+	if (TankActor == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
+		return;
+	}
+	ATank * Tank = Cast<ATank>(TankActor);
+	if (Tank == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Respawned"));
+	//NewPlayer->Possess(Tank);
 
+}
+bool ATank::SpawnOnServer_Validate(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod) {
+	return true;
+}
 void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 {
 	bDead = true;
@@ -112,6 +139,13 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		// 15% Chance to drop burst
 		Chance = rand() % 100 + 1;
 		if (Chance <= 20) DropBurst();
+		//AController * Controller = GetController();
+		//UnPossessed();
+		//ATank * Tank =	GetWorld()->SpawnActor<ATank>(StaticClass(), SpawnPointLocation, FRotator(0, 0, 0));
+		//if (Tank == nullptr) {
+		//	UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
+			//return;
+		//}
 	}
 
 	// Play explosion sound

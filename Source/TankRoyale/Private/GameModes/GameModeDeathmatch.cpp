@@ -11,5 +11,10 @@ void AGameModeDeathmatch::PostLogin(APlayerController * NewPlayer) {
 }
 AActor * AGameModeDeathmatch::SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation)
 {
-	return GetWorld()->SpawnActor<AActor>(ActorToSpawn, SpawnLocation, SpawnRotation);
+	UWorld * World = GetWorld();
+	if (World == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("World is null"));
+	}
+	return World->SpawnActor<AActor>(ActorToSpawn, SpawnLocation, SpawnRotation);
 }

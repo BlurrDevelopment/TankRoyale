@@ -42,10 +42,12 @@ public:
 	APickup* GetCurrentPickup() { return CurrentPickup; }
 
 	void StartGame();
-
+	class AGameModeDeathmatch * AGameMode;
 	void Repair(float Amount);
 	void SetSpawnPointLocation(FVector Location);
 	FVector SpawnPointLocation;
+	UFUNCTION(Server, Reliable, WithValidation)
+		void SpawnOnServer(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod);
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
@@ -60,7 +62,7 @@ private:
 	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
 
 	bool bGameStarted = false;
-
+	
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;
 	

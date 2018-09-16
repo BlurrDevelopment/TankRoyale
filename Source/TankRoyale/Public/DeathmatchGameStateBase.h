@@ -82,15 +82,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Team")
 		TArray<ATank*> GetTeamTanks(int32 Team) const;
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class ATank> TankSubClass;
+		TSubclassOf<ATank> TankSubClass;
 	UPROPERTY()
 		AActor * PointToSpawn;
 	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
 		void DisplayEndGameUI();
 
 	void EndGame();
-	UFUNCTION(Server, Reliable, WithValidation)
-	void SpawnOnServer(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer);
 	void RegisterTankHit(ATank* ShootingTank, ATank* HitTank);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Killfeed")

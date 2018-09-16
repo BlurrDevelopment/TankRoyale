@@ -143,8 +143,7 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	if (TeamOneTanks.Find(Tank) != INDEX_NONE)
 	{
 		TeamOneDeaths++;
-		
-		Respawn(Tank->GetController(), Tank->SpawnPointLocation);
+		//UE_LOG(LogTemp, Warning, TEXT("contrller %s spawn location %s"), *Tank->GetController()->GetName(), *Tank->SpawnPointLocation.ToString());
 		TeamOneTanks.Remove(Tank);
 		return;
 	}
@@ -152,8 +151,7 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 	else if (TeamTwoTanks.Find(Tank) != INDEX_NONE)
 	{
 		TeamTwoDeaths++;
-		
-		Respawn(Tank->GetController(), Tank->SpawnPointLocation);
+	//	UE_LOG(LogTemp, Warning, TEXT("contrller %s  spawn location %s"), *Tank->GetController()->GetName(), *Tank->SpawnPointLocation.ToString());
 		TeamTwoTanks.Remove(Tank);
 		return;
 	}
@@ -192,25 +190,8 @@ int32 ADeathmatchGameStateBase::GetTeamAlive(int32 Team) const
 	return 0;
 }
 
-void ADeathmatchGameStateBase::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer)
-{
-	AActor * TankActor = Cast<AGameModeDeathmatch>(UGameplayStatics::GetGameMode(World))->SpawnActor(ActorToSpawn, SpawnLocation, FRotator(0, 0, 0));
-	if (TankActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
-		return;
-	}
-	ATank * Tank = Cast<ATank>(TankActor);
-	if (Tank == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
-		return;
-	}
-	NewPlayer->Possess(Tank);
 
-}
-bool ADeathmatchGameStateBase::SpawnOnServer_Validate(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, UWorld * World, AController * NewPlayer) {
-	return true;
-}
+
 
 // Receive hits from tanks and check them against tanks
 void ADeathmatchGameStateBase::RegisterTankHit(ATank* ShootingTank, ATank* HitTank)
@@ -279,7 +260,7 @@ void ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPointNu
 }
 void ADeathmatchGameStateBase::Respawn(AController * NewPlayer , FVector SpawnLocation)
 {
-	SpawnOnServer(TankSubClass, SpawnLocation, FRotator(0, 0, 0), GetWorld(), NewPlayer);
+	
 }
 
 
