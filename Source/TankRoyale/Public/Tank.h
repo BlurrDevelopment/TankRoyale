@@ -47,11 +47,14 @@ public:
 	void SetSpawnPointLocation(FVector Location);
 	FVector SpawnPointLocation;
 	UFUNCTION(Server, Reliable, WithValidation)
-		void SpawnOnServer(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod);
+		void SpawnOnServer(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer);
+	UPROPERTY(EditDefaultsOnly, Category = "Respawning")
+		TSubclassOf<ATank> TankToBe;
+		AController * MyController;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
-
+	void PossessedBy(AController * NewController) override;
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	APickup* CurrentPickup = nullptr;
 

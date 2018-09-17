@@ -11,6 +11,11 @@
 #include "TankAimingComponent.h"
 
 
+void ATank::PossessedBy(AController * NewController)
+{
+	MyController = NewController;
+}
+
 // Sets default values
 ATank::ATank()
 {
@@ -22,7 +27,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
-	 AGameMode = Cast<AGameModeDeathmatch>(UGameplayStatics::GetGameMode(GetWorld()));
+	UE_LOG(LogTemp, Warning, TEXT("hi this is my location %s"), *GetActorLocation().ToString());
 	bGameStarted = false;
 	
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
@@ -37,7 +42,7 @@ void ATank::StartGame()
 {
 	// Set bool so the tank knows it can be killed.
 	bGameStarted = true;
-
+	
 	// Allow the player to being able to shoot and use gadgets.
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;
@@ -48,7 +53,7 @@ void ATank::StartGame()
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	//for testing 
-	TankDeath(DamageCauser, 20);
+	//TankDeath(DamageCauser, 20);
 	if (!bGameStarted) return 0.0f;
 
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
@@ -92,16 +97,17 @@ void ATank::SetOnPickup(bool On, APickup* Pickup)
 	bOnPickup = On;
 	CurrentPickup = Pickup;
 }
-void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod)
+void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer)
 {
-	if (AGameMod == nullptr)
+	AGameMode = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
+	if (AGameMode == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GameMode Is Null"));
 	}
 	if (ActorToSpawn == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("ActorToSpawn Is Null"));
 	}
-	AActor * TankActor = AGameMod->SpawnActor(ActorToSpawn, SpawnLocation, FRotator(0, 0, 0));
+	AActor * TankActor = AGameMode->SpawnActor(ActorToSpawn, SpawnLocation, SpawnRotation);
 	if (TankActor == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
@@ -112,11 +118,17 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
 		return;
 	}
+	if (NewPlayer == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
+		return;
+	}
+	NewPlayer->Possess(Tank);
 	UE_LOG(LogTemp, Warning, TEXT("Respawned"));
-	//NewPlayer->Possess(Tank);
+	
+
 
 }
-bool ATank::SpawnOnServer_Validate(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer, AGameModeDeathmatch * AGameMod) {
+bool ATank::SpawnOnServer_Validate(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer){
 	return true;
 }
 void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
@@ -139,15 +151,16 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		// 15% Chance to drop burst
 		Chance = rand() % 100 + 1;
 		if (Chance <= 20) DropBurst();
-		//AController * Controller = GetController();
-		//UnPossessed();
-		//ATank * Tank =	GetWorld()->SpawnActor<ATank>(StaticClass(), SpawnPointLocation, FRotator(0, 0, 0));
-		//if (Tank == nullptr) {
-		//	UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
-			//return;
-		//}
+		if (MyController == nullptr) {
+			UE_LOG(LogTemp, Warning, TEXT("ControllerToBe Is Null"));
+			return;
+		}
+	SpawnOnServer(TankToBe, SpawnPointLocation, FRotator(0, 0, 0), MyController);
+		
+		
+	
 	}
-
+	Destroy();
 	// Play explosion sound
 	if (!ensure(ExplodeSound)) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
@@ -156,7 +169,7 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	if (!ensure(DeathEmitterTemplate)) return;
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEmitterTemplate, GetTransform());
 	// Destroy the actor
-	Destroy();
+	
 	return;
 }
 
