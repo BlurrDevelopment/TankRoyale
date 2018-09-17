@@ -13,8 +13,5 @@ UCLASS()
 class TANKROYALE_API ATankRoyaleGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+
 };
