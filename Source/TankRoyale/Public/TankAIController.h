@@ -27,9 +27,9 @@ private:
 	class UAIPerceptionComponent * AIPerceptionComponent;
 	class ATank * PossessedTank;
 	void OnTargetPerceptionUpdated(AActor * Actor, struct FAIStimulus AIStimulus);
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBlackboardData * TankBlackboardData;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBehaviorTree * TankBehaviorTree;
 	
 protected:

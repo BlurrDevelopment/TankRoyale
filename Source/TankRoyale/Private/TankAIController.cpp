@@ -61,8 +61,9 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 }
 void ATankAIController::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
 	
+	Super::Tick(DeltaTime);
+	/*
 	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 	auto ControlledTank = GetPawn();
 	if (!(PlayerTank && ControlledTank)) { return; }
@@ -79,4 +80,5 @@ void ATankAIController::Tick(float DeltaTime)
 	{
 		AimingComponent->Fire();
 	}
+	*/
 }
