@@ -21,8 +21,20 @@ private:
 	virtual void SetPawn(APawn* InPawn) override;
 
 	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void OnPossessedTankDeath();
+	UPROPERTY(VisibleAnywhere)
+	class UAIPerceptionComponent * AIPerceptionComponent;
+	class ATank * PossessedTank;
+	void OnTargetPerceptionUpdated(AActor * Actor, struct FAIStimulus AIStimulus);
+	UPROPERTY(EditAnywhere)
+	class UBlackboardData * TankBlackboardData;
+	UPROPERTY(EditAnywhere)
+	class UBehaviorTree * TankBehaviorTree;
+	
 protected:
+
+public:
+ATankAIController();
+class UBlackboardComponent * BlackboardComponent;
 };

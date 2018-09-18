@@ -51,6 +51,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Respawning")
 		TSubclassOf<ATank> TankToBe;
 		AController * MyController;
+		const FName TeamOneTag = "1";
+		const FName TeamTwoTag = "2";
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	bool bOnPickup;
