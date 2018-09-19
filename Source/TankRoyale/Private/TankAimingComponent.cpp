@@ -21,6 +21,7 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	//TODO dor testing
 	bGameStarted = false;
 }
 

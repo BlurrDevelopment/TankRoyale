@@ -5,7 +5,6 @@
 #include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "Perception/AIPerceptionTypes.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "tank.h"
@@ -19,8 +18,8 @@ void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ATankAIController::OnTargetPerceptionUpdated);
-	RunBehaviorTree(TankBehaviorTree);
 	UseBlackboard(TankBlackboardData, BlackboardComponent);
+	RunBehaviorTree(TankBehaviorTree);
 }
 
 void ATankAIController::SetPawn(APawn* InPawn)
@@ -30,8 +29,9 @@ void ATankAIController::SetPawn(APawn* InPawn)
 	if (InPawn)
 	{
 		 PossessedTank = Cast<ATank>(InPawn);
-		if (!ensure(PossessedTank)) { return; }
-		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
+		 // TODO for testing
+	//	if (!ensure(PossessedTank)) { return; }
+	//	PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
 	}
 }
 
@@ -43,7 +43,8 @@ void ATankAIController::OnPossessedTankDeath()
 }
 
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)
-{
+{/*
+	UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
 	// Check actor team
 	if (Actor->ActorHasTag(PossessedTank->TeamOneTag))
 	{
@@ -58,6 +59,7 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 		}
 		
 	}
+	*/
 }
 void ATankAIController::Tick(float DeltaTime)
 {

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "TankAIController.generated.h"
 
 UCLASS()
@@ -26,7 +27,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UAIPerceptionComponent * AIPerceptionComponent;
 	class ATank * PossessedTank;
-	void OnTargetPerceptionUpdated(AActor * Actor, struct FAIStimulus AIStimulus);
+	UFUNCTION()
+	void OnTargetPerceptionUpdated(class AActor * Actor,   FAIStimulus AIStimulus);
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBlackboardData * TankBlackboardData;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -36,5 +38,6 @@ protected:
 
 public:
 ATankAIController();
+UPROPERTY(BlueprintReadWrite)
 class UBlackboardComponent * BlackboardComponent;
 };
