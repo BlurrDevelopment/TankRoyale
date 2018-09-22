@@ -7,11 +7,25 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AISenseConfig_Hearing.h"
+#include "Perception/AISenseConfig.h"
 #include "tank.h"
 const FName Enemy = "Enemy";
 ATankAIController::ATankAIController()
 {
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+	SightSenseConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightSense"));
+	HearingSenseConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearningSense"));
+	SightSenseConfig->SightRadius = 80000.f;
+	SightSenseConfig->LoseSightRadius = 10000.f;
+	SightSenseConfig->PeripheralVisionAngleDegrees = 180.f;
+	SightSenseConfig->DetectionByAffiliation.DetectAllFlags();
+	HearingSenseConfig->HearingRange = 12500.f;
+	HearingSenseConfig->DetectionByAffiliation.DetectAllFlags();
+	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(SightSenseConfig));
+	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(HearingSenseConfig));
+	
 }
 
 void ATankAIController::BeginPlay()
@@ -43,8 +57,9 @@ void ATankAIController::OnPossessedTankDeath()
 }
 
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)
-{/*
+{
 	UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
+	/*
 	// Check actor team
 	if (Actor->ActorHasTag(PossessedTank->TeamOneTag))
 	{
@@ -58,6 +73,18 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 			BlackboardComponent->SetValueAsObject(Enemy, Actor);
 		}
 		
+	}
+	else if (Actor->ActorHasTag(PossessedTank->TeamTwoTag)) {
+		// True means that they are on the same team and we sould not do anything
+		if (PossessedTank->ActorHasTag(PossessedTank->TeamTwoTag)) {
+
+		}
+		// True means that they are not on the same team and we sould fuck him up
+		else if ((PossessedTank->ActorHasTag(PossessedTank->TeamOneTag)))
+		{
+			BlackboardComponent->SetValueAsObject(Enemy, Actor);
+		}
+
 	}
 	*/
 }

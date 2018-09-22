@@ -24,11 +24,9 @@ private:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	void OnPossessedTankDeath();
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UAIPerceptionComponent * AIPerceptionComponent;
 	class ATank * PossessedTank;
-	UFUNCTION()
-	void OnTargetPerceptionUpdated(class AActor * Actor,   FAIStimulus AIStimulus);
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBlackboardData * TankBlackboardData;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -40,4 +38,11 @@ public:
 ATankAIController();
 UPROPERTY(BlueprintReadWrite)
 class UBlackboardComponent * BlackboardComponent;
+UFUNCTION()
+void OnTargetPerceptionUpdated(class AActor * Actor, FAIStimulus AIStimulus);
+
+UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+class UAISenseConfig_Sight * SightSenseConfig;
+UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+class UAISenseConfig_Hearing * HearingSenseConfig;
 };
