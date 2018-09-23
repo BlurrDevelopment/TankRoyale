@@ -13,9 +13,6 @@ class TANKROYALE_API ATankAIController : public AAIController
 	GENERATED_BODY()
 	
 private:
-	// How close to the player can the AI get?
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float AcceptanceRadius = 8000.0f;
 
 	virtual void BeginPlay() override;
 

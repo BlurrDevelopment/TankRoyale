@@ -21,8 +21,8 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	//TODO dor testing
-	bGameStarted = false;
+	//TODO for testing
+	bGameStarted = true;
 }
 
 void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)

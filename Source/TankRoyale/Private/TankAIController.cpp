@@ -2,7 +2,6 @@
 
 #include "TankAIController.h"
 #include "Engine/World.h"
-#include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -12,6 +11,8 @@
 #include "Perception/AISenseConfig.h"
 #include "tank.h"
 const FName Enemy = "Enemy";
+const FName TeamOneTag = "1";
+const FName TeamTwoTag = "2";
 ATankAIController::ATankAIController()
 {
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
@@ -44,8 +45,8 @@ void ATankAIController::SetPawn(APawn* InPawn)
 	{
 		 PossessedTank = Cast<ATank>(InPawn);
 		 // TODO for testing
-	//	if (!ensure(PossessedTank)) { return; }
-	//	PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
+		if (!ensure(PossessedTank)) { return; }
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
 	}
 }
 
@@ -59,55 +60,52 @@ void ATankAIController::OnPossessedTankDeath()
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
-	/*
-	// Check actor team
-	if (Actor->ActorHasTag(PossessedTank->TeamOneTag))
+	if (AIStimulus.WasSuccessfullySensed())
 	{
-		// True means that they are on the same team and we sould not do anything
-		if (PossessedTank->ActorHasTag(PossessedTank->TeamOneTag)) {
-
-		}
-		// True means that they are not on the same team and we sould fuck him up
-		else if ((PossessedTank->ActorHasTag(PossessedTank->TeamTwoTag)))
+		if (Actor != nullptr)
 		{
-			BlackboardComponent->SetValueAsObject(Enemy, Actor);
-		}
-		
-	}
-	else if (Actor->ActorHasTag(PossessedTank->TeamTwoTag)) {
-		// True means that they are on the same team and we sould not do anything
-		if (PossessedTank->ActorHasTag(PossessedTank->TeamTwoTag)) {
+			UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "));
+			// Check actor team
+			if (Actor->ActorHasTag(TeamOneTag))
+			{
+				// True means that they are on the same team and we sould not do anything
+				if (PossessedTank->ActorHasTag(TeamOneTag)) {
+
+				}
+				// True means that they are not on the same team and we sould fuck him up
+				else if ((PossessedTank->ActorHasTag(TeamTwoTag)))
+				{
+					BlackboardComponent->SetValueAsObject(Enemy, Actor);
+					return;
+				}
+
+			}
+			else if (Actor->ActorHasTag(TeamTwoTag)) {
+				// True means that they are on the same team and we sould not do anything
+				if (PossessedTank->ActorHasTag(TeamTwoTag)) {
+
+				}
+				// True means that they are not on the same team and we sould fuck him up
+				else if ((PossessedTank->ActorHasTag(TeamOneTag)))
+				{
+					BlackboardComponent->SetValueAsObject(Enemy, Actor);
+					return;
+				}
+
+			}
 
 		}
-		// True means that they are not on the same team and we sould fuck him up
-		else if ((PossessedTank->ActorHasTag(PossessedTank->TeamOneTag)))
-		{
-			BlackboardComponent->SetValueAsObject(Enemy, Actor);
-		}
-
 	}
-	*/
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SensingF"));
+		BlackboardComponent->SetValueAsObject(Enemy, nullptr);
+	}
+
 }
 void ATankAIController::Tick(float DeltaTime)
 {
 	
 	Super::Tick(DeltaTime);
-	/*
-	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
-	auto ControlledTank = GetPawn();
-	if (!(PlayerTank && ControlledTank)) { return; }
 
-	// Move towards the player
-	MoveToActor(PlayerTank, AcceptanceRadius); // TODO Make sure radius is in cm for Acceptance Radius
-		
-	// Aim towards the player
-	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
-	AimingComponent->AimAt(PlayerTank->GetActorLocation() + 150);
-
-	// FIRE!
-	if (AimingComponent->GetFiringState() == EFiringState::Locked)
-	{
-		AimingComponent->Fire();
-	}
-	*/
 }
