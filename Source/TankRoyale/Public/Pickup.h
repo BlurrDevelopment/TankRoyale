@@ -48,7 +48,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	class UAIPerceptionStimuliSourceComponent * AIPerceptionStimuliSourceComponent;
 private:
 	int32 PickupValue = 5;
 	EPickupType PickupType = EPickupType::Ammo;

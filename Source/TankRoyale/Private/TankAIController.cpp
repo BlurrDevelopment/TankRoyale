@@ -14,6 +14,7 @@ const FName Enemy = "Enemy";
 const FName LastSeenLocation = "LastSeenLocation";
 const FName TeamOneTag = "1";
 const FName TeamTwoTag = "2";
+const FName PickUp = "PickUp";
 ATankAIController::ATankAIController()
 {
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
@@ -62,34 +63,42 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
-	if (Actor != nullptr  && AIStimulus.WasSuccessfullySensed())
+	if (Actor != nullptr)
 	{
-
-		UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "))
-		
-		// Check actor team
-		if (Actor->ActorHasTag(TeamOneTag))
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *Actor->GetName());
+		if (AIStimulus.WasSuccessfullySensed())
 		{
-			// True means that they are not on the same team and we sould fuck him up
-			if ((PossessedTank->ActorHasTag(TeamTwoTag)))
-			{
-				BlackboardComponent->SetValueAsObject(Enemy, Actor);
-				BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-				return;
-			}
+
+			UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "))
+				if (Actor->ActorHasTag(PickUp))
+				{
+					BlackboardComponent->SetValueAsObject(PickUp, Actor);
+					UE_LOG(LogTemp, Warning, TEXT("PickUp"));
+				}
+				// Check actor team
+				if (Actor->ActorHasTag(TeamOneTag))
+				{
+					// True means that they are not on the same team and we should fuck him up
+					if ((PossessedTank->ActorHasTag(TeamTwoTag)))
+					{
+						BlackboardComponent->SetValueAsObject(Enemy, Actor);
+						BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+						return;
+					}
+
+				}
+				else if (Actor->ActorHasTag(TeamTwoTag)) {
+					// True means that they are not on the same team and we should fuck him up
+					if ((PossessedTank->ActorHasTag(TeamOneTag)))
+					{
+						BlackboardComponent->SetValueAsObject(Enemy, Actor);
+						BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+						return;
+					}
+
+				}
 
 		}
-		else if (Actor->ActorHasTag(TeamTwoTag)) {
-			// True means that they are not on the same team and we sould fuck him up
-			if ((PossessedTank->ActorHasTag(TeamOneTag)))
-			{
-				BlackboardComponent->SetValueAsObject(Enemy, Actor);
-				BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-				return;
-			}
-
-		}
-
 	}
 	UE_LOG(LogTemp, Warning, TEXT("SensingF"));
 	BlackboardComponent->SetValueAsObject(Enemy, nullptr);

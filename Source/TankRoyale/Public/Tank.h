@@ -53,9 +53,12 @@ public:
 		AController * MyController;
 		const FName TeamOneTag = "1";
 		const FName TeamTwoTag = "2";
+		UPROPERTY(BlueprintReadOnly, Category = "Pickups")
+			bool bOnPickup;
+		UFUNCTION(BlueprintCallable, Category = "Pickups")
+			void UsePickup();
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-	bool bOnPickup;
+
 	void PossessedBy(AController * NewController) override;
 	UPROPERTY(BlueprintReadOnly, Category = "Pickups")
 	APickup* CurrentPickup = nullptr;
@@ -106,8 +109,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Pickups")
 	FVector BurstOffset;
 
-	UFUNCTION(BlueprintCallable, Category = "Pickups")
-	void UsePickup();
 	void UseAmmoPickup();
 	void UseHealthPickup();
 	void UseBurstPickup();

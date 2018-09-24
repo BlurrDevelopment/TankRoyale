@@ -2,7 +2,7 @@
 
 #include "Pickup.h"
 #include "Tank.h"
-
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 // Sets default values
 APickup::APickup()
@@ -16,7 +16,7 @@ APickup::APickup()
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(FName("Collision Sphere"));
 	CollisionSphere->AttachToComponent(PickupParticle, FAttachmentTransformRules::KeepRelativeTransform);
 	CollisionSphere->SetSphereRadius(500);
-
+	AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(FName("AIPerceptionStimuliSourceComponent"));
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapBegin);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &APickup::OnOverlapEnd);
 
@@ -32,6 +32,7 @@ void APickup::SetupPickup(EPickupType Type, int32 Value)
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
+	Tags.Add("PickUp");
 }
 
 // Called every frame

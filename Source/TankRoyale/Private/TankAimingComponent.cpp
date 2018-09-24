@@ -239,7 +239,7 @@ void UTankAimingComponent::FireRound()
 
 	// Decrease loaded rounds
 	RoundsLoaded--;
-
+	GetOwner()->MakeNoise();
 	if (RoundsLoaded > 0)
 	{
 		// Reload another round
