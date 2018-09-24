@@ -11,6 +11,7 @@
 #include "Perception/AISenseConfig.h"
 #include "tank.h"
 const FName Enemy = "Enemy";
+const FName LastSeenLocation = "LastSeenLocation";
 const FName TeamOneTag = "1";
 const FName TeamTwoTag = "2";
 ATankAIController::ATankAIController()
@@ -76,6 +77,7 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 				else if ((PossessedTank->ActorHasTag(TeamTwoTag)))
 				{
 					BlackboardComponent->SetValueAsObject(Enemy, Actor);
+					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
 					return;
 				}
 
@@ -89,6 +91,7 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 				else if ((PossessedTank->ActorHasTag(TeamOneTag)))
 				{
 					BlackboardComponent->SetValueAsObject(Enemy, Actor);
+					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
 					return;
 				}
 
