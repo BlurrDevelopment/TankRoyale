@@ -66,6 +66,7 @@ void UTankAimingComponent::Initialise(ATank* OwningTank, UTankBarrel* BarrelToSe
 
 void UTankAimingComponent::StartGame()
 {
+	//TODO for testing
 	bGameStarted = true;
 }
 

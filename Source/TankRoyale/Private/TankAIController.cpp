@@ -60,52 +60,42 @@ void ATankAIController::OnPossessedTankDeath()
 
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)
 {
+
 	UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
-	if (AIStimulus.WasSuccessfullySensed())
+	if (Actor != nullptr  && AIStimulus.WasSuccessfullySensed())
 	{
-		if (Actor != nullptr)
+
+		UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "))
+		
+		// Check actor team
+		if (Actor->ActorHasTag(TeamOneTag))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "));
-			// Check actor team
-			if (Actor->ActorHasTag(TeamOneTag))
+			// True means that they are not on the same team and we sould fuck him up
+			if ((PossessedTank->ActorHasTag(TeamTwoTag)))
 			{
-				// True means that they are on the same team and we sould not do anything
-				if (PossessedTank->ActorHasTag(TeamOneTag)) {
-
-				}
-				// True means that they are not on the same team and we sould fuck him up
-				else if ((PossessedTank->ActorHasTag(TeamTwoTag)))
-				{
-					BlackboardComponent->SetValueAsObject(Enemy, Actor);
-					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-					return;
-				}
-
-			}
-			else if (Actor->ActorHasTag(TeamTwoTag)) {
-				// True means that they are on the same team and we sould not do anything
-				if (PossessedTank->ActorHasTag(TeamTwoTag)) {
-
-				}
-				// True means that they are not on the same team and we sould fuck him up
-				else if ((PossessedTank->ActorHasTag(TeamOneTag)))
-				{
-					BlackboardComponent->SetValueAsObject(Enemy, Actor);
-					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-					return;
-				}
-
+				BlackboardComponent->SetValueAsObject(Enemy, Actor);
+				BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+				return;
 			}
 
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("SensingF"));
-		BlackboardComponent->SetValueAsObject(Enemy, nullptr);
-	}
+		else if (Actor->ActorHasTag(TeamTwoTag)) {
+			// True means that they are not on the same team and we sould fuck him up
+			if ((PossessedTank->ActorHasTag(TeamOneTag)))
+			{
+				BlackboardComponent->SetValueAsObject(Enemy, Actor);
+				BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+				return;
+			}
 
+		}
+
+	}
+	UE_LOG(LogTemp, Warning, TEXT("SensingF"));
+	BlackboardComponent->SetValueAsObject(Enemy, nullptr);
 }
+
+
 void ATankAIController::Tick(float DeltaTime)
 {
 	
