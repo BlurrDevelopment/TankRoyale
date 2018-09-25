@@ -9,6 +9,7 @@
 #include "DeathmatchGameStateBase.h"
 #include "GameModeDeathmatch.h"
 #include "TankAimingComponent.h"
+#include "Public/DrawDebugHelpers.h"
 
 
 void ATank::PossessedBy(AController * NewController)
@@ -90,6 +91,12 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 float ATank::GetHealthPercent() const
 {
 	return ((float)CurrentHealth / (float)StartingHealth);
+}
+
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
 }
 
 void ATank::SetOnPickup(bool On, APickup* Pickup)

@@ -9,6 +9,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig.h"
+#include "Perception/AISenseConfig_Damage.h"
 #include "tank.h"
 const FName Enemy = "Enemy";
 const FName LastSeenLocation = "LastSeenLocation";
@@ -20,6 +21,7 @@ ATankAIController::ATankAIController()
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
 	SightSenseConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightSense"));
 	HearingSenseConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearningSense"));
+	SenseConfigDamage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseDamage"));
 	SightSenseConfig->SightRadius = 80000.f;
 	SightSenseConfig->LoseSightRadius = 10000.f;
 	SightSenseConfig->PeripheralVisionAngleDegrees = 180.f;
@@ -28,7 +30,7 @@ ATankAIController::ATankAIController()
 	HearingSenseConfig->DetectionByAffiliation.DetectAllFlags();
 	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(SightSenseConfig));
 	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(HearingSenseConfig));
-	
+	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(SenseConfigDamage));
 }
 
 void ATankAIController::BeginPlay()
@@ -66,8 +68,6 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 	if (Actor != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *Actor->GetName());
-		if (AIStimulus.WasSuccessfullySensed())
-		{
 
 			UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "))
 				if (Actor->ActorHasTag(PickUp))
@@ -83,25 +83,35 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 					{
 						BlackboardComponent->SetValueAsObject(Enemy, Actor);
 						BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-						return;
+						
 					}
 
 				}
-				else if (Actor->ActorHasTag(TeamTwoTag)) {
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("SensingF"));
+					BlackboardComponent->SetValueAsObject(Enemy, nullptr);
+				}
+				 if (Actor->ActorHasTag(TeamTwoTag)) {
 					// True means that they are not on the same team and we should fuck him up
 					if ((PossessedTank->ActorHasTag(TeamOneTag)))
 					{
 						BlackboardComponent->SetValueAsObject(Enemy, Actor);
 						BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-						return;
+					
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("SensingF"));
+						BlackboardComponent->SetValueAsObject(Enemy, nullptr);
 					}
 
-				}
-
-		}
+				}	
 	}
-	UE_LOG(LogTemp, Warning, TEXT("SensingF"));
-	BlackboardComponent->SetValueAsObject(Enemy, nullptr);
+
+		
+	
+
 }
 
 

@@ -42,4 +42,6 @@ UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 class UAISenseConfig_Sight * SightSenseConfig;
 UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 class UAISenseConfig_Hearing * HearingSenseConfig;
+UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+class UAISenseConfig_Damage * SenseConfigDamage;
 };

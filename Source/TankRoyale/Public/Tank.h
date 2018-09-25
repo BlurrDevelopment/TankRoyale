@@ -34,7 +34,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FTankDelegate OnDeath;
-
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void SetOnPickup(bool On, APickup* Pickup);
 
