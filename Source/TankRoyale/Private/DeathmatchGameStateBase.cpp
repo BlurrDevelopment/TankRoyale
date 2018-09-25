@@ -93,27 +93,28 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 	//	TeamTwoTanks.Add(Tank);
 	//	return;
 	//}
+	if (!Tank->AsAssignedToTeam)
+	{
+		if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < TanksPerTeam)
+		{
+			AssignTankToTeamByN(2, Tank);
+			return;
 
-	if (TeamOneTanks.Num() > TeamTwoTanks.Num() && TeamTwoTanks.Num() < TanksPerTeam)
-	{
-		TeamTwoTanks.Add(Tank);
-		Tank->Tags.Add(Tank->TeamTwoTag);
-		return;
-	}
-	else if (TeamOneTanks.Num() < TanksPerTeam)
-	{
-		TeamOneTanks.Add(Tank);
-		Tank->Tags.Add(Tank->TeamOneTag);
-		return;
-	}
-	else
-	{
-		TeamSpectatorTanks.Add(Tank);
-		if (Cast<ATankPlayerController>(Controller)) Cast<ATankPlayerController>(Controller)->StartSpectatingOnly();
-		Tank->DetachFromControllerPendingDestroy(); // TODO Might cause issues when too many players.
-		Tank->DestroyConstructedComponents();
-		Tank->Destroy();
-		return;
+		}
+		else if (TeamOneTanks.Num() < TanksPerTeam)
+		{
+			AssignTankToTeamByN(1, Tank);
+			return;
+		}
+		else
+		{
+			TeamSpectatorTanks.Add(Tank);
+			if (Cast<ATankPlayerController>(Controller)) Cast<ATankPlayerController>(Controller)->StartSpectatingOnly();
+			Tank->DetachFromControllerPendingDestroy(); // TODO Might cause issues when too many players.
+			Tank->DestroyConstructedComponents();
+			Tank->Destroy();
+			return;
+		}
 	}
 }
 
@@ -242,23 +243,40 @@ TArray<ATank*> ADeathmatchGameStateBase::GetTeamTanks(int32 Team) const
 }
 
 
-void ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPointNumber)
+AActor * ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPointNumber)
 {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATankSpawnPoint::StaticClass(), SpawnPoints);
 	if (SpawnPoints.Num() == 0) {
 		UE_LOG(LogTemp, Warning, TEXT("nope"));
-		return;
+		return nullptr;
 	}
 	PointToSpawn = SpawnPoints[SpawnPointNumber];
 	FVector PointToSpawnLocation = PointToSpawn->GetActorLocation();
 	 ATank *Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
-	//Tank->PossessedBy(NewPlayer);
 	NewPlayer->Possess(Tank);
 	Tank->SetSpawnPointLocation(PointToSpawnLocation);
-	PlayerNumber++;
-
+	if (Cast<APlayerController>(NewPlayer))
+	{
+		PlayerNumber++;
+	}
+	return  Tank;
 
 }
+
+void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
+{
+	if (TeamN == 2)
+	{
+		TeamTwoTanks.Add(Tank);
+		Tank->Tags.Add(Tank->TeamTwoTag);
+	}
+	else if (TeamN == 1)
+	{
+		TeamOneTanks.Add(Tank);
+		Tank->Tags.Add(Tank->TeamOneTag);
+	}
+}
+
 void ADeathmatchGameStateBase::Respawn(AController * NewPlayer , FVector SpawnLocation)
 {
 	

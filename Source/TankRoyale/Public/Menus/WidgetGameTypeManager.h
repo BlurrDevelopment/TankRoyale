@@ -41,6 +41,8 @@ UFUNCTION()
 void RefreshServerList();
 UFUNCTION()
 void GoToJoinMenu();
+int16 TeamOneAi;
+int16 TeamTwoAi;
 protected:
 class INetworkInterface * NetworkInterface;
 virtual bool Initialize();
@@ -67,4 +69,8 @@ UPROPERTY(meta = (BindWidget))
 class UButton * Refresh;
 UPROPERTY(meta = (BindWidget))
 class UButton * BackToJoinMenu;
+UPROPERTY(meta = (BindWidget))
+class UComboBoxString * ComboBoxAiTeamOne;
+UPROPERTY(meta = (BindWidget))
+class UComboBoxString * ComboBoxAITeamTwo;
 };

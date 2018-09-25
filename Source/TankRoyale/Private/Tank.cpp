@@ -257,6 +257,11 @@ void ATank::UsePickup()
 	if (CurrentPickup->GetType() == EPickupType::Burst) UseBurstPickup();
 }
 
+void ATank::AsAssignedToTeamSeter(bool Set)
+{
+	AsAssignedToTeam = Set;
+}
+
 void ATank::UseAmmoPickup()
 {
 	// Get the aiming component and then add the ammo from the pickup

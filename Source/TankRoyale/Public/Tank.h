@@ -58,6 +58,9 @@ public:
 			bool bOnPickup;
 		UFUNCTION(BlueprintCallable, Category = "Pickups")
 			void UsePickup();
+		
+		void AsAssignedToTeamSeter(bool Set);
+		bool AsAssignedToTeam = false;
 protected:
 
 	void PossessedBy(AController * NewController) override;
@@ -145,4 +148,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 	float DamageStartTime = 0.0f;
+
+
 };

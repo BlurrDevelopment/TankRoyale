@@ -8,6 +8,7 @@
 #include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "ServerRowWidget.h"
+#include "Components/ComboBoxString.h"
 void UWidgetGameTypeManager::SetNetworkInterface(INetworkInterface * INetworkInterface)
 {
 	NetworkInterface = INetworkInterface;
@@ -47,6 +48,62 @@ bool UWidgetGameTypeManager::Initialize() {
 void UWidgetGameTypeManager::OnHostServerButtonPressd() {
 	if (NetworkInterface != nullptr) {
 		NetworkInterface->Host(ServerNameBox->GetText().ToString());
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "0")
+		{
+			TeamOneAi = 0;
+		}
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "1")
+		{
+			TeamOneAi = 1;
+		}
+
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "2")
+		{
+			TeamOneAi = 2;
+		}
+
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "3")
+		{
+			TeamOneAi = 3;
+		}
+
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "4")
+		{
+			TeamOneAi = 4;
+		}
+		if (ComboBoxAiTeamOne->GetSelectedOption() == "5")
+		{
+			TeamOneAi = 5;
+		}
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "0")
+		{
+			TeamTwoAi = 0;
+		}
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "1")
+		{
+			TeamTwoAi = 1;
+		}
+
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "2")
+		{
+			TeamTwoAi = 2;
+		}
+
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "3")
+		{
+			TeamTwoAi = 3;
+		}
+
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "4")
+		{
+			TeamTwoAi = 4;
+		}
+		if (ComboBoxAITeamTwo->GetSelectedOption() == "5")
+		{
+			TeamTwoAi = 5;
+		}
+
+
 	}
 }
 

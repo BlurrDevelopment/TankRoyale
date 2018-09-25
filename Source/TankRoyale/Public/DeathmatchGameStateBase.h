@@ -94,7 +94,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Killfeed")
 		void AddKillToFeed(const FString& Killer, const FString& State, const FString& Victim);//FString Killer, FString State, FString Victim               const FString& Killer, const FString& State, const FString& Victim
 	bool Timer = false;
-	void Spawn(AController * NewPlayer, int16 SpawnPointNumber);
+	AActor * Spawn(AController * NewPlayer, int16 SpawnPointNumber);
+	void AssignTankToTeamByN(int16 TeamN, ATank * Tank);
 private:
 	TArray<AActor *> SpawnPoints;	
 	void Respawn(AController * NewPlayer, FVector SpawnLocation);

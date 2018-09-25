@@ -42,6 +42,5 @@ private:
 	FString CurnantServer;
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	
-	
-	
+
 };
