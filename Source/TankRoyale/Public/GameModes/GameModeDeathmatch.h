@@ -17,12 +17,7 @@ class TANKROYALE_API AGameModeDeathmatch : public AGameModeBase
 	GENERATED_BODY()
 public:
 	AActor * SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation);
-	void SpawnAI(AController * Controller);
-	UFUNCTION(BlueprintCallable)
-		void Setwidget(class UWidgetGameTypeManager * WidgetToSet);
-	class UWidgetGameTypeManager * Menu;
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-		TSubclassOf<AController> ControllerSubClass;
+	void SpawnAI();
 protected:
 	void PostLogin(APlayerController * NewPlayer) override;
 private:

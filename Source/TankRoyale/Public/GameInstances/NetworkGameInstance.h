@@ -29,8 +29,9 @@ void Join(uint32 Index) override;
 void GoToMainMenu() override;
 void RequestARefresh() override;
 class UWidgetGameTypeManager * Menu;
-
-
+public:
+int16 GetTeam1AI();
+int16 GetTeam2AI();
 private:
 	bool bIsSessionCrated;
 	IOnlineSessionPtr SessionInterface;

@@ -96,6 +96,7 @@ public:
 	bool Timer = false;
 	AActor * Spawn(AController * NewPlayer, int16 SpawnPointNumber);
 	void AssignTankToTeamByN(int16 TeamN, ATank * Tank);
+	AActor * SpawnAi(int16 SpawnPointNumber);
 private:
 	TArray<AActor *> SpawnPoints;	
 	void Respawn(AController * NewPlayer, FVector SpawnLocation);

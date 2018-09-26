@@ -45,9 +45,16 @@ bool UWidgetGameTypeManager::Initialize() {
 	return false;
 
 }
+int16 UWidgetGameTypeManager::GetTeamOneAi()
+{
+	return TeamOneAi;
+}
+int16 UWidgetGameTypeManager::GetTeamTwoAi()
+{
+	return TeamTwoAi;
+}
 void UWidgetGameTypeManager::OnHostServerButtonPressd() {
 	if (NetworkInterface != nullptr) {
-		NetworkInterface->Host(ServerNameBox->GetText().ToString());
 		if (ComboBoxAiTeamOne->GetSelectedOption() == "0")
 		{
 			TeamOneAi = 0;
@@ -103,7 +110,7 @@ void UWidgetGameTypeManager::OnHostServerButtonPressd() {
 			TeamTwoAi = 5;
 		}
 
-
+		NetworkInterface->Host(ServerNameBox->GetText().ToString());
 	}
 }
 

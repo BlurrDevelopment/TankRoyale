@@ -42,6 +42,17 @@ void UNetworkGameInstance::RequestARefresh()
 
 }
 
+int16 UNetworkGameInstance::GetTeam1AI()
+{
+	return 	Menu->GetTeamOneAi();
+}
+
+int16 UNetworkGameInstance::GetTeam2AI()
+{
+	return 	Menu->GetTeamTwoAi(); 
+}
+
+
 
 void UNetworkGameInstance::OnDestroySession(FName SessionName, bool bIsSessionDestroy)
 {

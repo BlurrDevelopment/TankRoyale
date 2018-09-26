@@ -5,34 +5,36 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Menus/WidgetGameTypeManager.h"
+#include "GameInstances/NetworkGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "Tank.h"
-void AGameModeDeathmatch::SpawnAI(AController * Controller)
+void AGameModeDeathmatch::SpawnAI()
 {
 	if (!bHaveSpawnedAi)
 	{
+	int16 TeamOne =	Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
+	int16 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 		bHaveSpawnedAi = true;
-		for (size_t i = 0; i < Menu->TeamOneAi; i++)
+		for (size_t i = 0; i < 4; i++)
 		{
-ATank * Tank = Cast<ATank>(GameState->Spawn(Controller, 5 - (Menu->TeamOneAi - i)));
+			ATank * Tank = Cast<ATank>(GameState->SpawnAi(i));
 GameState->AssignTankToTeamByN(1, Tank);
 Tank->AsAssignedToTeamSeter(true);
 		}
-		for (size_t i = 0; i < Menu->TeamTwoAi; i++)
+		for (size_t i = 0; i < 5; i++)
 		{
-			ATank * Tank = Cast<ATank>(GameState->Spawn(Controller, 10 - (Menu->TeamTwoAi + i)));
+			int16 SpawnNum = (i + 5);
+			ATank * Tank = Cast<ATank>(GameState->SpawnAi(SpawnNum));
 			GameState->AssignTankToTeamByN(2, Tank);
 			Tank->AsAssignedToTeamSeter(true);
 		}
 	}
 }
-void AGameModeDeathmatch::Setwidget(UWidgetGameTypeManager * WidgetToSet)
-{
-	Menu = WidgetToSet;
-}
+
 void AGameModeDeathmatch::PostLogin(APlayerController * NewPlayer) {
-	ADeathmatchGameStateBase * GameState = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	GameState = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
 	GameState->Spawn(NewPlayer, GameState->PlayerNumber);
-	//SpawnAI(ControllerSubClass.GetDefaultObject());
+	SpawnAI();
 }
 AActor * AGameModeDeathmatch::SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation)
 {

@@ -23,6 +23,8 @@ class TANKROYALE_API UWidgetGameTypeManager : public UUserWidget
 {
 GENERATED_BODY()
 public:	
+int16 GetTeamOneAi();
+int16 GetTeamTwoAi();
 void TearDown();
 void SetNetworkInterface(class INetworkInterface * INetworkInterface);
 UFUNCTION()
@@ -41,8 +43,6 @@ UFUNCTION()
 void RefreshServerList();
 UFUNCTION()
 void GoToJoinMenu();
-int16 TeamOneAi;
-int16 TeamTwoAi;
 protected:
 class INetworkInterface * NetworkInterface;
 virtual bool Initialize();
@@ -73,4 +73,7 @@ UPROPERTY(meta = (BindWidget))
 class UComboBoxString * ComboBoxAiTeamOne;
 UPROPERTY(meta = (BindWidget))
 class UComboBoxString * ComboBoxAITeamTwo;
+private:
+int16 TeamOneAi;
+int16 TeamTwoAi;
 };
