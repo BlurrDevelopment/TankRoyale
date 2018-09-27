@@ -15,13 +15,13 @@ void AGameModeDeathmatch::SpawnAI()
 	int16 TeamOne =	Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
 	int16 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 		bHaveSpawnedAi = true;
-		for (size_t i = 0; i < 4; i++)
+		for (size_t i = 0; i < TeamOne; i++)
 		{
 			ATank * Tank = Cast<ATank>(GameState->SpawnAi(i));
 GameState->AssignTankToTeamByN(1, Tank);
 Tank->AsAssignedToTeamSeter(true);
 		}
-		for (size_t i = 0; i < 5; i++)
+		for (size_t i = 0; i < TeamTwo; i++)
 		{
 			int16 SpawnNum = (i + 5);
 			ATank * Tank = Cast<ATank>(GameState->SpawnAi(SpawnNum));

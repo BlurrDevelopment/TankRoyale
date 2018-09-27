@@ -121,6 +121,11 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 void ADeathmatchGameStateBase::StartGame()
 {
 	bGameStarted = true;
+	for (int i = 0; i < TanksPerTeam; i++)
+	{
+		if (TeamOneTanks[i]) TeamOneTanks[i]->TankDeath(this, 0);
+		if (TeamTwoTanks[i]) TeamTwoTanks[i]->TankDeath(this, 0);
+	}
 	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &ADeathmatchGameStateBase::EndGame, 2.0f, true, 60.0f * GameTime);
 	TeamOneScore = 0;
 	TeamTwoScore = 0;
@@ -129,7 +134,7 @@ void ADeathmatchGameStateBase::StartGame()
 	TeamOneDeaths = 0;
 	TeamTwoDeaths = 0;
 
-	// TODO Teleport all players to spawn.
+
 
 	for (int i = 0; i < TanksPerTeam; i++)
 	{
@@ -245,20 +250,16 @@ TArray<ATank*> ADeathmatchGameStateBase::GetTeamTanks(int32 Team) const
 
 AActor * ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPointNumber)
 {
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATankSpawnPoint::StaticClass(), SpawnPoints);
-	if (SpawnPoints.Num() == 0) {
-		UE_LOG(LogTemp, Warning, TEXT("nope"));
-		return nullptr;
-	}
-	PointToSpawn = SpawnPoints[SpawnPointNumber];
-	FVector PointToSpawnLocation = PointToSpawn->GetActorLocation();
-	 ATank *Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
-	NewPlayer->Possess(Tank);
+
+
+	FVector PointToSpawnLocation = SapwnPointLocation[SpawnPointNumber];
+	ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, SapwnPointLocation[SpawnPointNumber], FRotator(0, 0, 0));
 	Tank->SetSpawnPointLocation(PointToSpawnLocation);
+	NewPlayer->Possess(Tank);
 	PlayerNumber++;
 	return  Tank;
-
 }
+
 
 void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 {
@@ -276,18 +277,13 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 
 AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
 {
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATankSpawnPoint::StaticClass(), SpawnPoints);
-	if (SpawnPoints.Num() == 0) {
-		UE_LOG(LogTemp, Warning, TEXT("nope"));
-		return nullptr;
-	}
-	PointToSpawn = SpawnPoints[SpawnPointNumber];
-	FVector PointToSpawnLocation = PointToSpawn->GetActorLocation();
-	ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, PointToSpawn->GetActorLocation(), FRotator(0, 0, 0));
+	FVector PointToSpawnLocation = SapwnPointLocation[SpawnPointNumber];
+	ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, SapwnPointLocation[SpawnPointNumber], FRotator(0, 0, 0));
 	Tank->SetSpawnPointLocation(PointToSpawnLocation);
 	PlayerNumber++;
 	return  Tank;
 }
+
 
 void ADeathmatchGameStateBase::Respawn(AController * NewPlayer , FVector SpawnLocation)
 {

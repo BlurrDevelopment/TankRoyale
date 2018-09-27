@@ -44,12 +44,12 @@ void UNetworkGameInstance::RequestARefresh()
 
 int16 UNetworkGameInstance::GetTeam1AI()
 {
-	return 	Menu->GetTeamOneAi();
+	return TeamOneAi;
 }
 
 int16 UNetworkGameInstance::GetTeam2AI()
 {
-	return 	Menu->GetTeamTwoAi(); 
+	return 	TeamTwoAi; 
 }
 
 
@@ -189,7 +189,8 @@ void UNetworkGameInstance::CreateAndHost(FName SessionName, bool bIsSessionReady
 	if (!bIsSessionReady) {
 		return;
 	}
-
+	TeamOneAi = Menu->GetTeamOneAi();
+	TeamTwoAi = Menu->GetTeamTwoAi();
 	if (Menu != nullptr) {
 
 		Menu->TearDown();

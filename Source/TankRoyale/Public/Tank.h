@@ -41,7 +41,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	APickup* GetCurrentPickup() { return CurrentPickup; }
-
+	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
 	void StartGame();
 	class AGameModeDeathmatch * AGameMode;
 	void Repair(float Amount);
@@ -58,7 +58,6 @@ public:
 			bool bOnPickup;
 		UFUNCTION(BlueprintCallable, Category = "Pickups")
 			void UsePickup();
-		
 		void AsAssignedToTeamSeter(bool Set);
 		bool AsAssignedToTeam = false;
 protected:
@@ -70,8 +69,6 @@ protected:
 private:
 	// Sets default values for this pawn's properties
 	ATank();
-
-	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
 
 	bool bGameStarted = false;
 	

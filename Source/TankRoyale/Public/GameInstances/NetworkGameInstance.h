@@ -29,6 +29,8 @@ void Join(uint32 Index) override;
 void GoToMainMenu() override;
 void RequestARefresh() override;
 class UWidgetGameTypeManager * Menu;
+int16 TeamOneAi = 0;
+int16 TeamTwoAi = 0;
 public:
 int16 GetTeam1AI();
 int16 GetTeam2AI();
