@@ -58,7 +58,7 @@ public:
 
 	// How many tanks per team. Default: 5
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-		int32 TanksPerTeam = 1;
+		int32 TanksPerTeam = 0;
 
 	FTimerHandle GameTimerHandler;
 

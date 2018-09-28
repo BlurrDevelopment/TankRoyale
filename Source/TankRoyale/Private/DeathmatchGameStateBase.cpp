@@ -266,6 +266,7 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 	if (TeamN == 2)
 	{
 		TeamTwoTanks.Add(Tank);
+		TanksPerTeam++;
 		Tank->Tags.Add(Tank->TeamTwoTag);
 	}
 	else if (TeamN == 1)

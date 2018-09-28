@@ -201,7 +201,7 @@ void UNetworkGameInstance::CreateAndHost(FName SessionName, bool bIsSessionReady
 	{
 
 		Engine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("Hosting"));
-		GetWorld()->ServerTravel("/Game/_Levels/TestMapDeathmatch?listen");
+		GetWorld()->ServerTravel("/Game/_Levels/Maps/Map2?listen");
 	}
 	
 
