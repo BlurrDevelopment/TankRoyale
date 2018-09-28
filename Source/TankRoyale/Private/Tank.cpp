@@ -17,7 +17,6 @@ void ATank::PossessedBy(AController * NewController)
 {
 		Super::PossessedBy(NewController);
 		MyController = NewController;
-	
 }
 
 // Sets default values
@@ -33,10 +32,6 @@ void ATank::BeginPlay()
 	CurrentHealth = StartingHealth;
 	UE_LOG(LogTemp, Warning, TEXT("hi this is my location %s"), *GetActorLocation().ToString());
 	bGameStarted = false;
-	if (GetController() == nullptr)
-	{
-	//TODO PossessByAI
-	}
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
 	if (GameMode == EGameMode::Deathmatch)
 	{
