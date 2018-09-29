@@ -274,6 +274,10 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 		TeamOneTanks.Add(Tank);
 		Tank->Tags.Add(Tank->TeamOneTag);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("The users team could not be assigned!"));
+	}
 }
 
 AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
