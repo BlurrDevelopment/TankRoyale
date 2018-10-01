@@ -79,7 +79,8 @@ void ADeathmatchGameStateBase::Tick(float DeltaTime)
 
 	if (TeamOneTanks.Num() <= 0 || TeamTwoTanks.Num() <= 0)
 	{
-		EndGame();
+		UE_LOG(LogTemp, Warning, TEXT("No team"));
+	//	EndGame();
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
@@ -120,28 +121,35 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 
 void ADeathmatchGameStateBase::StartGame()
 {
-	bGameStarted = true;
-	for (int i = 0; i < TanksPerTeam; i++)
+	bGameStarted = true;	
+	for (ATank * TeamOneTank : TeamOneTanks)
 	{
-		if (TeamOneTanks[i]) TeamOneTanks[i]->TankDeath(this, 0);
-		if (TeamTwoTanks[i]) TeamTwoTanks[i]->TankDeath(this, 0);
+		TeamOneTank->TankDeath(TeamOneTank, 20);
 	}
-	GetWorldTimerManager().SetTimer(GameTimerHandler, this, &ADeathmatchGameStateBase::EndGame, 2.0f, true, 60.0f * GameTime);
-	TeamOneScore = 0;
-	TeamTwoScore = 0;
-	TeamOneKills = 0;
-	TeamTwoKills = 0;
-	TeamOneDeaths = 0;
-	TeamTwoDeaths = 0;
-
-
-
-	for (int i = 0; i < TanksPerTeam; i++)
+	for (ATank * TeamTwoTank : TeamTwoTanks)
 	{
-		if (TeamOneTanks[i]) TeamOneTanks[i]->StartGame();
-	if (TeamTwoTanks[i]) TeamTwoTanks[i]->StartGame();
+		TeamTwoTank->TankDeath(TeamTwoTank, 20);
 	}
-}
+	for (ATank * TeamOneTank : TeamOneTanks)
+	{
+		TeamOneTank->StartGame();
+	}
+	for (ATank * TeamTwoTank : TeamTwoTanks)
+	{
+		TeamTwoTank->StartGame();
+	}
+		GetWorldTimerManager().SetTimer(GameTimerHandler, this, &ADeathmatchGameStateBase::EndGame, 2.0f, true, 60.0f * GameTime);
+		TeamOneScore = 0;
+		TeamTwoScore = 0;
+		TeamOneKills = 0;
+		TeamTwoKills = 0;
+		TeamOneDeaths = 0;
+		TeamTwoDeaths = 0;
+
+
+
+	
+	}
 
 void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 {
@@ -167,7 +175,7 @@ void ADeathmatchGameStateBase::AddTeamDeath(ATank* Tank, ATank* KillerTank)
 void ADeathmatchGameStateBase::EndGame()
 {
 	if (!bGameStarted) return;
-
+	UE_LOG(LogTemp, Warning, TEXT("EndGame"));
 	bGameStarted = false;
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
@@ -265,12 +273,13 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 {
 	if (TeamN == 2)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Added to team 2"));
 		TeamTwoTanks.Add(Tank);
-		TanksPerTeam++;
 		Tank->Tags.Add(Tank->TeamTwoTag);
 	}
 	else if (TeamN == 1)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Added to team 1"));
 		TeamOneTanks.Add(Tank);
 		Tank->Tags.Add(Tank->TeamOneTag);
 	}

@@ -44,7 +44,7 @@ void ATank::StartGame()
 {
 	// Set bool so the tank knows it can be killed.
 	bGameStarted = true;
-	
+	UE_LOG(LogTemp, Warning, TEXT("game start"));
 	// Allow the player to being able to shoot and use gadgets.
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) return;

@@ -32,8 +32,9 @@ private:
 	int32 WinningTeam = 0;
 
 	bool bGameStarted = false;
-
+	UPROPERTY()
 	TArray<ATank*> TeamOneTanks;
+	UPROPERTY()
 	TArray<ATank*> TeamTwoTanks;
 	TArray<ATank*> TeamSpectatorTanks;
 
