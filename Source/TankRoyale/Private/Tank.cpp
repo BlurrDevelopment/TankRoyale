@@ -33,11 +33,14 @@ void ATank::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("hi this is my location %s"), *GetActorLocation().ToString());
 	bGameStarted = false;
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
-	if (GameMode == EGameMode::Deathmatch)
+	if (!AsAssignedToTeam)
 	{
-		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
+		if (GameMode == EGameMode::Deathmatch)
+		{
+			Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
+		}
 	}
-	
+	 TankTeam = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTankTeam(this);
 }
 
 void ATank::StartGame()
@@ -54,31 +57,28 @@ void ATank::StartGame()
 
 float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	//for testing 
-	//TankDeath(DamageCauser, 20);
 	if (!bGameStarted) return 0.0f;
-
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp<int32>(DamagePoints, 0, CurrentHealth);
 
 	CurrentHealth -= DamageToApply;
 
 	// Play tank damage sound
-	if (!ensure(DamageSound)) return DamageToApply;
-	UGameplayStatics::PlaySoundAtLocation(this, DamageSound, GetActorLocation(), DamageVolumeMultiplier, DamagePitchMultiplier, DamageStartTime);
+	//if (!ensure(DamageSound)) return DamageToApply;
+	//UGameplayStatics::PlaySoundAtLocation(this, DamageSound, GetActorLocation(), DamageVolumeMultiplier, DamagePitchMultiplier, DamageStartTime);
 
 	if (!bDead)
 	{
-		if (CurrentHealth <= (StartingHealth / 2) && CurrentHealth > 0)
+		if (CurrentHealth <= 0)
+		{
+			if (SmokeEmitterComponent) SmokeEmitterComponent; // TODO Destroy SmokeEmitterComponent
+			TankDeath(DamageCauser, DamageToApply);
+		}
+		else if (CurrentHealth <= (StartingHealth / 2) && CurrentHealth > 0)
 		{
 			// Play the particle emitter
 			if (!ensure(SmokeEmitterTemplate)) return DamageToApply;
 			SmokeEmitterComponent = UGameplayStatics::SpawnEmitterAttached(SmokeEmitterTemplate, FindComponentByClass<UTankTurret>(), FName("Centre"), FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), EAttachLocation::KeepRelativeOffset, true);
-		}
-		else if (CurrentHealth <= 0)
-		{
-			if (SmokeEmitterComponent) SmokeEmitterComponent; // TODO Destroy SmokeEmitterComponent
-			TankDeath(DamageCauser, DamageToApply);
 		}
 		else
 		{
@@ -128,9 +128,15 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 	}
 	if (NewPlayer == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
+		Tank->SpawnDefaultController();
 		return;
 	}
-	NewPlayer->Possess(Tank);
+	else
+	{
+		NewPlayer->Possess(Tank);
+	}
+	
+	Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankToTeamByN(TankTeam, Tank);
 	UE_LOG(LogTemp, Warning, TEXT("Respawned"));
 	
 
@@ -261,6 +267,11 @@ void ATank::UsePickup()
 void ATank::AsAssignedToTeamSeter(bool Set)
 {
 	AsAssignedToTeam = Set;
+}
+
+bool ATank::GetbGameStarted()
+{
+	return bGameStarted;
 }
 
 void ATank::UseAmmoPickup()

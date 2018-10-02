@@ -60,6 +60,7 @@ public:
 			void UsePickup();
 		void AsAssignedToTeamSeter(bool Set);
 		bool AsAssignedToTeam = false;
+		bool GetbGameStarted();
 protected:
 
 	void PossessedBy(AController * NewController) override;
@@ -72,6 +73,8 @@ private:
 
 	bool bGameStarted = false;
 	
+	int16 TankTeam;
+
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;
 	

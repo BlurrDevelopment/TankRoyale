@@ -10,10 +10,10 @@
 #include "Tank.h"
 void AGameModeDeathmatch::SpawnAI()
 {
+	int16 TeamOne = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
+	int16 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 	if (!bHaveSpawnedAi)
 	{
-	int16 TeamOne =	Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
-	int16 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 		bHaveSpawnedAi = true;
 		for (size_t i = 0; i < TeamOne; i++)
 		{

@@ -20,10 +20,10 @@ void ADeathmatchGameStateBase::BeginPlay()
 	Super::BeginPlay();
 
 	// TODO Pause game
-
-	TeamOneTanks.Empty();
-	TeamTwoTanks.Empty();
-	TeamSpectatorTanks.Empty();
+	// there is no reason to empty an empty array
+	//TeamOneTanks.Empty();
+	//TeamTwoTanks.Empty();
+	//TeamSpectatorTanks.Empty();
 
 	WaitForPlayers();
 }
@@ -121,15 +121,18 @@ void ADeathmatchGameStateBase::AssignTankTeam(ATank* Tank)
 
 void ADeathmatchGameStateBase::StartGame()
 {
-	bGameStarted = true;	
+	/*
 	for (ATank * TeamOneTank : TeamOneTanks)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("TeamOneTanks"));
 		TeamOneTank->TankDeath(TeamOneTank, 20);
 	}
 	for (ATank * TeamTwoTank : TeamTwoTanks)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("TeamTwoTanks"));
 		TeamTwoTank->TankDeath(TeamTwoTank, 20);
 	}
+	*/
 	for (ATank * TeamOneTank : TeamOneTanks)
 	{
 		TeamOneTank->StartGame();
@@ -145,8 +148,7 @@ void ADeathmatchGameStateBase::StartGame()
 		TeamTwoKills = 0;
 		TeamOneDeaths = 0;
 		TeamTwoDeaths = 0;
-
-
+	bGameStarted = true;
 
 	
 	}
@@ -275,13 +277,18 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Added to team 2"));
 		TeamTwoTanks.Add(Tank);
+		UE_LOG(LogTemp, Warning, TEXT("Added to team 2   %d"), TeamTwoTanks.Num());
 		Tank->Tags.Add(Tank->TeamTwoTag);
+		Tank->AsAssignedToTeamSeter(true);
+		return;
 	}
 	else if (TeamN == 1)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Added to team 1"));
 		TeamOneTanks.Add(Tank);
 		Tank->Tags.Add(Tank->TeamOneTag);
+		Tank->AsAssignedToTeamSeter(true);
+		return;
 	}
 	else
 	{
