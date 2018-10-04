@@ -10,11 +10,10 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig.h"
 #include "Perception/AISenseConfig_Damage.h"
+#include "Kismet/GameplayStatics.h"
 #include "tank.h"
 const FName Enemy = "Enemy";
 const FName LastSeenLocation = "LastSeenLocation";
-const FName TeamOneTag = "1";
-const FName TeamTwoTag = "2";
 const FName PickUp = "PickUp";
 ATankAIController::ATankAIController()
 {
@@ -65,49 +64,23 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 {
 	if (PossessedTank->GetbGameStarted())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OnTargetPerceptionUpdated"));
-		if (Actor != nullptr)
+
+		if (Actor->ActorHasTag(PickUp))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *Actor->GetName());
-
-			UE_LOG(LogTemp, Warning, TEXT("SensingSucceeded + Actor != nullptr "))
-				if (Actor->ActorHasTag(PickUp))
-				{
-					BlackboardComponent->SetValueAsObject(PickUp, Actor);
-					UE_LOG(LogTemp, Warning, TEXT("PickUp"));
-				}
-			if (PossessedTank->ActorHasTag(TeamTwoTag)) {
-				// True means that they are not on the same team and we should fuck him up
-				if ((PossessedTank->ActorHasTag(TeamOneTag)))
-				{
-					BlackboardComponent->SetValueAsObject(Enemy, Actor);
-					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-					return;
-				}
-			// Check actor team
-			if (PossessedTank->ActorHasTag(TeamOneTag))
-			{
-				// True means that they are not on the same team and we should fuck him up
-				if ((Actor->ActorHasTag(TeamTwoTag)))
-				{
-					BlackboardComponent->SetValueAsObject(Enemy, Actor);
-					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-					return;
-				}
-
-			}
-				{
-					UE_LOG(LogTemp, Warning, TEXT("SensingF"));
-					BlackboardComponent->SetValueAsObject(Enemy, nullptr);
-				}
-
-			}
+			BlackboardComponent->SetValueAsObject(PickUp, Actor);
 		}
-
-
+		if (Actor->Tags[0] != Tags[0] && (Actor->Tags[0] == "1" || Actor->Tags[0] == "2"))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("a"));
+			BlackboardComponent->SetValueAsObject(Enemy, Actor);
+			BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+			return;
+		}
+		BlackboardComponent->SetValueAsObject(Enemy, nullptr);
 	}
 
 }
+
 
 
 void ATankAIController::Tick(float DeltaTime)

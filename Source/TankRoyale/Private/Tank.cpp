@@ -15,8 +15,9 @@
 
 void ATank::PossessedBy(AController * NewController)
 {
+	
 		Super::PossessedBy(NewController);
-		MyController = NewController;
+		MyController = NewController; 
 }
 
 // Sets default values
@@ -30,7 +31,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
-	UE_LOG(LogTemp, Warning, TEXT("hi this is my location %s"), *GetActorLocation().ToString());
+
 	bGameStarted = false;
 	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
 	if (!AsAssignedToTeam)
@@ -40,7 +41,8 @@ void ATank::BeginPlay()
 			Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
 		}
 	}
-	 TankTeam = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTankTeam(this);
+	
+	TankTeam = FCString::Atoi(*Tags[0].ToString());
 }
 
 void ATank::StartGame()
@@ -50,6 +52,7 @@ void ATank::StartGame()
 	UE_LOG(LogTemp, Warning, TEXT("game start"));
 	// Allow the player to being able to shoot and use gadgets.
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
+	MyController->Tags.Add(Tags[0]);
 	if (!ensure(AimingComponent)) return;
 	AimingComponent->StartGame();
 }
