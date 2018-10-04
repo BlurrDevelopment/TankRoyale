@@ -76,6 +76,14 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 					BlackboardComponent->SetValueAsObject(PickUp, Actor);
 					UE_LOG(LogTemp, Warning, TEXT("PickUp"));
 				}
+			if (PossessedTank->ActorHasTag(TeamTwoTag)) {
+				// True means that they are not on the same team and we should fuck him up
+				if ((PossessedTank->ActorHasTag(TeamOneTag)))
+				{
+					BlackboardComponent->SetValueAsObject(Enemy, Actor);
+					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+					return;
+				}
 			// Check actor team
 			if (PossessedTank->ActorHasTag(TeamOneTag))
 			{
@@ -88,20 +96,6 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 				}
 
 			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("SensingF"));
-				BlackboardComponent->SetValueAsObject(Enemy, nullptr);
-			}
-			if (PossessedTank->ActorHasTag(TeamTwoTag)) {
-				// True means that they are not on the same team and we should fuck him up
-				if ((PossessedTank->ActorHasTag(TeamOneTag)))
-				{
-					BlackboardComponent->SetValueAsObject(Enemy, Actor);
-					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-					return;
-				}
-				else
 				{
 					UE_LOG(LogTemp, Warning, TEXT("SensingF"));
 					BlackboardComponent->SetValueAsObject(Enemy, nullptr);

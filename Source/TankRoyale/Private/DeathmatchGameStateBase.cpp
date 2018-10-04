@@ -280,7 +280,6 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 		UE_LOG(LogTemp, Warning, TEXT("Added to team 2   %d"), TeamTwoTanks.Num());
 		Tank->Tags.Add(Tank->TeamTwoTag);
 		Tank->AsAssignedToTeamSeter(true);
-		return;
 	}
 	else if (TeamN == 1)
 	{
@@ -288,7 +287,6 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 		TeamOneTanks.Add(Tank);
 		Tank->Tags.Add(Tank->TeamOneTag);
 		Tank->AsAssignedToTeamSeter(true);
-		return;
 	}
 	else
 	{

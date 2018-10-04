@@ -126,14 +126,15 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
 		return;
 	}
-	if (NewPlayer == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
-		Tank->SpawnDefaultController();
+	if (Cast<APlayerController>(NewPlayer)) {
+
+		NewPlayer->Possess(Tank);
 		return;
 	}
 	else
 	{
-		NewPlayer->Possess(Tank);
+		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
+		Tank->SpawnDefaultController();
 	}
 	
 	Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankToTeamByN(TankTeam, Tank);
