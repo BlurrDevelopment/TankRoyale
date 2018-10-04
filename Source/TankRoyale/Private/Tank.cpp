@@ -176,11 +176,12 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 	}
 	Destroy();
 	// Play explosion sound
-	if (!ensure(ExplodeSound)) return;
+	// we dont need an ensure every null 
+	if (!ExplodeSound) return;
 	UGameplayStatics::PlaySoundAtLocation(this, ExplodeSound, GetActorLocation(), ExplodeVolumeMultiplier, ExplodePitchMultiplier, ExplodeStartTime);
 
 	// Play the particle emitter
-	if (!ensure(DeathEmitterTemplate)) return;
+	if (!DeathEmitterTemplate) return;
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEmitterTemplate, GetTransform());
 	// Destroy the actor
 	

@@ -58,7 +58,7 @@ void ATankAIController::OnPossessedTankDeath()
 {
 	if (!GetPawn()) { return; }
 	
-	GetPawn()->DetachFromControllerPendingDestroy();
+	//GetPawn()->DetachFromControllerPendingDestroy();
 }
 
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)

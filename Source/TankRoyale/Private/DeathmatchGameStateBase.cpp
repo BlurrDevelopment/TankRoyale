@@ -80,7 +80,7 @@ void ADeathmatchGameStateBase::Tick(float DeltaTime)
 	if (TeamOneTanks.Num() <= 0 || TeamTwoTanks.Num() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No team"));
-	//	EndGame();
+		EndGame();
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Winning Team: %i, Team One Score: %i, Team Two Score: %i"), WinningTeam, TeamOneScore, TeamTwoScore);
 }
