@@ -77,7 +77,7 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEve
 		else if (CurrentHealth <= (StartingHealth / 2) && CurrentHealth > 0)
 		{
 			// Play the particle emitter
-			if (!ensure(SmokeEmitterTemplate)) return DamageToApply;
+			if (!SmokeEmitterTemplate) return DamageToApply;
 			SmokeEmitterComponent = UGameplayStatics::SpawnEmitterAttached(SmokeEmitterTemplate, FindComponentByClass<UTankTurret>(), FName("Centre"), FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), EAttachLocation::KeepRelativeOffset, true);
 		}
 		else
