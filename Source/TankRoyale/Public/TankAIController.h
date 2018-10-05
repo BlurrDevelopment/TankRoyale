@@ -28,6 +28,7 @@ private:
 	class UBlackboardData * TankBlackboardData;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBehaviorTree * TankBehaviorTree;
+
 protected:
 
 public:

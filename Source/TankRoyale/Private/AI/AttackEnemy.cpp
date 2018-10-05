@@ -11,22 +11,30 @@ EBTNodeResult::Type UAttackEnemy::ExecuteTask(UBehaviorTreeComponent & OwnerComp
 	auto Enemy = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(KeyToGetEnemyValue.SelectedKeyName));
 	if (Enemy != nullptr)
 	{
-		if (AimingComponent != nullptr)
+		if (ControlledTank->Tags[0] != Enemy->Tags[0])
 		{
-			AimingComponent->AimAt(Enemy->GetActorLocation() + 150);
+			if (AimingComponent != nullptr)
+			{
+				AimingComponent->AimAt(Enemy->GetActorLocation() + 150);
+			}
+			if (OwnerComp.GetAIOwner() != nullptr)
+			{
+				OwnerComp.GetAIOwner()->MoveToActor(Enemy, AcceptanceRadius);
+			}
+			if (AimingComponent != nullptr)
+			{
+				// FIRE!
+				if (AimingComponent->GetFiringState() == EFiringState::Locked)
+				{
+					AimingComponent->Fire();
+				}
+			}
 		}
-		if (OwnerComp.GetAIOwner() != nullptr)
+		else
 		{
-			OwnerComp.GetAIOwner()->MoveToActor(Enemy, AcceptanceRadius);
+			return EBTNodeResult::Failed;
 		}
 	}
-	if (AimingComponent != nullptr)
-	{
-		// FIRE!
-		if (AimingComponent->GetFiringState() == EFiringState::Locked)
-		{
-			AimingComponent->Fire();
-		}
-	}
+
 	return EBTNodeResult::Succeeded;
 }
