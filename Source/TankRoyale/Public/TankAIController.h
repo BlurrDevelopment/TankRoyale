@@ -17,7 +17,7 @@ private:
 	virtual void BeginPlay() override;
 
 	virtual void SetPawn(APawn* InPawn) override;
-
+	FGenericTeamId TeamId;
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	void OnPossessedTankDeath();
@@ -28,7 +28,6 @@ private:
 	class UBlackboardData * TankBlackboardData;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	class UBehaviorTree * TankBehaviorTree;
-	
 protected:
 
 public:

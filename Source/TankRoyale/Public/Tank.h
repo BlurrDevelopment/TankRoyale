@@ -31,7 +31,7 @@ public:
 	// Returns current health as a percentage of starting health, between 0 and 100
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealthPercent() const;
-
+	int GetTankTeam();
 	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FTankDelegate OnDeath;
 	// Called every frame
@@ -73,7 +73,7 @@ private:
 
 	bool bGameStarted = false;
 	
-	int16 TankTeam;
+	int32 TankTeam;
 
 	//UPROPERTY(BlueprintReadOnly, Category = "Gamemode")
 	EGameMode GameMode = EGameMode::Menu;

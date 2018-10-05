@@ -15,6 +15,7 @@
 const FName Enemy = "Enemy";
 const FName LastSeenLocation = "LastSeenLocation";
 const FName PickUp = "PickUp";
+
 ATankAIController::ATankAIController()
 {
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
@@ -24,9 +25,11 @@ ATankAIController::ATankAIController()
 	SightSenseConfig->SightRadius = 80000.f;
 	SightSenseConfig->LoseSightRadius = 10000.f;
 	SightSenseConfig->PeripheralVisionAngleDegrees = 180.f;
-	SightSenseConfig->DetectionByAffiliation.DetectAllFlags();
+	SightSenseConfig->DetectionByAffiliation.bDetectNeutrals = false;
+	SightSenseConfig->DetectionByAffiliation.bDetectEnemies = true;
 	HearingSenseConfig->HearingRange = 12500.f;
-	HearingSenseConfig->DetectionByAffiliation.DetectAllFlags();
+	HearingSenseConfig->DetectionByAffiliation.bDetectNeutrals = false;
+	HearingSenseConfig->DetectionByAffiliation.bDetectEnemies = true;
 	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(SightSenseConfig));
 	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(HearingSenseConfig));
 	AIPerceptionComponent->ConfigureSense(*Cast<UAISenseConfig>(SenseConfigDamage));
@@ -47,7 +50,6 @@ void ATankAIController::SetPawn(APawn* InPawn)
 	if (InPawn)
 	{
 		 PossessedTank = Cast<ATank>(InPawn);
-		 // TODO for testing
 		if (!ensure(PossessedTank)) { return; }
 		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
 	}
@@ -64,17 +66,22 @@ void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AI
 {
 	if (PossessedTank->GetbGameStarted())
 	{
-
+		UE_LOG(LogTemp, Warning, TEXT(" tank team %d"), PossessedTank->GetTankTeam());
 		if (Actor->ActorHasTag(PickUp))
 		{
 			BlackboardComponent->SetValueAsObject(PickUp, Actor);
 		}
-		if (Actor->Tags[0] != Tags[0] && (Actor->Tags[0] == "1" || Actor->Tags[0] == "2"))
+		// not the best way but good enough for now  
+		ATank * TankActor = Cast<ATank>(Actor);
+		if (TankActor != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("a"));
-			BlackboardComponent->SetValueAsObject(Enemy, Actor);
-			BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
-			return;
+			if (TankActor->GetTankTeam() != PossessedTank->GetTankTeam())
+			{
+				UE_LOG(LogTemp, Warning, TEXT(" pynohn "))
+				BlackboardComponent->SetValueAsObject(Enemy, Actor);
+				BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
+				return;
+			}
 		}
 		BlackboardComponent->SetValueAsObject(Enemy, nullptr);
 	}

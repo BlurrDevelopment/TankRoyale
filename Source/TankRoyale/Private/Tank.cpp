@@ -10,6 +10,8 @@
 #include "GameModeDeathmatch.h"
 #include "TankAimingComponent.h"
  #include "TankAIController.h"
+#include "Misc/DefaultValueHelper.h"
+#include "Classes/GenericTeamAgentInterface.h"
 #include "Public/DrawDebugHelpers.h"
 
 
@@ -41,8 +43,6 @@ void ATank::BeginPlay()
 			Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
 		}
 	}
-	
-	TankTeam = FCString::Atoi(*Tags[0].ToString());
 }
 
 void ATank::StartGame()
@@ -50,9 +50,10 @@ void ATank::StartGame()
 	// Set bool so the tank knows it can be killed.
 	bGameStarted = true;
 	UE_LOG(LogTemp, Warning, TEXT("game start"));
-	// Allow the player to being able to shoot and use gadgets.
+	FString TeamTag = Tags[0].ToString();
+	FDefaultValueHelper::ParseInt(TeamTag, TankTeam);
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
-	MyController->Tags.Add(Tags[0]);
+	// Allow the player to being able to shoot and use gadgets.
 	if (!ensure(AimingComponent)) return;
 	AimingComponent->StartGame();
 }
@@ -97,6 +98,11 @@ float ATank::GetHealthPercent() const
 	return ((float)CurrentHealth / (float)StartingHealth);
 }
 
+int ATank::GetTankTeam()
+{
+	return TankTeam;
+}
+
 void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -139,8 +145,8 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
 		Tank->SpawnDefaultController();
 	}
-	
 	Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankToTeamByN(TankTeam, Tank);
+	Tank->StartGame();
 	UE_LOG(LogTemp, Warning, TEXT("Respawned"));
 	
 
