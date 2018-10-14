@@ -159,6 +159,9 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 {
 	bDead = true;
 	OnDeath.Broadcast();
+	if (CurrentPickup != nullptr) {
+		CurrentPickup->TimeToRemoveWidget();
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Dead "));
 	if (GameMode == EGameMode::Deathmatch)
 	{
@@ -270,9 +273,11 @@ void ATank::DropBurst()
 
 void ATank::UsePickup()
 {
-	if (CurrentPickup->GetType() == EPickupType::Ammo) UseAmmoPickup();
-	if (CurrentPickup->GetType() == EPickupType::Health) UseHealthPickup();
-	if (CurrentPickup->GetType() == EPickupType::Burst) UseBurstPickup();
+	if (CurrentPickup != nullptr) {
+		if (CurrentPickup->GetType() == EPickupType::Ammo) UseAmmoPickup();
+		if (CurrentPickup->GetType() == EPickupType::Health) UseHealthPickup();
+		if (CurrentPickup->GetType() == EPickupType::Burst) UseBurstPickup();
+	}
 }
 
 void ATank::AsAssignedToTeamSeter(bool Set)

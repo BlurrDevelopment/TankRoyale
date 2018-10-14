@@ -44,7 +44,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
 	EPickupType GetType() { return PickupType; }
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void TimeToDisplayWidget();
+	UFUNCTION(BlueprintImplementableEvent)
+	void TimeToRemoveWidget();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

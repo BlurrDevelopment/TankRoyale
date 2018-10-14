@@ -36,9 +36,7 @@ public:
 	FTankDelegate OnDeath;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	void SetOnPickup(bool On, APickup* Pickup);
-
 	UFUNCTION(BlueprintCallable, Category = "Pickups")
 	APickup* GetCurrentPickup() { return CurrentPickup; }
 	void TankDeath(AActor* DamageCauser, int32 DamageToApply);
@@ -55,7 +53,7 @@ public:
 		const FName TeamOneTag = "1";
 		const FName TeamTwoTag = "2";
 		UPROPERTY(BlueprintReadOnly, Category = "Pickups")
-			bool bOnPickup;
+			bool bOnPickup = false;
 		UFUNCTION(BlueprintCallable, Category = "Pickups")
 			void UsePickup();
 		void AsAssignedToTeamSeter(bool Set);

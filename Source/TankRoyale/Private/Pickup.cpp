@@ -50,16 +50,30 @@ void APickup::Deactivate()
 
 void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<ATank>(OtherActor))
+	ATank * Tank = Cast<ATank>(OtherActor);
+	if (Tank != nullptr)
 	{
-		Cast<ATank>(OtherActor)->SetOnPickup(true, this);
+		if (!Tank->bOnPickup)
+		{
+
+		
+		Tank->SetOnPickup(true, this);
+		if (Cast<APlayerController>(Tank->GetController())) {
+
+			TimeToDisplayWidget();
+		}
+		}
 	}
 }
 
 void APickup::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<ATank>(OtherActor))
+	ATank * Tank = Cast<ATank>(OtherActor);
+	if (Tank != nullptr)
 	{
-		Cast<ATank>(OtherActor)->SetOnPickup(false, this);
+		if (Cast<APlayerController>(Tank->GetController())) {
+			Tank->SetOnPickup(false, nullptr);
+			TimeToRemoveWidget();
+		}
 	}
 }
