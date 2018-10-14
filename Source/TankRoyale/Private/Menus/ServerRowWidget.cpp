@@ -5,19 +5,30 @@
 #include "components/Button.h"
 void UServerRowWidget::SetUpServerIndex(UWidgetGameTypeManager * Parent, uint32 Index)
 {
-	OutParent = Parent;
-	OutIndex = Index;
+	if (!IsGuide)
+	{
+		OutParent = Parent;
+		OutIndex = Index;
+	}
 }
 void UServerRowWidget::OnServerButtonPressd()
 {
-	OutParent->SelectIndex(OutIndex);
+	if (!IsGuide)
+	{
+
+		OutParent->SelectIndex(OutIndex);
+	}
 }
 bool UServerRowWidget::Initialize()
 {
 	if (Super::Initialize())
 	{
-		ServerButton->OnClicked.AddDynamic(this, &UServerRowWidget::OnServerButtonPressd);
+		if (!IsGuide)
+		{
 
+
+			ServerButton->OnClicked.AddDynamic(this, &UServerRowWidget::OnServerButtonPressd);
+		}
 		return true;
 	}
 	return false;

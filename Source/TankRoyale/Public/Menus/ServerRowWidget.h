@@ -14,6 +14,8 @@ class TANKROYALE_API UServerRowWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool IsGuide = false;
 	UPROPERTY(BlueprintReadOnly)
 		bool Selected = false;
 	UPROPERTY(meta = (BindWidget))
@@ -27,6 +29,7 @@ public:
 	UFUNCTION()
 		void OnServerButtonPressd();
 	void SetUpServerIndex(class UWidgetGameTypeManager * Parent, uint32 Index);
+
 protected:
 	virtual bool Initialize();
 private:
