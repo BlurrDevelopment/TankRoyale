@@ -88,8 +88,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ATank> TankSubClass;
 	
-	UPROPERTY()
-	class ATankSpawnPoint * PointToSpawn;
+
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = "EndGame")
 	void DisplayEndGameUI();
@@ -107,15 +106,9 @@ public:
 	void AssignTankToTeamByN(int16 TeamN, ATank * Tank);
 
 	AActor * SpawnAi(int16 SpawnPointNumber);
-
-	TSubclassOf<class ATankSpawnPoint> SpawnPoint;
-
-	UPROPERTY(EditAnywhere, Meta = (MakeEditWidget = true))
-	TArray<	FVector> SapwnPointLocation;
-
-	void CreateTankSpawnPoints();
 private:
-	TArray<class ATankSpawnPoint*> ATankSpawnPoints;
+	TArray<AActor*> TankSpawnPoints;
+	class  ATankSpawnPoint *  SpawnPoint;
 	void Respawn(AController * NewPlayer, FVector SpawnLocation);
 
 };
