@@ -18,11 +18,20 @@ class TANKROYALE_API AGameModeDeathmatch : public AGameModeBase
 public:
 	AActor * SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation);
 	void SpawnAI();
+	UPROPERTY(EditAnywhere)
+	float Timer = 3;
 protected:
 	void PostLogin(APlayerController * NewPlayer) override;
 private:
 	class ADeathmatchGameStateBase * GameState;
 	bool bHaveSpawnedAi = false;
+	UFUNCTION()
+		void OnTimerEnd();
+	UFUNCTION()
+		void OnTimerEndTeam2();
+	int16 PlayerNum = 0;
+	int16 PlayerNumTeam2 = 0;
+	FTimerHandle TimerHandle;
  };
 
 
