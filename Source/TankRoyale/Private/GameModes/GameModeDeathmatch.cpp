@@ -11,7 +11,8 @@
 #include "Tank.h"
 void AGameModeDeathmatch::SpawnAI()
 {
-
+	 TeamOne = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
+	 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 	if (!bHaveSpawnedAi)
 	{
 		bHaveSpawnedAi = true;
@@ -37,12 +38,13 @@ AActor * AGameModeDeathmatch::SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVect
 }
 void AGameModeDeathmatch::OnTimerEnd()
 {
-	int16 TeamOne = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
-	if (PlayerNum > TeamOne){
+
+	if (PlayerNum < TeamOne){
 		ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerNum));
 	GameState->AssignTankToTeamByN(1, Tank);
 	Tank->AsAssignedToTeamSeter(true);
 	PlayerNum++;
+	UE_LOG(LogTemp, Warning, TEXT("team one %d"), PlayerNum);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGameModeDeathmatch::OnTimerEnd, Timer);
 
 }
@@ -50,13 +52,14 @@ void AGameModeDeathmatch::OnTimerEnd()
 
 void AGameModeDeathmatch::OnTimerEndTeam2()
 {
-	int16 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
-	if (PlayerNumTeam2 > TeamTwo)
+	
+	if (PlayerNumTeam2 < TeamTwo)
 	{
 		ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerNumTeam2 + 5));
 		GameState->AssignTankToTeamByN(2, Tank);
 		Tank->AsAssignedToTeamSeter(true);
 		PlayerNumTeam2++;
+		UE_LOG(LogTemp, Warning, TEXT("team tow %d"), PlayerNumTeam2);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
 	}
 }

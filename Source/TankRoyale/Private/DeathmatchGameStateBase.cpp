@@ -267,7 +267,6 @@ AActor * ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPoi
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(point->GetActorLocation());
 		NewPlayer->Possess(Tank);
-		PlayerNumber++;
 		return  Tank;
 	}
 	else if (SpawnPointNumber < 5)
@@ -276,7 +275,6 @@ AActor * ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPoi
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(point->GetActorLocation());
 		NewPlayer->Possess(Tank);
-		PlayerNumber++;
 		return  Tank;
 
 	}
@@ -309,24 +307,23 @@ void ADeathmatchGameStateBase::AssignTankToTeamByN(int16 TeamN, ATank * Tank)
 
 AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
 {
-	if (SpawnPointNumber >= 5) {
-		AActor * point = SpawnPoint->SapwnPoints[1];
-		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
-		Tank->SetSpawnPointLocation(point->GetActorLocation());
-		Tank->SpawnDefaultController();
-		PlayerNumber++;
-		return  Tank;
-	}
-	else if (SpawnPointNumber < 5)
+	if (SpawnPointNumber < 5)
 	{
 		AActor * point = SpawnPoint->SapwnPoints[0];
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(point->GetActorLocation());
 		Tank->SpawnDefaultController();
-		PlayerNumber++;
 		return  Tank;
-
 	}
+	else if (SpawnPointNumber >= 5) {
+		AActor * point = SpawnPoint->SapwnPoints[1];
+		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
+		Tank->SetSpawnPointLocation(point->GetActorLocation());
+		Tank->SpawnDefaultController();
+		return  Tank;
+	}
+
+	
 	return  nullptr;
 }
 

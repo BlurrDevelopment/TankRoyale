@@ -32,6 +32,8 @@ private:
 	int16 PlayerNum = 0;
 	int16 PlayerNumTeam2 = 0;
 	FTimerHandle TimerHandle;
+	int16 TeamTwo;
+	int16 TeamOne;
  };
 
 
