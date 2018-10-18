@@ -35,14 +35,18 @@ void ATank::BeginPlay()
 	CurrentHealth = StartingHealth;
 
 	bGameStarted = false;
-	if (Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))) GameMode = EGameMode::Deathmatch;
-	if (!AsAssignedToTeam)
-	{
-		if (GameMode == EGameMode::Deathmatch)
+	ADeathmatchGameStateBase * DeathmatchGameStateBase = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	if (DeathmatchGameStateBase != nullptr) {
+		GameMode = EGameMode::Deathmatch;
+		if (DeathmatchGameStateBase->GetTankTeam(this) == 0)
 		{
-			Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
+			if (GameMode == EGameMode::Deathmatch)
+			{
+				Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankTeam(this);
+			}
 		}
 	}
+
 }
 
 void ATank::StartGame()

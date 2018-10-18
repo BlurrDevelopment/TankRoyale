@@ -269,7 +269,7 @@ AActor * ADeathmatchGameStateBase::Spawn(AController * NewPlayer, int16 SpawnPoi
 		NewPlayer->Possess(Tank);
 		return  Tank;
 	}
-	else if (SpawnPointNumber < 5)
+ if (SpawnPointNumber < 5)
 	{
 		AActor * point = SpawnPoint->SapwnPoints[0];
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
@@ -315,7 +315,7 @@ AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
 		Tank->SpawnDefaultController();
 		return  Tank;
 	}
-	else if (SpawnPointNumber >= 5) {
+	 if (SpawnPointNumber >= 5) {
 		AActor * point = SpawnPoint->SapwnPoints[1];
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, point->GetActorLocation(), FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(point->GetActorLocation());
