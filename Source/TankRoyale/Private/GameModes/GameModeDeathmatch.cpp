@@ -15,7 +15,7 @@ void AGameModeDeathmatch::SpawnAI()
 	 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
 	if (!bHaveSpawnedAi)
 	{
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGameModeDeathmatch::OnTimerEnd, Timer);
 		bHaveSpawnedAi = true;
 	}
@@ -41,7 +41,6 @@ void AGameModeDeathmatch::OnTimerEnd()
 
 	if (PlayerNum < TeamOne){
 	ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerNum));
-	Tank->Tags.Empty();
 	GameState->AssignTankToTeamByN(1, Tank);
 	Tank->AsAssignedToTeamSeter(true);
 	PlayerNum++;
@@ -55,12 +54,12 @@ void AGameModeDeathmatch::OnTimerEndTeam2()
 	
 	if (PlayerNumTeam2 < TeamTwo)
 	{
-		ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerNumTeam2 + 5));
-		Tank->Tags.Empty();
+		int16 PlayerSNum = PlayerNumTeam2 + 5;
+		ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerSNum));
 		GameState->AssignTankToTeamByN(2, Tank);
 		Tank->AsAssignedToTeamSeter(true);
 		PlayerNumTeam2++;
 		UE_LOG(LogTemp, Warning, TEXT("team tow %d"), PlayerNumTeam2);
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
 	}
 }

@@ -107,7 +107,9 @@ public:
 
 	AActor * SpawnAi(int16 SpawnPointNumber);
 private:
-	TArray<AActor*> TankSpawnPoints;
+	UPROPERTY()
+		TArray<AActor*> TankSpawnPoints;
+	UPROPERTY()
 	class  ATankSpawnPoint *  SpawnPoint;
 	void Respawn(AController * NewPlayer, FVector SpawnLocation);
 

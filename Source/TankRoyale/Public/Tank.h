@@ -59,6 +59,8 @@ public:
 		void AsAssignedToTeamSeter(bool Set);
 		bool AsAssignedToTeam = false;
 		bool GetbGameStarted();
+		void AssignThisTankTeam();
+
 protected:
 
 	void PossessedBy(AController * NewController) override;
