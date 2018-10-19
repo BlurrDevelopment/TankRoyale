@@ -19,7 +19,7 @@ void ATank::PossessedBy(AController * NewController)
 {
 	
 		Super::PossessedBy(NewController);
-		MyController = NewController; 
+		MyController = NewController;
 }
 
 // Sets default values
@@ -44,7 +44,10 @@ void ATank::StartGame()
 	bGameStarted = true;
 	UE_LOG(LogTemp, Warning, TEXT("game start"));
 	FString TeamTag = Tags[0].ToString();
-	FDefaultValueHelper::ParseInt(TeamTag, TankTeam);
+	ADeathmatchGameStateBase * DeathmatchGameStateBase = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	if (DeathmatchGameStateBase != nullptr) {
+		TankTeam =	DeathmatchGameStateBase->GetTankTeam(this);
+	}
 	auto AimingComponent = FindComponentByClass<UTankAimingComponent>();
 	// Allow the player to being able to shoot and use gadgets.
 	if (!ensure(AimingComponent)) return;
@@ -117,7 +120,7 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 	if (ActorToSpawn == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("ActorToSpawn Is Null"));
 	}
-	AActor * TankActor = AGameMode->SpawnActor(ActorToSpawn, SpawnLocation, SpawnRotation);
+	AActor * TankActor = AGameMode->SpawnActor(NewPlayer, TankTeam);
 	if (TankActor == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
@@ -127,16 +130,6 @@ void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVect
 	if (Tank == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
 		return;
-	}
-	if (Cast<APlayerController>(NewPlayer)) {
-
-		NewPlayer->Possess(Tank);
-		return;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("NewPlayer Is Null"));
-		Tank->SpawnDefaultController();
 	}
 	Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankToTeamByN(TankTeam, Tank);
 	Tank->StartGame();
@@ -171,10 +164,6 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		// 15% Chance to drop burst
 		Chance = rand() % 100 + 1;
 		if (Chance <= 20) DropBurst();
-		if (MyController == nullptr) {
-			UE_LOG(LogTemp, Warning, TEXT("ControllerToBe Is Null"));
-			return;
-		}
 	SpawnOnServer(TankToBe, SpawnPointLocation, FRotator(0, 0, 0), MyController);
 		
 		

@@ -16,7 +16,7 @@ class TANKROYALE_API AGameModeDeathmatch : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
-	AActor * SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation);
+	AActor * SpawnActor(AController * NewPlayer, int16 num);
 	void SpawnAI();
 	UPROPERTY(EditAnywhere)
 	float Timer = 3;

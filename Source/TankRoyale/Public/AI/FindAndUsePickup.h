@@ -17,6 +17,8 @@ class TANKROYALE_API UFindAndUsePickup : public UBTTaskNode
 protected:
 	UPROPERTY(EditAnywhere, Category = "BlackboardComponents")
 		struct FBlackboardKeySelector KeyToGetPickupValue;	
+	UPROPERTY(EditAnywhere, Category = "BlackboardComponents")
+		struct FBlackboardKeySelector KeyToGetPickupL;
 private:
 	class ATank * ContTank;
 public:

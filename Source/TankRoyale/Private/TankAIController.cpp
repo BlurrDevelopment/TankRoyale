@@ -63,13 +63,11 @@ void ATankAIController::OnPossessedTankDeath()
 void ATankAIController::OnTargetPerceptionUpdated(AActor * Actor, FAIStimulus AIStimulus)
 {
 	
-		UE_LOG(LogTemp, Warning, TEXT(" tank team %d"), PossessedTank->GetTankTeam());
 		if (Actor->ActorHasTag(PickUp))
 		{
 			BlackboardComponent->SetValueAsObject(PickUp, Actor);
 		}	
 		if (Cast<ATank>(Actor)) {
-			UE_LOG(LogTemp, Warning, TEXT(" pynohn "))
 				BlackboardComponent->SetValueAsObject(Enemy, Actor);
 					BlackboardComponent->SetValueAsVector(LastSeenLocation, Actor->GetActorLocation());
 					return;

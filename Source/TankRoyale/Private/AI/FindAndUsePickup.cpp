@@ -12,6 +12,7 @@ EBTNodeResult::Type UFindAndUsePickup::ExecuteTask(UBehaviorTreeComponent & Owne
 	if (AIcont != nullptr)
 	{
 	auto PickUp = Cast<AActor>(BlackBComp->GetValueAsObject((KeyToGetPickupValue.SelectedKeyName)));
+	BlackBComp->SetValueAsVector(KeyToGetPickupL.SelectedKeyName, PickUp->GetActorLocation());
 	AIcont->MoveToActor(PickUp, AcceptanceRadius);
 	 ContTank = Cast<ATank>(AIcont->GetPawn());
 	}

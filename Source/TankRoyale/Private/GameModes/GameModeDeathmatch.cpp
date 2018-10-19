@@ -11,8 +11,7 @@
 #include "Tank.h"
 void AGameModeDeathmatch::SpawnAI()
 {
-	 TeamOne = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
-	 TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
+
 	if (!bHaveSpawnedAi)
 	{
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
@@ -23,24 +22,30 @@ void AGameModeDeathmatch::SpawnAI()
 
 void AGameModeDeathmatch::PostLogin(APlayerController * NewPlayer) {
 	GameState = Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
-	GameState->Spawn(NewPlayer, GameState->PlayerNumber);
+	TeamOne = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam1AI();
+	TeamTwo = Cast<UNetworkGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->GetTeam2AI();
+	GameState->Spawn(NewPlayer, FMath::Abs((TeamTwo - TeamOne)));
 	SpawnAI();
 }
 
-AActor * AGameModeDeathmatch::SpawnActor(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation)
+AActor * AGameModeDeathmatch::SpawnActor(AController * NewPlayer, int16 num)
 {
-	UWorld * World = GetWorld();
-	if (World == nullptr)
+	if (Cast<APlayerController>(NewPlayer))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World is null"));
+	return GameState->Spawn(NewPlayer, num);
 	}
-	return World->SpawnActor<AActor>(ActorToSpawn, SpawnLocation, SpawnRotation);
+	else
+	{
+	return	GameState->SpawnAi(num);
+	}
+	return nullptr;
+	
 }
 void AGameModeDeathmatch::OnTimerEnd()
 {
 
 	if (PlayerNum < TeamOne){
-	ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerNum));
+	ATank * Tank = Cast<ATank>(GameState->SpawnAi(1));
 	GameState->AssignTankToTeamByN(1, Tank);
 	Tank->AsAssignedToTeamSeter(true);
 	PlayerNum++;
@@ -54,8 +59,7 @@ void AGameModeDeathmatch::OnTimerEndTeam2()
 	
 	if (PlayerNumTeam2 < TeamTwo)
 	{
-		int16 PlayerSNum = PlayerNumTeam2 + 5;
-		ATank * Tank = Cast<ATank>(GameState->SpawnAi(PlayerSNum));
+		ATank * Tank = Cast<ATank>(GameState->SpawnAi(2));
 		GameState->AssignTankToTeamByN(2, Tank);
 		Tank->AsAssignedToTeamSeter(true);
 		PlayerNumTeam2++;
