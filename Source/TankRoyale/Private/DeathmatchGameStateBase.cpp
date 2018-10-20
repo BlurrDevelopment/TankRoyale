@@ -316,6 +316,7 @@ AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
 		FVector SpawnLocation = point->GetActorLocation();
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, SpawnLocation, FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(SpawnLocation);
+		AssignTankToTeamByN(SpawnPointNumber, Tank);
 		Tank->SpawnDefaultController();
 		return  Tank;
 	}
@@ -324,6 +325,7 @@ AActor * ADeathmatchGameStateBase::SpawnAi(int16 SpawnPointNumber)
 		FVector SpawnLocation = point->GetActorLocation();
 		ATank * Tank = GetWorld()->SpawnActor<ATank>(TankSubClass, SpawnLocation, FRotator(0, 0, 0));
 		Tank->SetSpawnPointLocation(SpawnLocation);
+		AssignTankToTeamByN(SpawnPointNumber, Tank);
 		Tank->SpawnDefaultController();
 		return  Tank;
 	}

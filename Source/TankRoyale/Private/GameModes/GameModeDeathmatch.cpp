@@ -28,17 +28,12 @@ void AGameModeDeathmatch::PostLogin(APlayerController * NewPlayer) {
 	SpawnAI();
 }
 
-AActor * AGameModeDeathmatch::SpawnActor(AController * NewPlayer, int16 num)
+void AGameModeDeathmatch::SpawnActor(AController * NewPlayer, int16 num)
 {
-	if (Cast<APlayerController>(NewPlayer))
-	{
-	return GameState->Spawn(NewPlayer, num);
-	}
-	else
-	{
-	return	GameState->SpawnAi(num);
-	}
-	return nullptr;
+	Controller = NewPlayer;
+	Num = num;
+	// TODO Multi-cast
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle3, this, &AGameModeDeathmatch::SpawnActorAfterDealy, Timer);
 	
 }
 void AGameModeDeathmatch::OnTimerEnd()
@@ -46,7 +41,6 @@ void AGameModeDeathmatch::OnTimerEnd()
 
 	if (PlayerNum < TeamOne){
 	ATank * Tank = Cast<ATank>(GameState->SpawnAi(1));
-	GameState->AssignTankToTeamByN(1, Tank);
 	Tank->AsAssignedToTeamSeter(true);
 	PlayerNum++;
 	UE_LOG(LogTemp, Warning, TEXT("2 + 2 %d"), PlayerNum);
@@ -60,10 +54,23 @@ void AGameModeDeathmatch::OnTimerEndTeam2()
 	if (PlayerNumTeam2 < TeamTwo)
 	{
 		ATank * Tank = Cast<ATank>(GameState->SpawnAi(2));
-		GameState->AssignTankToTeamByN(2, Tank);
 		Tank->AsAssignedToTeamSeter(true);
 		PlayerNumTeam2++;
 		UE_LOG(LogTemp, Warning, TEXT("team tow %d"), PlayerNumTeam2);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, this, &AGameModeDeathmatch::OnTimerEndTeam2, Timer);
 	}
+}
+
+void AGameModeDeathmatch::SpawnActorAfterDealy()
+{
+	if (Cast<APlayerController>(Controller))
+	{
+		GameState->Spawn(Controller, Num);
+	}
+	else
+	{
+		GameState->SpawnAi(Num);
+		UE_LOG(LogTemp, Warning, TEXT("Ptoto"));
+	}
+
 }

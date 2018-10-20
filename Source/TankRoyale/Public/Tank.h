@@ -70,7 +70,6 @@ protected:
 private:
 	// Sets default values for this pawn's properties
 	ATank();
-
 	bool bGameStarted = false;
 	
 	int32 TankTeam;

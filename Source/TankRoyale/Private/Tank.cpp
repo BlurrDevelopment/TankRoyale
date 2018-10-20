@@ -113,28 +113,8 @@ void ATank::SetOnPickup(bool On, APickup* Pickup)
 void ATank::SpawnOnServer_Implementation(TSubclassOf<AActor> ActorToSpawn, FVector SpawnLocation, FRotator SpawnRotation, AController * NewPlayer)
 {
 	AGameMode = Cast<AGameModeDeathmatch>(GetWorld()->GetAuthGameMode());
-	if (AGameMode == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("GameMode Is Null"));
-	}
-	if (ActorToSpawn == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("ActorToSpawn Is Null"));
-	}
-	AActor * TankActor = AGameMode->SpawnActor(NewPlayer, TankTeam);
-	if (TankActor == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TankActor Is Null"));
-		return;
-	}
-	ATank * Tank = Cast<ATank>(TankActor);
-	if (Tank == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("Tank Is Null"));
-		return;
-	}
-	Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AssignTankToTeamByN(TankTeam, Tank);
-	Tank->StartGame();
-	UE_LOG(LogTemp, Warning, TEXT("Respawned"));
-	
+	AGameMode->SpawnActor(NewPlayer, TankTeam);
+
 
 
 }
@@ -149,8 +129,7 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		CurrentPickup->TimeToRemoveWidget();
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Dead "));
-	if (GameMode == EGameMode::Deathmatch)
-	{
+	
 		auto KillerTank = Cast<ATank>(DamageCauser);
 		Cast<ADeathmatchGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->AddTeamDeath(this, KillerTank);
 
@@ -164,11 +143,9 @@ void ATank::TankDeath(AActor* DamageCauser, int32 DamageToApply)
 		// 15% Chance to drop burst
 		Chance = rand() % 100 + 1;
 		if (Chance <= 20) DropBurst();
+		
 	SpawnOnServer(TankToBe, SpawnPointLocation, FRotator(0, 0, 0), MyController);
-		
-		
-	
-	}
+	GetController()->UnPossess();
 	Destroy();
 	// Play explosion sound
 	// we dont need an ensure every null 
