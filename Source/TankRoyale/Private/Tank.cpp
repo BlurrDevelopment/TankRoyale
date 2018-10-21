@@ -11,6 +11,7 @@
 #include "TankAimingComponent.h"
  #include "TankAIController.h"
 #include "Misc/DefaultValueHelper.h"
+#include "Camera/CameraComponent.h"
 #include "Classes/GenericTeamAgentInterface.h"
 #include "Public/DrawDebugHelpers.h"
 
@@ -28,12 +29,32 @@ ATank::ATank()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
+/*
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (IsLocallyControlled()) {
+		Rep_ServerLocalControlRotaione(GetControlRotation(), this);
+		RepControlRotaion = GetControlRotation();
+		FollowCamera->SetWorldRotation(RepControlRotaion);
+	}
+	else
+	{
+		FollowCamera->SetWorldRotation(RepControlRotaion);
+	}
 
+
+}
+*/
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	//FollowCamera  = GetOwner()->GetComponentByClass<UCameraComponent>();
 	CurrentHealth = StartingHealth;
-
+	//if (!HasAuthority())
+	//{
+		//CllintLocaiton = GetActorLocation();
+	//}
 	bGameStarted = false;
 	
 }
@@ -333,3 +354,21 @@ void ATank::UseBurstPickup()
 	// Destroy the pickup
 	CurrentPickup->Deactivate();
 }
+/*
+void ATank::Rep_ServerLocalControlRotaione_Implementation(FRotator ControlRotaion, AActor * Tank) {
+
+	ATank  * Tank = Cast<ATank>(Tank);
+	Tank->Rep_LocalControlRotaion(ControlRotaion);
+}
+bool ATank::Rep_ServerLocalControlRotaione_Validate(FRotator ControlRotaion, AActor * a) {
+	return true;
+}
+
+void ATank::Rep_LocalControlRotaion_Implementation(FRotator ControlRotaion)
+{
+	RepControlRotaion = ControlRotaion;
+}
+bool ATank::Rep_LocalControlRotaion_Validate(FRotator ControlRotaion) {
+	return true;
+}
+*/

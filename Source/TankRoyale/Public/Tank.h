@@ -60,7 +60,7 @@ public:
 		bool AsAssignedToTeam = false;
 		bool GetbGameStarted();
 		void AssignThisTankTeam();
-
+		//class UCameraComponent * FollowCamera;
 protected:
 
 	void PossessedBy(AController * NewController) override;
