@@ -2,27 +2,52 @@
 
 #include "TankMovementComponent.h"
 #include "Engine/World.h"
+#include "GameFramework/GameStateBase.h"
+#include "Kismet/GameplayStatics.h"
 #include "TankTrack.h"
+
+UTankMovementComponent::UTankMovementComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
 
 void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
 	if (!ensure(LeftTrackToSet && RightTrackToSet)) { return; }
 	LeftTrack = LeftTrackToSet;
 	RightTrack = RightTrackToSet;
+	
 }
+void UTankMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Move = MakeMove(DeltaTime);
+	//if (GetOwner()->GetRemoteRole() == ROLE_SimulatedProxy || GetOwnerRole() == ROLE_AutonomousProxy) {
+	RightTrack->SetThrottle(Move, false);
+		LeftTrack->SetThrottle(Move, true);
+	
+	//}
+}
+
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
 	if (bMovementDisabled) return;
-	LeftTrack->SetThrottle(Throw);
-	RightTrack->SetThrottle(Throw);
+	if (LeftThrottle == 0)
+	{
+		LeftThrottle = Throw;
+	}
+	if (RightThrottle == 0 ) {
+		RightThrottle = Throw;
+	}
+	
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
 	if (bMovementDisabled) return;
-	LeftTrack->SetThrottle(Throw);
-	RightTrack->SetThrottle(-Throw);
+	LeftThrottle = Throw;
+	RightThrottle = -Throw;
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
@@ -55,4 +80,13 @@ void UTankMovementComponent::Disable(float Time)
 void UTankMovementComponent::OnEnable()
 {
 	bMovementDisabled = false;
+}
+FMove UTankMovementComponent::MakeMove(float DeltaTime)
+{
+	FMove Move;
+	Move.DeltaTime = DeltaTime;
+	Move.Time = UGameplayStatics::GetGameState(GetWorld())->GetServerWorldTimeSeconds();
+	Move.LeftThrottle = LeftThrottle;
+	Move.RightThrottle = RightThrottle;
+	return Move;
 }

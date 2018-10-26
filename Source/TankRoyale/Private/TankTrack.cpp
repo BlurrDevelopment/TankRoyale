@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "SprungWheel.h"
 #include "SpawnPoint.h"
+#include "TankMovementComponent.h"
 
 UTankTrack::UTankTrack()
 {
@@ -15,10 +16,20 @@ void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
 }
-void UTankTrack::SetThrottle(float Throttle)
+void UTankTrack::SetThrottle(FMove Move, bool bIsLeft)
 {
-	float CurrentThrottle = FMath::Clamp<float>(Throttle, -1.0f, +1.0f);
-	DriveTrack(CurrentThrottle);
+	if (!bIsLeft)
+	{
+		float CurrentThrottle = FMath::Clamp<float>(Move.RightThrottle, -1.0f, +1.0f);
+		DriveTrack(CurrentThrottle, Move);
+	}
+	if (bIsLeft)
+	{
+		float CurrentThrottle = FMath::Clamp<float>(Move.LeftThrottle, -1.0f, +1.0f);
+		DriveTrack(CurrentThrottle, Move);
+	}
+
+
 }
 
 TArray<ASprungWheel*> UTankTrack::GetWheels() const
@@ -43,15 +54,15 @@ TArray<ASprungWheel*> UTankTrack::GetWheels() const
 	return ResultArray;
 }
 
-void UTankTrack::DriveTrack(float CurrentThrottle)
+void UTankTrack::DriveTrack(float CurrentThrottle,  FMove Move)
 {
-	auto ForceApplied = CurrentThrottle * TrackMaxDrivingForce;
+	auto ForceApplied = CurrentThrottle * TrackMaxDrivingForce ;
 	auto Wheels = GetWheels();
 	auto ForcePerWheel = ForceApplied / Wheels.Num();
 
 	for (ASprungWheel* Wheel : Wheels)
 	{
-		Wheel->AddDrivingForce(ForcePerWheel);
+		Wheel->AddDrivingForce(ForcePerWheel * Move.DeltaTime);
 	}
 }
 

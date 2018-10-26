@@ -18,9 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ASprungWheel();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	float n = 0;
 	void AddDrivingForce(float ForceMagnitude);
 
 protected:

@@ -18,12 +18,12 @@ class TANKROYALE_API UTankTrack : public UStaticMeshComponent
 	
 public:
 	// Sets the throttle between -1 and +1
-	UFUNCTION(BlueprintCallable, Category = "Input")
-	void SetThrottle(float Throttle);
+	//UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetThrottle(struct FMove Move, bool bIsLeft);
 	
 	// Max force per track, in Newtons
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float TrackMaxDrivingForce = 400000; // Assume 40 tonne tank, and 1g acceleration 
+	float TrackMaxDrivingForce = 4000000; // Assume 40 tonne tank, and 1g acceleration 
 
 private:
 	UTankTrack();
@@ -32,5 +32,5 @@ private:
 
 	TArray<ASprungWheel*> GetWheels() const;
 
-	void DriveTrack(float CurrentThrottle);
+	void DriveTrack(float CurrentThrottle, struct FMove Move);
 };

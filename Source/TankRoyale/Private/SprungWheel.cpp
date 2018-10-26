@@ -7,8 +7,8 @@
 ASprungWheel::ASprungWheel()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.TickGroup = TG_PostPhysics;
+	PrimaryActorTick.bCanEverTick = false;
+	//PrimaryActorTick.TickGroup = TG_PostPhysics;
 	this->SetActorHiddenInGame(true);
 
 	MassWheelConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("MassWheelConstraint"));
@@ -49,19 +49,10 @@ void ASprungWheel::SetupConstraint()
 	AxleWheelConstraint->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 }
 
-// Called every frame
-void ASprungWheel::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	if (GetWorld()->TickGroup == TG_PostPhysics)
-	{
-		TotalForceMagnitudeThisFrame = 0;
-	}
-}
 
 void ASprungWheel::AddDrivingForce(float ForceMagnitude)
 {
-	TotalForceMagnitudeThisFrame += ForceMagnitude;
+	TotalForceMagnitudeThisFrame = ForceMagnitude;
 }
 
 void ASprungWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -71,5 +62,8 @@ void ASprungWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 
 void ASprungWheel::ApplyForce()
 {
+	
+	UE_LOG(LogTemp, Warning, TEXT("ApplyForce %f"), TotalForceMagnitudeThisFrame);
+	n++;
 	Wheel->AddForce(Axle->GetForwardVector() * TotalForceMagnitudeThisFrame);
 }
